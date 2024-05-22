@@ -1,0 +1,125 @@
+<div class=" container text-center p-5">
+  <h1>Shto Produkt</h1>
+  <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <div class="form-group">
+            <label for="id">ID:</label>
+            <input type="text" id="id" class="form-control" formControlName="id" placeholder="id">
+          </div>
+          <label for="kodi">Kodi:</label>
+          <input type="text" id="kodi" class="form-control" formControlName="kodi" placeholder="Kodi">
+        </div>
+        <div class="form-group">
+          <label for="masa">Masa:</label>
+          <input type="text" id="masa" class="form-control" formControlName="masa" placeholder="Masa">
+        </div>
+        <div class="form-group">
+          <label for="sasia">Sasia:</label>
+          <input type="text" id="sasia" class="form-control" formControlName="sasia" placeholder="Sasia">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="ngjyra">Ngjyra:</label>
+          <input type="text" id="ngjyra" class="form-control" formControlName="ngjyra" placeholder="Ngjyra">
+        </div>
+        <div class="form-group">
+          <label for="tipi">Tipi:</label>
+          <input type="text" id="tipi" class="form-control" formControlName="tipi" placeholder="Tipi">
+        </div>
+        <div class="form-group">
+          <label for="cmimiIBlerjes">CMIMI I BLERJES:</label>
+          <input type="text" id="cmimiIBlerjes " class="form-control" formControlName="cmimiIBlerjes"
+            placeholder="cmimiIBlerjes">
+        </div>
+        <div class="form-group">
+          <label for="cmimiIShitjes">CMIMI I SHITJES:</label>
+          <input type="text" id="cmimiIShitjes" class="form-control" formControlName="cmimiIShitjes"
+            placeholder="cmimiIShitjes">
+        </div>
+
+        <button type=" submit" class="btn btn-success mt-3">Regjistro</button>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <h1>Ndrysho Produkt</h1>
+  <form [formGroup]="updateProductForm" (submit)="UpdateProductsAsync()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="id">ID:</label>
+          <input type="text" id="id" class="form-control" formControlName="id" placeholder="id">
+        </div>
+        <div class="form-group">
+          <label for="kodi">Kodi:</label>
+          <input type="text" id="kodi" class="form-control" formControlName="kodi" placeholder="Kodi">
+        </div>
+        <div class="form-group">
+          <label for="masa">Masa:</label>
+          <input type="text" id="masa" class="form-control" formControlName="masa" placeholder="Masa">
+        </div>
+        <div class="form-group">
+          <label for="sasia">Sasia:</label>
+          <input type="text" id="sasia" class="form-control" formControlName="sasia" placeholder="Sasia">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="ngjyra">Ngjyra:</label>
+          <input type="text" id="ngjyra" class="form-control" formControlName="ngjyra" placeholder="Ngjyra">
+        </div>
+        <div class="form-group">
+          <label for="tipi">Tipi:</label>
+          <input type="text" id="tipi" class="form-control" formControlName="tipi" placeholder="Tipi">
+        </div>
+        <div class="form-group">
+          <label for="cmimiIBlerjes">CMIMI I BLERJES:</label>
+          <input type="text" id="cmimiIBlerjes " class="form-control" formControlName="cmimiIBlerjes"
+            placeholder="cmimiIBlerjes">
+        </div>
+        <div class="form-group">
+          <label for="cmimiIShitjes">CMIMI I SHITJES:</label>
+          <input type="text" id="cmimiIShitjes" class="form-control" formControlName="cmimiIShitjes"
+            placeholder="cmimiIShitjes">
+        </div>
+        <button type="submit" (submit)="UpdateProductsAsync()" class="btn btn-success mt-3">Ndrysho</button>
+
+      </div>
+    </div>
+  </form>
+  <div class="table-responsive border-danger-subtle mt-5">
+    <table class="table table-dark p-5 ">
+      <thead>
+        <tr class="p-5">
+          <th scope="col">ID</th>
+          <th scope="col">KODI</th>
+          <th scope="col">MASA</th>
+          <th scope="col">SASIA</th>
+          <th scope="col">NGJYRA</th>
+          <th scope="col">TIPI</th>
+          <th scope="col">CMIMI I BLERJES</th>
+          <th scope="col">CMIMI I SHITJES</th>
+          <th scope="col">FITIMI</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pro of products | async">
+          <td>{{pro.id}}</td>
+          <td>{{pro.kodi}}</td>
+          <td>{{pro.masa}}</td>
+          <td>{{pro.sasia}}</td>
+          <td>{{pro.ngjyra}}</td>
+          <td>{{pro.tipi}}</td>
+          <td>{{pro.cmimiIBlerjes}}</td>
+          <td>{{pro.cmimiIShitjes}}</td>
+          <td>{{pro.fitimi}}</td>
+          <button class="btn btn-warning">Ndrysho</button>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

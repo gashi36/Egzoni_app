@@ -1,0 +1,78 @@
+query getProducts {
+  productsAsync {
+    id
+    kodi
+    masa
+    ngjyra
+    sasia
+    tipi
+    cmimiIShitjes
+    cmimiIBlerjes
+    fitimi
+  }
+}
+
+mutation addProductss(
+  $kodi: String!
+  $masa: String!
+  $sasia: Decimal!
+  $tipi: String!
+  $ngjyra: String!
+  $cmimiIShitjes: Decimal!
+  $cmimiIBlerjes: Decimal!
+) {
+  addProduct(
+    input: {
+      kodi: $kodi
+      masa: $masa
+      ngjyra: $ngjyra
+      sasia: $sasia
+      tipi: $tipi
+      cmimiIShitjes: $cmimiIShitjes
+      cmimiIBlerjes: $cmimiIBlerjes
+    }
+  ) {
+    id
+    kodi
+    masa
+    ngjyra
+    sasia
+    tipi
+    cmimiIBlerjes
+    cmimiIShitjes
+  }
+}
+
+mutation updateAll(
+  $id: Int!
+  $kodi: String!
+  $masa: String!
+  $sasia: Decimal!
+  $tipi: String!
+  $ngjyra: String!
+  $cmimiIBlerjes: Decimal!
+  $cmimiIShitjes: Decimal!
+) {
+  update(
+    id: $id
+    kodi: $kodi
+    tipi: $tipi
+    masa: $masa
+    sasia: $sasia
+    ngjyra: $ngjyra
+    cmimiIShitjes: $cmimiIShitjes
+    cmimiIBlerjes: $cmimiIBlerjes
+  ) {
+    products {
+      cmimiIBlerjes
+      cmimiIShitjes
+      fitimi
+      id
+      kodi
+      masa
+      ngjyra
+      sasia
+      tipi
+    }
+  }
+}

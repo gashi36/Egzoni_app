@@ -1,0 +1,51 @@
+{
+  "name": "egzoni-client",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "run-p start:ng gql:codegen:watch",
+    "start:ng": "ng serve",
+    "gql:update-schema": "graphql get-schema -e default",
+    "gql:codegen": "graphql-codegen --config codegen.yml",
+    "gql:codegen:watch": "graphql-codegen --watch",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/forms": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/router": "^17.3.0",
+    "@apollo/client": "^3.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0-rc.2",
+    "@parcel/watcher": "^2.4.1",
+    "@popperjs/core": "^2.11.8",
+    "apollo-angular": "^7.0.1",
+    "bootstrap": "^5.3.3",
+    "graphql": "^16",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.7",
+    "@angular/cli": "^17.3.7",
+    "@angular/compiler-cli": "^17.3.0",
+    "@angular/localize": "^17.3.0",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/introspection": "4.0.3",
+    "@graphql-codegen/typescript-apollo-angular": "4.0.0",
+    "@types/jasmine": "~5.1.0",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "~5.4.2"
+  }
+}

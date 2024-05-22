@@ -1,0 +1,6 @@
+@Egzoni_app_HostAddress = http://localhost:5044
+
+GET {{Egzoni_app_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

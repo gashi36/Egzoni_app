@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Egzoni_app.props" />
+</Project>
