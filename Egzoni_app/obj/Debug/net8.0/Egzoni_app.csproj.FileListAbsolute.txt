@@ -154,3 +154,4 @@ C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\System.IO.Hashing.d
 C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\Yarp.ReverseProxy.dll
 C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\HotChocolate.Data.dll
 C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\HotChocolate.Data.EntityFramework.dll
+C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\obj\Debug\net8.0\Egzoni_app.sourcelink.json

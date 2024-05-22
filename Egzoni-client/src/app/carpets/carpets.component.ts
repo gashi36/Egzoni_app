@@ -4,11 +4,14 @@ import {
   AddProductssGQL,
   GetProductsGQL,
   Product,
-  UpdateAllGQL,
-  // UpdateAllGQL,
 } from '../../generated/graphql';
 import { Subject } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  FormsModule,
+} from '@angular/forms';
 // import { GET_CARPETS } from './graphql.operations';
 
 @Component({
@@ -29,30 +32,16 @@ export class CarpetsComponent implements OnInit {
     cmimiIBlerjes: new FormControl(''),
     cmimiIShitjes: new FormControl(''),
   });
-  updateProductForm = new FormGroup({
-    id: new FormControl(),
-    kodi: new FormControl(''),
-    masa: new FormControl(''),
-    ngjyra: new FormControl(''),
-    sasia: new FormControl(''),
-    tipi: new FormControl(''),
-    cmimiIBlerjes: new FormControl(''),
-    cmimiIShitjes: new FormControl(''),
-  });
-
   carpets: any[] = [];
   error: any;
 
   constructor(
     private getproducts: GetProductsGQL,
-    private addpro: AddProductssGQL,
-    private updateAll: UpdateAllGQL
+    private addpro: AddProductssGQL
   ) {}
 
   ngOnInit(): void {
     this.getAllProducts();
-    // this.addProductsAsync();
-    this.UpdateProductsAsync();
   }
   getAllProducts(): void {
     this.getproducts.watch().valueChanges.subscribe({
@@ -91,41 +80,6 @@ export class CarpetsComponent implements OnInit {
           },
           error: (error) => {
             console.log(error);
-          },
-        });
-    }
-  }
-
-  UpdateProductsAsync(): void {
-    console.log(this.updateProductForm.value);
-    console.log(this.updateProductForm.errors);
-    if (this.updateProductForm?.valid) {
-      this.updateAll
-        .mutate({
-          id: parseInt(this.updateProductForm.controls.id.value ?? Number),
-          kodi: this.updateProductForm.controls.kodi.value ?? '',
-          masa: this.updateProductForm.controls.masa.value ?? '',
-          ngjyra: this.updateProductForm.controls.ngjyra.value ?? '',
-          sasia:
-            parseFloat(this.updateProductForm.controls.sasia.value ?? '') || 0,
-          tipi: this.updateProductForm.controls.tipi.value ?? '',
-          cmimiIBlerjes:
-            parseFloat(
-              this.updateProductForm.controls.cmimiIBlerjes.value ?? ''
-            ) || 0,
-          cmimiIShitjes:
-            parseFloat(
-              this.updateProductForm.controls.cmimiIShitjes.value ?? ''
-            ) || 0,
-        })
-        .subscribe({
-          next: ({ data }) => {
-            console.log(data);
-            console.log('Mutation Done');
-          },
-          error: (error) => {
-            const errorMessage = `Error adding product: ${error.message}`;
-            console.error(errorMessage);
           },
         });
     }
