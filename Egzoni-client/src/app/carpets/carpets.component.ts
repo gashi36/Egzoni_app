@@ -84,4 +84,7 @@ export class CarpetsComponent implements OnInit {
         });
     }
   }
+  showSuccessMessage(): void {
+    alert('Produkti eshte regjistruar me sukses');
+  }
 }

@@ -1,12 +1,13 @@
 using Egzoni_app.Database;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Egzoni_app.Products
 {
     [MutationType]
     public class ProductsMutations
     {
-
         public async Task<Product> AddProductAsync(AddProductInput input, ApplicationDbContext context)
         {
             var newProduct = new Product
@@ -35,12 +36,11 @@ namespace Egzoni_app.Products
              string? ngjyra,
              decimal? cmimiIBlerjes,
              decimal? cmimiIShitjes,
-     ApplicationDbContext context)
+             ApplicationDbContext context)
         {
             var product = await context.Products.FindAsync(id);
             if (product == null)
             {
-
                 throw new KeyNotFoundException($"Product with ID {id} not found.");
             }
 
@@ -55,8 +55,21 @@ namespace Egzoni_app.Products
             context.Products.Update(product);
             await context.SaveChangesAsync();
 
-
             return new UpdateProductPayload(product);
+        }
+
+        public async Task<bool> RemoveProductsById(int id, ApplicationDbContext context)
+        {
+            var product = await context.Products.FindAsync(id);
+            if (product == null)
+            {
+                throw new KeyNotFoundException($"Product with ID {id} not found.");
+            }
+
+            context.Products.Remove(product);
+            await context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
