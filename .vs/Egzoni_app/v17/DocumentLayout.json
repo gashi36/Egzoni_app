@@ -1,12 +1,54 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\asus\\Desktop\\Egzoni_app\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9681FB-5850-478D-8689-EF78FF240C39}|Egzoni_app\\Egzoni_app.csproj|c:\\users\\asus\\desktop\\egzoni_app\\egzoni_app\\products\\productsmutations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9681FB-5850-478D-8689-EF78FF240C39}|Egzoni_app\\Egzoni_app.csproj|solutionrelative:egzoni_app\\products\\productsmutations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2E9681FB-5850-478D-8689-EF78FF240C39}|Egzoni_app\\Egzoni_app.csproj|c:\\users\\asus\\desktop\\egzoni_app\\egzoni_app\\products\\addproductinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2E9681FB-5850-478D-8689-EF78FF240C39}|Egzoni_app\\Egzoni_app.csproj|solutionrelative:egzoni_app\\products\\addproductinput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AddProductInput.cs",
+              "DocumentMoniker": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\Products\\AddProductInput.cs",
+              "RelativeDocumentMoniker": "Egzoni_app\\Products\\AddProductInput.cs",
+              "ToolTip": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\Products\\AddProductInput.cs",
+              "RelativeToolTip": "Egzoni_app\\Products\\AddProductInput.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-27T08:46:10.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ProductsMutations.cs",
+              "DocumentMoniker": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\Products\\ProductsMutations.cs",
+              "RelativeDocumentMoniker": "Egzoni_app\\Products\\ProductsMutations.cs",
+              "ToolTip": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\Products\\ProductsMutations.cs",
+              "RelativeToolTip": "Egzoni_app\\Products\\ProductsMutations.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAQwCEAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-27T08:41:28.647Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

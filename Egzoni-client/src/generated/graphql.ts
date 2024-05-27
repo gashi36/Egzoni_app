@@ -22,6 +22,7 @@ export type Scalars = {
 export type AddProductInput = {
   cmimiIBlerjes?: InputMaybe<Scalars['Decimal']['input']>;
   cmimiIShitjes?: InputMaybe<Scalars['Decimal']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   kodi?: InputMaybe<Scalars['String']['input']>;
   masa?: InputMaybe<Scalars['String']['input']>;
   ngjyra?: InputMaybe<Scalars['String']['input']>;
@@ -62,6 +63,7 @@ export type IntOperationFilterInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   addProduct: Product;
+  removeProductsById: Scalars['Boolean']['output'];
   update: UpdateProductPayload;
 };
 
@@ -71,15 +73,13 @@ export type MutationAddProductArgs = {
 };
 
 
-export type MutationUpdateArgs = {
-  cmimiIBlerjes?: InputMaybe<Scalars['Decimal']['input']>;
-  cmimiIShitjes?: InputMaybe<Scalars['Decimal']['input']>;
+export type MutationRemoveProductsByIdArgs = {
   id: Scalars['Int']['input'];
-  kodi?: InputMaybe<Scalars['String']['input']>;
-  masa?: InputMaybe<Scalars['String']['input']>;
-  ngjyra?: InputMaybe<Scalars['String']['input']>;
-  sasia?: InputMaybe<Scalars['Decimal']['input']>;
-  tipi?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationUpdateArgs = {
+  input: AddProductInput;
 };
 
 export type Product = {
@@ -149,6 +149,13 @@ export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetProductsQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null }> };
 
+export type GetProductQueryVariables = Exact<{
+  kodi: Scalars['String']['input'];
+}>;
+
+
+export type GetProductQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', fitimi?: any | null, id: number, kodi?: string | null }> };
+
 export type AddProductssMutationVariables = Exact<{
   kodi: Scalars['String']['input'];
   masa: Scalars['String']['input'];
@@ -162,19 +169,26 @@ export type AddProductssMutationVariables = Exact<{
 
 export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null } };
 
-export type UpdateAllMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
+export type EditProductMutationVariables = Exact<{
   kodi: Scalars['String']['input'];
   masa: Scalars['String']['input'];
   sasia: Scalars['Decimal']['input'];
   tipi: Scalars['String']['input'];
   ngjyra: Scalars['String']['input'];
-  cmimiIBlerjes: Scalars['Decimal']['input'];
   cmimiIShitjes: Scalars['Decimal']['input'];
+  cmimiIBlerjes: Scalars['Decimal']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type UpdateAllMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null, fitimi?: any | null, id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null } } };
+export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null } } };
+
+export type DeleteProductMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteProductMutation = { __typename?: 'Mutation', removeProductsById: boolean };
 
 export const GetProductsDocument = gql`
     query getProducts {
@@ -197,6 +211,26 @@ export const GetProductsDocument = gql`
   })
   export class GetProductsGQL extends Apollo.Query<GetProductsQuery, GetProductsQueryVariables> {
     document = GetProductsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetProductDocument = gql`
+    query getProduct($kodi: String!) {
+  productsAsync(where: {kodi: {eq: $kodi}}) {
+    fitimi
+    id
+    kodi
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetProductGQL extends Apollo.Query<GetProductQuery, GetProductQueryVariables> {
+    document = GetProductDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -229,28 +263,20 @@ export const AddProductssDocument = gql`
       super(apollo);
     }
   }
-export const UpdateAllDocument = gql`
-    mutation updateAll($id: Int!, $kodi: String!, $masa: String!, $sasia: Decimal!, $tipi: String!, $ngjyra: String!, $cmimiIBlerjes: Decimal!, $cmimiIShitjes: Decimal!) {
+export const EditProductDocument = gql`
+    mutation editProduct($kodi: String!, $masa: String!, $sasia: Decimal!, $tipi: String!, $ngjyra: String!, $cmimiIShitjes: Decimal!, $cmimiIBlerjes: Decimal!, $id: Int) {
   update(
-    id: $id
-    kodi: $kodi
-    tipi: $tipi
-    masa: $masa
-    sasia: $sasia
-    ngjyra: $ngjyra
-    cmimiIShitjes: $cmimiIShitjes
-    cmimiIBlerjes: $cmimiIBlerjes
+    input: {kodi: $kodi, masa: $masa, ngjyra: $ngjyra, sasia: $sasia, tipi: $tipi, cmimiIShitjes: $cmimiIShitjes, cmimiIBlerjes: $cmimiIBlerjes, id: $id}
   ) {
     products {
-      cmimiIBlerjes
-      cmimiIShitjes
-      fitimi
       id
       kodi
       masa
       ngjyra
       sasia
       tipi
+      cmimiIBlerjes
+      cmimiIShitjes
     }
   }
 }
@@ -259,8 +285,24 @@ export const UpdateAllDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class UpdateAllGQL extends Apollo.Mutation<UpdateAllMutation, UpdateAllMutationVariables> {
-    document = UpdateAllDocument;
+  export class EditProductGQL extends Apollo.Mutation<EditProductMutation, EditProductMutationVariables> {
+    document = EditProductDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteProductDocument = gql`
+    mutation deleteProduct($id: Int!) {
+  removeProductsById(id: $id)
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteProductGQL extends Apollo.Mutation<DeleteProductMutation, DeleteProductMutationVariables> {
+    document = DeleteProductDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -28,29 +28,22 @@ namespace Egzoni_app.Products
         }
 
         public async Task<UpdateProductPayload> UpdateAsync(
-             int id,
-             string? kodi,
-             string? tipi,
-             string? masa,
-             decimal? sasia,
-             string? ngjyra,
-             decimal? cmimiIBlerjes,
-             decimal? cmimiIShitjes,
-             ApplicationDbContext context)
+            AddProductInput input,
+            ApplicationDbContext context)
         {
-            var product = await context.Products.FindAsync(id);
+            var product = await context.Products.FindAsync(input.Id);
             if (product == null)
             {
-                throw new KeyNotFoundException($"Product with ID {id} not found.");
+                throw new KeyNotFoundException($"Product with ID {input.Id} not found.");
             }
 
-            product.Kodi = kodi;
-            product.Tipi = tipi;
-            product.Masa = masa;
-            product.Sasia = sasia;
-            product.Ngjyra = ngjyra;
-            product.CmimiIBlerjes = cmimiIBlerjes;
-            product.CmimiIShitjes = cmimiIShitjes;
+            product.Kodi = input.Kodi;
+            product.Tipi = input.Tipi;
+            product.Masa = input.Masa;
+            product.Sasia = input.Sasia;
+            product.Ngjyra = input.Ngjyra;
+            product.CmimiIBlerjes = input.CmimiIBlerjes;
+            product.CmimiIShitjes = input.CmimiIShitjes;
 
             context.Products.Update(product);
             await context.SaveChangesAsync();
@@ -63,7 +56,7 @@ namespace Egzoni_app.Products
             var product = await context.Products.FindAsync(id);
             if (product == null)
             {
-                throw new KeyNotFoundException($"Product with ID {id} not found.");
+                return false;
             }
 
             context.Products.Remove(product);

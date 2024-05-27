@@ -12,6 +12,14 @@ query getProducts {
   }
 }
 
+query getProduct($kodi: String!) {
+  productsAsync(where: { kodi: { eq: $kodi } }) {
+    fitimi
+    id
+    kodi
+  }
+}
+
 mutation addProductss(
   $kodi: String!
   $masa: String!
@@ -43,36 +51,41 @@ mutation addProductss(
   }
 }
 
-mutation updateAll(
-  $id: Int!
+mutation editProduct(
   $kodi: String!
   $masa: String!
   $sasia: Decimal!
   $tipi: String!
   $ngjyra: String!
-  $cmimiIBlerjes: Decimal!
   $cmimiIShitjes: Decimal!
+  $cmimiIBlerjes: Decimal!
+  $id: Int
 ) {
   update(
-    id: $id
-    kodi: $kodi
-    tipi: $tipi
-    masa: $masa
-    sasia: $sasia
-    ngjyra: $ngjyra
-    cmimiIShitjes: $cmimiIShitjes
-    cmimiIBlerjes: $cmimiIBlerjes
+    input: {
+      kodi: $kodi
+      masa: $masa
+      ngjyra: $ngjyra
+      sasia: $sasia
+      tipi: $tipi
+      cmimiIShitjes: $cmimiIShitjes
+      cmimiIBlerjes: $cmimiIBlerjes
+      id: $id
+    }
   ) {
     products {
-      cmimiIBlerjes
-      cmimiIShitjes
-      fitimi
       id
       kodi
       masa
       ngjyra
       sasia
       tipi
+      cmimiIBlerjes
+      cmimiIShitjes
     }
   }
+}
+
+mutation deleteProduct($id: Int!) {
+  removeProductsById(id: $id)
 }

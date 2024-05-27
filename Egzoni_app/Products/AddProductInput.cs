@@ -13,6 +13,7 @@ namespace Egzoni_app.Products
         decimal? Sasia,
         string? Ngjyra,
         decimal? CmimiIBlerjes,
-        decimal? CmimiIShitjes
+        decimal? CmimiIShitjes,
+        int? Id
     );
 }
