@@ -1,3 +1,7 @@
+<h1><b style="color: red;">EGZONI</b></h1>
+
+
+
 <div class=" container text-center p-5">
   <h1>Shto Produkt</h1>
   <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
@@ -46,6 +50,23 @@
 
     </div>
   </form>
+  <h4 class="col-md-3 p-2">Kerko sipas kodit</h4>
+  <div class="searchbar row  col-md-12">
+    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.controls['search'].value)"
+      class="row ">
+      <div class="col-md-8">
+        <input class="form-control p-2" type="text" formControlName="search" placeholder="Kerko">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-info py-2 px-5">Search</button>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-danger  py-2 px-5" (click)="cancelSearch()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+
   <hr>
   <div class="table-responsive mt-5 ">
     <table class="table table-striped">

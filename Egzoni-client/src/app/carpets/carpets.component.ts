@@ -6,6 +6,7 @@ import {
   EditProductGQL,
   Product,
   DeleteProductGQL,
+  SearchProductsGQL,
 } from '../../generated/graphql';
 import { Subject } from 'rxjs';
 import {
@@ -14,6 +15,8 @@ import {
   Validators,
   FormsModule,
 } from '@angular/forms';
+import { query } from 'express';
+import { subscribe } from '@parcel/watcher';
 // import { GET_CARPETS } from './graphql.operations';
 
 @Component({
@@ -25,6 +28,10 @@ export class CarpetsComponent implements OnInit {
   products: Product[] = [];
   imagePath: string = 'assets/egzoni.png';
   isEdit: boolean = false;
+
+  searchProductForm: FormGroup = new FormGroup({
+    search: new FormControl(''),
+  });
 
   addProductForm = new FormGroup({
     id: new FormControl<number | undefined>(undefined),
@@ -43,7 +50,8 @@ export class CarpetsComponent implements OnInit {
     private getproducts: GetProductsGQL,
     private editProd: EditProductGQL,
     private addpro: AddProductssGQL,
-    private deleteprod: DeleteProductGQL
+    private deleteprod: DeleteProductGQL,
+    private searchprod: SearchProductsGQL
   ) {}
 
   ngOnInit(): void {
@@ -106,6 +114,7 @@ export class CarpetsComponent implements OnInit {
             next: ({ data }) => {
               console.log('EDIT Done');
               this.isEdit = false;
+              window.location.reload();
             },
             error: (error) => {
               this.isEdit = false;
@@ -133,6 +142,7 @@ export class CarpetsComponent implements OnInit {
           .subscribe({
             next: ({ data }) => {
               console.log('Mutation Done');
+              window.location.reload();
             },
             error: (error) => {
               console.log(error);
@@ -148,11 +158,30 @@ export class CarpetsComponent implements OnInit {
       })
       .subscribe({
         next: ({ data }) => {
-          console.log('Mutation Done');
+          console.log('product removed');
+          window.location.reload();
         },
         error: (error) => {
           console.log(error);
         },
       });
+  }
+  searchProduct(kodi: string): void {
+    this.searchprod
+      .fetch({
+        kodi: kodi,
+      })
+      .subscribe({
+        next: ({ data }) => {
+          this.products = data.productsAsync as Product[];
+          console.log('Search result:', this.products);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+  }
+  cancelSearch(): void {
+    window.location.reload();
   }
 }

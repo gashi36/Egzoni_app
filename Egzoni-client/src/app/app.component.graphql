@@ -12,11 +12,16 @@ query getProducts {
   }
 }
 
-query getProduct($kodi: String!) {
+query searchProducts($kodi: String!) {
   productsAsync(where: { kodi: { eq: $kodi } }) {
-    fitimi
-    id
     kodi
+    masa
+    ngjyra
+    sasia
+    tipi
+    cmimiIShitjes
+    cmimiIBlerjes
+    fitimi
   }
 }
 

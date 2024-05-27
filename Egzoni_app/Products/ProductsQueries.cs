@@ -14,6 +14,7 @@ namespace Egzoni_app.Products
     public class ProductsQueries
 
     {
+        [UsePaging]
         [UseFiltering(typeof(ProductFilterInputType))]
         public IQueryable<Product> GetProductsAsync(ApplicationDbContext context) =>
          context.Products;

@@ -30,6 +30,12 @@ export type AddProductInput = {
   tipi?: InputMaybe<Scalars['String']['input']>;
 };
 
+export enum ApplyPolicy {
+  AfterResolver = 'AFTER_RESOLVER',
+  BeforeResolver = 'BEFORE_RESOLVER',
+  Validation = 'VALIDATION'
+}
+
 export type DecimalOperationFilterInput = {
   eq?: InputMaybe<Scalars['Decimal']['input']>;
   gt?: InputMaybe<Scalars['Decimal']['input']>;
@@ -149,12 +155,12 @@ export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetProductsQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null }> };
 
-export type GetProductQueryVariables = Exact<{
+export type SearchProductsQueryVariables = Exact<{
   kodi: Scalars['String']['input'];
 }>;
 
 
-export type GetProductQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', fitimi?: any | null, id: number, kodi?: string | null }> };
+export type SearchProductsQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null }> };
 
 export type AddProductssMutationVariables = Exact<{
   kodi: Scalars['String']['input'];
@@ -216,12 +222,17 @@ export const GetProductsDocument = gql`
       super(apollo);
     }
   }
-export const GetProductDocument = gql`
-    query getProduct($kodi: String!) {
+export const SearchProductsDocument = gql`
+    query searchProducts($kodi: String!) {
   productsAsync(where: {kodi: {eq: $kodi}}) {
-    fitimi
-    id
     kodi
+    masa
+    ngjyra
+    sasia
+    tipi
+    cmimiIShitjes
+    cmimiIBlerjes
+    fitimi
   }
 }
     `;
@@ -229,8 +240,8 @@ export const GetProductDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class GetProductGQL extends Apollo.Query<GetProductQuery, GetProductQueryVariables> {
-    document = GetProductDocument;
+  export class SearchProductsGQL extends Apollo.Query<SearchProductsQuery, SearchProductsQueryVariables> {
+    document = SearchProductsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

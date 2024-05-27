@@ -24,7 +24,37 @@ builder.Services
     .RegisterDbContext<ApplicationDbContext>()
     .AddTypes()
     .AddDataLoader<ProductByIdDataLoader>()
-    .AddFiltering();
+    .AddFiltering()
+    // .AddPagination()
+    .AddAuthorization();
+
+
+// builder.Services.AddGraphQLServer()
+//     .ModifyRequestOptions(o =>
+//     {
+//         o.ExecutionTimeout = TimeSpan.FromSeconds(60);
+//     });
+// builder.Services.AddGraphQLServer()
+//     .SetMaxAllowedValidationErrors(5);
+// builder.Services.AddGraphQLServer()
+// .ModifyOptions(o => o.MaxAllowedNodeBatchSize = 1);
+// builder.Services.AddSha256DocumentHashProvider();
+// var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySuperSecretKey"));
+
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = true,
+//             ValidateAudience = true,
+//             ValidateIssuerSigningKey = true,
+//             ValidIssuer = "https://auth.chillicream.com",
+//             ValidAudience = "https://graphql.chillicream.com",
+//             IssuerSigningKey = signingKey
+//         };
+//     });
+
 
 var app = builder.Build();
 
@@ -34,7 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseAuthentication();
 app.UseHttpsRedirection();
 app.MapGraphQL();
 app.MapControllers();
@@ -45,5 +75,6 @@ app.UseCors(options =>
     options.AllowAnyMethod();
 
 });
+
 
 app.Run();
