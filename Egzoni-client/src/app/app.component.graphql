@@ -1,27 +1,39 @@
-query getProducts {
-  productsAsync {
-    id
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIShitjes
-    cmimiIBlerjes
-    fitimi
+query getProducts($cursor: String, $first: Int) {
+  productsAsync(first: $first, after: $cursor, order: { id: DESC }) {
+    nodes {
+      cmimiIBlerjes
+      cmimiIShitjes
+      fitimi
+      id
+      kodi
+      masa
+      ngjyra
+      sasia
+      tipi
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
   }
 }
 
-query searchProducts($kodi: String!) {
+query searchProducts($kodi: String) {
   productsAsync(where: { kodi: { eq: $kodi } }) {
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIShitjes
-    cmimiIBlerjes
-    fitimi
+    edges {
+      node {
+        kodi
+        masa
+        ngjyra
+        sasia
+        tipi
+        cmimiIShitjes
+        cmimiIBlerjes
+        fitimi
+      }
+    }
   }
 }
 

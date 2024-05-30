@@ -4,6 +4,7 @@ using HotChocolate;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using Egzoni_app.Products;
+using HotChocolate.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +23,11 @@ builder.Services.AddCors();
 builder.Services
     .AddGraphQLServer()
     .RegisterDbContext<ApplicationDbContext>()
+     .AddFiltering()
+    .AddSorting()
     .AddTypes()
-    .AddDataLoader<ProductByIdDataLoader>()
-    .AddFiltering()
-    // .AddPagination()
-    .AddAuthorization();
+    .AddDataLoader<ProductByIdDataLoader>();
+
 
 
 // builder.Services.AddGraphQLServer()

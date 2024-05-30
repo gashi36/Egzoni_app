@@ -3,7 +3,7 @@
 
 
 <div class=" container text-center p-5">
-  <h1>Shto Produkt</h1>
+  <h2>{{isEdit ? 'Ndrysho' : 'Regjistro'}}</h2>
   <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
     <div class="row">
       <div class="col-md-6">
@@ -58,15 +58,17 @@
         <input class="form-control p-2" type="text" formControlName="search" placeholder="Kerko">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-info py-2 px-5">Search</button>
+        <button type="submit" class="btn btn-info py-2 px-5">Kerko</button>
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn btn-danger  py-2 px-5" (click)="cancelSearch()">Cancel</button>
+        <button type="button" class="btn btn-danger  py-2 px-5" (click)="cancelSearch()">Anulo</button>
       </div>
     </form>
   </div>
 
 
+  <hr>
+  <h1>Stoku</h1>
   <hr>
   <div class="table-responsive mt-5 ">
     <table class="table table-striped">
@@ -104,5 +106,11 @@
           </td>
 
     </table>
+  </div>
+  <div class="row align-content-center justify-content-center">
+    <!-- <button (click)="getPreviousProducts()" class="btn btn-info col-md-1">Mbrapa</button> -->
+
+    <button (click)="loadMoreProducts()" class="btn btn-info  col-md-2">Faqja Tjetër</button>
+
   </div>
 </div>

@@ -30,12 +30,6 @@ export type AddProductInput = {
   tipi?: InputMaybe<Scalars['String']['input']>;
 };
 
-export enum ApplyPolicy {
-  AfterResolver = 'AFTER_RESOLVER',
-  BeforeResolver = 'BEFORE_RESOLVER',
-  Validation = 'VALIDATION'
-}
-
 export type DecimalOperationFilterInput = {
   eq?: InputMaybe<Scalars['Decimal']['input']>;
   gt?: InputMaybe<Scalars['Decimal']['input']>;
@@ -88,6 +82,19 @@ export type MutationUpdateArgs = {
   input: AddProductInput;
 };
 
+/** Information about pagination in a connection. */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  /** When paginating forwards, the cursor to continue. */
+  endCursor?: Maybe<Scalars['String']['output']>;
+  /** Indicates whether more edges exist following the set defined by the clients arguments. */
+  hasNextPage: Scalars['Boolean']['output'];
+  /** Indicates whether more edges exist prior the set defined by the clients arguments. */
+  hasPreviousPage: Scalars['Boolean']['output'];
+  /** When paginating backwards, the cursor to continue. */
+  startCursor?: Maybe<Scalars['String']['output']>;
+};
+
 export type Product = {
   __typename?: 'Product';
   cmimiIBlerjes?: Maybe<Scalars['Decimal']['output']>;
@@ -114,14 +121,50 @@ export type ProductFilterInput = {
   tipi?: InputMaybe<StringOperationFilterInput>;
 };
 
+export type ProductSortInput = {
+  cmimiIBlerjes?: InputMaybe<SortEnumType>;
+  cmimiIShitjes?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  kodi?: InputMaybe<SortEnumType>;
+  masa?: InputMaybe<SortEnumType>;
+  ngjyra?: InputMaybe<SortEnumType>;
+  sasia?: InputMaybe<SortEnumType>;
+  tipi?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type ProductsAsyncConnection = {
+  __typename?: 'ProductsAsyncConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<ProductsAsyncEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Product>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type ProductsAsyncEdge = {
+  __typename?: 'ProductsAsyncEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Product;
+};
+
 export type Query = {
   __typename?: 'Query';
-  productsAsync: Array<Product>;
+  productsAsync?: Maybe<ProductsAsyncConnection>;
   productsById: Product;
 };
 
 
 export type QueryProductsAsyncArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<ProductSortInput>>;
   where?: InputMaybe<ProductFilterInput>;
 };
 
@@ -129,6 +172,11 @@ export type QueryProductsAsyncArgs = {
 export type QueryProductsByIdArgs = {
   id: Scalars['ID']['input'];
 };
+
+export enum SortEnumType {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
 
 export type StringOperationFilterInput = {
   and?: InputMaybe<Array<StringOperationFilterInput>>;
@@ -150,17 +198,20 @@ export type UpdateProductPayload = {
   products: Product;
 };
 
-export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetProductsQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null }> };
-
-export type SearchProductsQueryVariables = Exact<{
-  kodi: Scalars['String']['input'];
+export type GetProductsQueryVariables = Exact<{
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', productsAsync: Array<{ __typename?: 'Product', kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null }> };
+export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null, fitimi?: any | null, id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+
+export type SearchProductsQueryVariables = Exact<{
+  kodi?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', edges?: Array<{ __typename?: 'ProductsAsyncEdge', node: { __typename?: 'Product', kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null } }> | null } | null };
 
 export type AddProductssMutationVariables = Exact<{
   kodi: Scalars['String']['input'];
@@ -197,17 +248,25 @@ export type DeleteProductMutationVariables = Exact<{
 export type DeleteProductMutation = { __typename?: 'Mutation', removeProductsById: boolean };
 
 export const GetProductsDocument = gql`
-    query getProducts {
-  productsAsync {
-    id
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIShitjes
-    cmimiIBlerjes
-    fitimi
+    query getProducts($cursor: String, $first: Int) {
+  productsAsync(first: $first, after: $cursor, order: {id: DESC}) {
+    nodes {
+      cmimiIBlerjes
+      cmimiIShitjes
+      fitimi
+      id
+      kodi
+      masa
+      ngjyra
+      sasia
+      tipi
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
   }
 }
     `;
@@ -223,16 +282,20 @@ export const GetProductsDocument = gql`
     }
   }
 export const SearchProductsDocument = gql`
-    query searchProducts($kodi: String!) {
+    query searchProducts($kodi: String) {
   productsAsync(where: {kodi: {eq: $kodi}}) {
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIShitjes
-    cmimiIBlerjes
-    fitimi
+    edges {
+      node {
+        kodi
+        masa
+        ngjyra
+        sasia
+        tipi
+        cmimiIShitjes
+        cmimiIBlerjes
+        fitimi
+      }
+    }
   }
 }
     `;

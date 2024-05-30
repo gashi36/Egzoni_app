@@ -13,5 +13,7 @@ namespace Egzoni_app.Products
             descriptor.BindFieldsImplicitly().
             Field(k => k.Kodi);
         }
+
     }
+
 }

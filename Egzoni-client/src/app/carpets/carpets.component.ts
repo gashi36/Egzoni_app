@@ -9,25 +9,20 @@ import {
   SearchProductsGQL,
 } from '../../generated/graphql';
 import { Subject } from 'rxjs';
-import {
-  FormControl,
-  FormGroup,
-  Validators,
-  FormsModule,
-} from '@angular/forms';
-import { query } from 'express';
-import { subscribe } from '@parcel/watcher';
-// import { GET_CARPETS } from './graphql.operations';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-carpets',
   templateUrl: './carpets.component.html',
-  styleUrl: './carpets.component.css',
+  styleUrls: ['./carpets.component.css'],
 })
 export class CarpetsComponent implements OnInit {
   products: Product[] = [];
   imagePath: string = 'assets/egzoni.png';
   isEdit: boolean = false;
+  cursor: string | null = null;
+  hasNextPage: boolean = false;
 
   searchProductForm: FormGroup = new FormGroup({
     search: new FormControl(''),
@@ -43,8 +38,6 @@ export class CarpetsComponent implements OnInit {
     cmimiIBlerjes: new FormControl(''),
     cmimiIShitjes: new FormControl(''),
   });
-  carpets: any[] = [];
-  error: any;
 
   constructor(
     private getproducts: GetProductsGQL,
@@ -57,20 +50,38 @@ export class CarpetsComponent implements OnInit {
   ngOnInit(): void {
     this.getAllProducts();
   }
-  getAllProducts(): void {
-    this.getproducts.watch().valueChanges.subscribe({
-      next: ({ data }) => {
-        this.products = data.productsAsync as Product[];
-        console.log('Query Done');
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+
+  getAllProducts(first: number = 10): void {
+    this.getproducts
+      .watch({ first, cursor: this.cursor })
+      .valueChanges.pipe(map((result: any) => result.data.productsAsync))
+      .subscribe({
+        next: (data) => {
+          if (data && data.nodes) {
+            this.products = data.nodes;
+
+            if (data.pageInfo) {
+              this.cursor = data.pageInfo.endCursor ?? null;
+              this.hasNextPage = data.pageInfo.hasNextPage;
+            }
+          } else {
+            console.error('No products found');
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+        },
+      });
   }
 
-  editProduct(id: number) {
-    var product = this.products.find((p) => p.id === id);
+  loadMoreProducts(): void {
+    if (this.hasNextPage) {
+      this.getAllProducts();
+    }
+  }
+
+  editProduct(id: number): void {
+    const product = this.products.find((p) => p.id === id);
 
     if (!product) {
       window.alert('Product not found');
@@ -151,6 +162,7 @@ export class CarpetsComponent implements OnInit {
       }
     }
   }
+
   deleteProduct(id: number): void {
     this.deleteprod
       .mutate({
@@ -158,7 +170,7 @@ export class CarpetsComponent implements OnInit {
       })
       .subscribe({
         next: ({ data }) => {
-          console.log('product removed');
+          console.log('Product removed');
           window.location.reload();
         },
         error: (error) => {
@@ -166,6 +178,7 @@ export class CarpetsComponent implements OnInit {
         },
       });
   }
+
   searchProduct(kodi: string): void {
     this.searchprod
       .fetch({
@@ -173,14 +186,19 @@ export class CarpetsComponent implements OnInit {
       })
       .subscribe({
         next: ({ data }) => {
-          this.products = data.productsAsync as Product[];
-          console.log('Search result:', this.products);
+          console.log(data?.productsAsync);
+          if (data?.productsAsync) {
+            this.products = data.productsAsync.edges?.map(
+              (x) => x.node
+            ) as Product[]; // Map to the productsAsync object
+          }
         },
         error: (error) => {
-          console.log(error);
+          console.error('Error searching products:', error);
         },
       });
   }
+
   cancelSearch(): void {
     window.location.reload();
   }
