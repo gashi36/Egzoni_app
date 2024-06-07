@@ -106,3 +106,14 @@ mutation editProduct(
 mutation deleteProduct($id: Int!) {
   removeProductsById(id: $id)
 }
+mutation Login($username: String!, $password: String!) {
+  login(loginInput: { username: $username, password: $password }) {
+    administrator {
+      id
+      password
+      salt
+      token
+      username
+    }
+  }
+}

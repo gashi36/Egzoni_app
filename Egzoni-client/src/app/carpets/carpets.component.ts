@@ -11,7 +11,6 @@ import {
 import { Subject } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
-
 @Component({
   selector: 'app-carpets',
   templateUrl: './carpets.component.html',
@@ -51,7 +50,7 @@ export class CarpetsComponent implements OnInit {
     this.getAllProducts();
   }
 
-  getAllProducts(first: number = 10): void {
+  getAllProducts(first: number = 15): void {
     this.getproducts
       .watch({ first, cursor: this.cursor })
       .valueChanges.pipe(map((result: any) => result.data.productsAsync))

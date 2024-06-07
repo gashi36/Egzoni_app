@@ -20,10 +20,18 @@ namespace Egzoni_app.Products
         [UseSorting]
         public IQueryable<Product> GetProductsAsync(ApplicationDbContext context) =>
                      context.Products;
-        public Task<Product> GetProductsByIdAsync(
-          [ID(nameof(Product))] int id,
-          ProductByIdDataLoader dataLoader,
-          CancellationToken cancellationToken) =>
-          dataLoader.LoadAsync(id, cancellationToken);
+        public async Task<Product> GetProductByIdAsync(int id, ApplicationDbContext context, CancellationToken cancellationToken, IProductDataLoader productDataLoader)
+        {
+            var product = await productDataLoader.LoadAsync(id, cancellationToken);
+            return product;
+        }
+
+        [DataLoader]
+        internal static async Task<IReadOnlyDictionary<int, Product>> GetProductAsync(IReadOnlyList<int> ids, ApplicationDbContext context, CancellationToken cancellationToken) =>
+   await context.Products
+  .Where(s => ids.Contains(s.Id))
+  .ToDictionaryAsync(t => t.Id, cancellationToken);
+
     }
+
 }

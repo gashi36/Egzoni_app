@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AddProductssGQL, GetProductsGQL, Product } from '../generated/graphql';
-import { ThisReceiver } from '@angular/compiler';
-import { Subject } from 'rxjs';
+import { LoginGQL, LoginMutation } from '../generated/graphql';
+import { Router } from '@angular/router';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
-  ngOnInit(): void {}
-}
+export class AppComponent {}

@@ -3,20 +3,33 @@ import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
   /** The built-in `Decimal` scalar type. */
-  Decimal: { input: any; output: any; }
+  Decimal: { input: any; output: any };
 };
 
 export type AddProductInput = {
@@ -29,6 +42,32 @@ export type AddProductInput = {
   sasia?: InputMaybe<Scalars['Decimal']['input']>;
   tipi?: InputMaybe<Scalars['String']['input']>;
 };
+
+export type AdminPayloadBase = {
+  __typename?: 'AdminPayloadBase';
+  administrator?: Maybe<Administrator>;
+  errors?: Maybe<Array<UserError>>;
+};
+
+export type AdminRegisterInput = {
+  password?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Administrator = {
+  __typename?: 'Administrator';
+  id: Scalars['Int']['output'];
+  password?: Maybe<Scalars['String']['output']>;
+  salt: Scalars['String']['output'];
+  token?: Maybe<Scalars['String']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
+};
+
+export enum ApplyPolicy {
+  AfterResolver = 'AFTER_RESOLVER',
+  BeforeResolver = 'BEFORE_RESOLVER',
+  Validation = 'VALIDATION',
+}
 
 export type DecimalOperationFilterInput = {
   eq?: InputMaybe<Scalars['Decimal']['input']>;
@@ -60,23 +99,35 @@ export type IntOperationFilterInput = {
   nlte?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type LoginInput = {
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addProduct: Product;
+  addRegister: AdminPayloadBase;
+  login: AdminPayloadBase;
   removeProductsById: Scalars['Boolean']['output'];
   update: UpdateProductPayload;
 };
-
 
 export type MutationAddProductArgs = {
   input: AddProductInput;
 };
 
+export type MutationAddRegisterArgs = {
+  adminRegisterInput: AdminRegisterInput;
+};
+
+export type MutationLoginArgs = {
+  loginInput: LoginInput;
+};
 
 export type MutationRemoveProductsByIdArgs = {
   id: Scalars['Int']['input'];
 };
-
 
 export type MutationUpdateArgs = {
   input: AddProductInput;
@@ -154,10 +205,13 @@ export type ProductsAsyncEdge = {
 
 export type Query = {
   __typename?: 'Query';
+  productById: Product;
   productsAsync?: Maybe<ProductsAsyncConnection>;
-  productsById: Product;
 };
 
+export type QueryProductByIdArgs = {
+  id: Scalars['Int']['input'];
+};
 
 export type QueryProductsAsyncArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -168,14 +222,9 @@ export type QueryProductsAsyncArgs = {
   where?: InputMaybe<ProductFilterInput>;
 };
 
-
-export type QueryProductsByIdArgs = {
-  id: Scalars['ID']['input'];
-};
-
 export enum SortEnumType {
   Asc = 'ASC',
-  Desc = 'DESC'
+  Desc = 'DESC',
 }
 
 export type StringOperationFilterInput = {
@@ -198,20 +247,67 @@ export type UpdateProductPayload = {
   products: Product;
 };
 
+export type UserError = {
+  __typename?: 'UserError';
+  code: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+};
+
 export type GetProductsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-
-export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null, fitimi?: any | null, id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+export type GetProductsQuery = {
+  __typename?: 'Query';
+  productsAsync?: {
+    __typename?: 'ProductsAsyncConnection';
+    nodes?: Array<{
+      __typename?: 'Product';
+      cmimiIBlerjes?: any | null;
+      cmimiIShitjes?: any | null;
+      fitimi?: any | null;
+      id: number;
+      kodi?: string | null;
+      masa?: string | null;
+      ngjyra?: string | null;
+      sasia?: any | null;
+      tipi?: string | null;
+    }> | null;
+    pageInfo: {
+      __typename?: 'PageInfo';
+      endCursor?: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor?: string | null;
+    };
+  } | null;
+};
 
 export type SearchProductsQueryVariables = Exact<{
   kodi?: InputMaybe<Scalars['String']['input']>;
 }>;
 
-
-export type SearchProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', edges?: Array<{ __typename?: 'ProductsAsyncEdge', node: { __typename?: 'Product', kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null } }> | null } | null };
+export type SearchProductsQuery = {
+  __typename?: 'Query';
+  productsAsync?: {
+    __typename?: 'ProductsAsyncConnection';
+    edges?: Array<{
+      __typename?: 'ProductsAsyncEdge';
+      node: {
+        __typename?: 'Product';
+        kodi?: string | null;
+        masa?: string | null;
+        ngjyra?: string | null;
+        sasia?: any | null;
+        tipi?: string | null;
+        cmimiIShitjes?: any | null;
+        cmimiIBlerjes?: any | null;
+        fitimi?: any | null;
+      };
+    }> | null;
+  } | null;
+};
 
 export type AddProductssMutationVariables = Exact<{
   kodi: Scalars['String']['input'];
@@ -223,8 +319,20 @@ export type AddProductssMutationVariables = Exact<{
   cmimiIBlerjes: Scalars['Decimal']['input'];
 }>;
 
-
-export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null } };
+export type AddProductssMutation = {
+  __typename?: 'Mutation';
+  addProduct: {
+    __typename?: 'Product';
+    id: number;
+    kodi?: string | null;
+    masa?: string | null;
+    ngjyra?: string | null;
+    sasia?: any | null;
+    tipi?: string | null;
+    cmimiIBlerjes?: any | null;
+    cmimiIShitjes?: any | null;
+  };
+};
 
 export type EditProductMutationVariables = Exact<{
   kodi: Scalars['String']['input'];
@@ -237,112 +345,143 @@ export type EditProductMutationVariables = Exact<{
   id?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-
-export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null } } };
+export type EditProductMutation = {
+  __typename?: 'Mutation';
+  update: {
+    __typename?: 'UpdateProductPayload';
+    products: {
+      __typename?: 'Product';
+      id: number;
+      kodi?: string | null;
+      masa?: string | null;
+      ngjyra?: string | null;
+      sasia?: any | null;
+      tipi?: string | null;
+      cmimiIBlerjes?: any | null;
+      cmimiIShitjes?: any | null;
+    };
+  };
+};
 
 export type DeleteProductMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
+export type DeleteProductMutation = {
+  __typename?: 'Mutation';
+  removeProductsById: boolean;
+};
 
-export type DeleteProductMutation = { __typename?: 'Mutation', removeProductsById: boolean };
+export type LoginMutationVariables = Exact<{
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+export type LoginMutation = {
+  __typename?: 'Mutation';
+  login: {
+    __typename?: 'AdminPayloadBase';
+    administrator?: {
+      __typename?: 'Administrator';
+      id: number;
+      password?: string | null;
+      salt: string;
+      token?: string | null;
+      username?: string | null;
+    } | null;
+  };
+};
 
 export const GetProductsDocument = gql`
-    query getProducts($cursor: String, $first: Int) {
-  productsAsync(first: $first, after: $cursor, order: {id: DESC}) {
-    nodes {
-      cmimiIBlerjes
-      cmimiIShitjes
-      fitimi
-      id
-      kodi
-      masa
-      ngjyra
-      sasia
-      tipi
-    }
-    pageInfo {
-      endCursor
-      hasNextPage
-      hasPreviousPage
-      startCursor
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetProductsGQL extends Apollo.Query<GetProductsQuery, GetProductsQueryVariables> {
-    document = GetProductsDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const SearchProductsDocument = gql`
-    query searchProducts($kodi: String) {
-  productsAsync(where: {kodi: {eq: $kodi}}) {
-    edges {
-      node {
+  query getProducts($cursor: String, $first: Int) {
+    productsAsync(first: $first, after: $cursor, order: { id: DESC }) {
+      nodes {
+        cmimiIBlerjes
+        cmimiIShitjes
+        fitimi
+        id
         kodi
         masa
         ngjyra
         sasia
         tipi
-        cmimiIShitjes
-        cmimiIBlerjes
-        fitimi
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
       }
     }
   }
-}
-    `;
+`;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class SearchProductsGQL extends Apollo.Query<SearchProductsQuery, SearchProductsQueryVariables> {
-    document = SearchProductsDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
+@Injectable({
+  providedIn: 'root',
+})
+export class GetProductsGQL extends Apollo.Query<
+  GetProductsQuery,
+  GetProductsQueryVariables
+> {
+  document = GetProductsDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const SearchProductsDocument = gql`
+  query searchProducts($kodi: String) {
+    productsAsync(where: { kodi: { eq: $kodi } }) {
+      edges {
+        node {
+          kodi
+          masa
+          ngjyra
+          sasia
+          tipi
+          cmimiIShitjes
+          cmimiIBlerjes
+          fitimi
+        }
+      }
     }
   }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SearchProductsGQL extends Apollo.Query<
+  SearchProductsQuery,
+  SearchProductsQueryVariables
+> {
+  document = SearchProductsDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const AddProductssDocument = gql`
-    mutation addProductss($kodi: String!, $masa: String!, $sasia: Decimal!, $tipi: String!, $ngjyra: String!, $cmimiIShitjes: Decimal!, $cmimiIBlerjes: Decimal!) {
-  addProduct(
-    input: {kodi: $kodi, masa: $masa, ngjyra: $ngjyra, sasia: $sasia, tipi: $tipi, cmimiIShitjes: $cmimiIShitjes, cmimiIBlerjes: $cmimiIBlerjes}
+  mutation addProductss(
+    $kodi: String!
+    $masa: String!
+    $sasia: Decimal!
+    $tipi: String!
+    $ngjyra: String!
+    $cmimiIShitjes: Decimal!
+    $cmimiIBlerjes: Decimal!
   ) {
-    id
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIBlerjes
-    cmimiIShitjes
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AddProductssGQL extends Apollo.Mutation<AddProductssMutation, AddProductssMutationVariables> {
-    document = AddProductssDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const EditProductDocument = gql`
-    mutation editProduct($kodi: String!, $masa: String!, $sasia: Decimal!, $tipi: String!, $ngjyra: String!, $cmimiIShitjes: Decimal!, $cmimiIBlerjes: Decimal!, $id: Int) {
-  update(
-    input: {kodi: $kodi, masa: $masa, ngjyra: $ngjyra, sasia: $sasia, tipi: $tipi, cmimiIShitjes: $cmimiIShitjes, cmimiIBlerjes: $cmimiIBlerjes, id: $id}
-  ) {
-    products {
+    addProduct(
+      input: {
+        kodi: $kodi
+        masa: $masa
+        ngjyra: $ngjyra
+        sasia: $sasia
+        tipi: $tipi
+        cmimiIShitjes: $cmimiIShitjes
+        cmimiIBlerjes: $cmimiIBlerjes
+      }
+    ) {
       id
       kodi
       masa
@@ -353,32 +492,114 @@ export const EditProductDocument = gql`
       cmimiIShitjes
     }
   }
-}
-    `;
+`;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class EditProductGQL extends Apollo.Mutation<EditProductMutation, EditProductMutationVariables> {
-    document = EditProductDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
+@Injectable({
+  providedIn: 'root',
+})
+export class AddProductssGQL extends Apollo.Mutation<
+  AddProductssMutation,
+  AddProductssMutationVariables
+> {
+  document = AddProductssDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const EditProductDocument = gql`
+  mutation editProduct(
+    $kodi: String!
+    $masa: String!
+    $sasia: Decimal!
+    $tipi: String!
+    $ngjyra: String!
+    $cmimiIShitjes: Decimal!
+    $cmimiIBlerjes: Decimal!
+    $id: Int
+  ) {
+    update(
+      input: {
+        kodi: $kodi
+        masa: $masa
+        ngjyra: $ngjyra
+        sasia: $sasia
+        tipi: $tipi
+        cmimiIShitjes: $cmimiIShitjes
+        cmimiIBlerjes: $cmimiIBlerjes
+        id: $id
+      }
+    ) {
+      products {
+        id
+        kodi
+        masa
+        ngjyra
+        sasia
+        tipi
+        cmimiIBlerjes
+        cmimiIShitjes
+      }
     }
   }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class EditProductGQL extends Apollo.Mutation<
+  EditProductMutation,
+  EditProductMutationVariables
+> {
+  document = EditProductDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const DeleteProductDocument = gql`
-    mutation deleteProduct($id: Int!) {
-  removeProductsById(id: $id)
-}
-    `;
+  mutation deleteProduct($id: Int!) {
+    removeProductsById(id: $id)
+  }
+`;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteProductGQL extends Apollo.Mutation<DeleteProductMutation, DeleteProductMutationVariables> {
-    document = DeleteProductDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
+@Injectable({
+  providedIn: 'root',
+})
+export class DeleteProductGQL extends Apollo.Mutation<
+  DeleteProductMutation,
+  DeleteProductMutationVariables
+> {
+  document = DeleteProductDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const LoginDocument = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(loginInput: { username: $username, password: $password }) {
+      administrator {
+        id
+        password
+        salt
+        token
+        username
+      }
     }
   }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LoginGQL extends Apollo.Mutation<
+  LoginMutation,
+  LoginMutationVariables
+> {
+  document = LoginDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}

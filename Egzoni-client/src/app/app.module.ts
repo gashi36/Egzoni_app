@@ -9,17 +9,31 @@ import { CarpetsComponent } from './carpets/carpets.component';
 import { CommonModule } from '@angular/common';
 import { CarpetsModule } from './carpets/carpets.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { AdminComponent } from './admin/admin.component';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
-  declarations: [AppComponent, CarpetsComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule,
     GraphQLModule,
     CommonModule,
-    CarpetsModule,
+    NgbModule,
+    ReactiveFormsModule,
+    AdminModule,
+  ],
+  exports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
+    GraphQLModule,
+    CommonModule,
     NgbModule,
     ReactiveFormsModule,
   ],

@@ -5,12 +5,20 @@ using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using Egzoni_app.Products;
 using HotChocolate.Data;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Egzoni_app.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddPooledDbContextFactory<ApplicationDbContext>(options => options.UseSqlite("Data Source=egzoni.db"));
+builder.Services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"));
+
+});
 
 builder.Services.AddControllers();
 
@@ -23,39 +31,25 @@ builder.Services.AddCors();
 builder.Services
     .AddGraphQLServer()
     .RegisterDbContext<ApplicationDbContext>()
-     .AddFiltering()
+    .AddFiltering()
     .AddSorting()
     .AddTypes()
-    .AddDataLoader<ProductByIdDataLoader>();
+    .AddAuthorization();
 
-
-
-// builder.Services.AddGraphQLServer()
-//     .ModifyRequestOptions(o =>
-//     {
-//         o.ExecutionTimeout = TimeSpan.FromSeconds(60);
-//     });
-// builder.Services.AddGraphQLServer()
-//     .SetMaxAllowedValidationErrors(5);
-// builder.Services.AddGraphQLServer()
-// .ModifyOptions(o => o.MaxAllowedNodeBatchSize = 1);
-// builder.Services.AddSha256DocumentHashProvider();
-// var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySuperSecretKey"));
-
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidateIssuerSigningKey = true,
-//             ValidIssuer = "https://auth.chillicream.com",
-//             ValidAudience = "https://graphql.chillicream.com",
-//             IssuerSigningKey = signingKey
-//         };
-//     });
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+ .AddJwtBearer(options =>
+ {
+     options.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = true,
+         ValidateAudience = true,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         //  ValidIssuer = jwtIssuer,
+         //  ValidAudience = jwtIssuer,
+         //  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+     };
+ });
 
 var app = builder.Build();
 
@@ -66,6 +60,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseAuthentication();
+app.UseAuthorization();
+app.UseWebSockets();
 app.UseHttpsRedirection();
 app.MapGraphQL();
 app.MapControllers();
