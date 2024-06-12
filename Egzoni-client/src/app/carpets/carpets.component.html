@@ -1,8 +1,8 @@
-<h1><b style="color: red;">EGZONI</b></h1>
-
-
-
-<div class=" container text-center p-5">
+<div class="container text-center p-5">
+  <div class="row justify-content-between">
+    <h1 class="col-md-3"><b style="color: red;">Egzoni</b></h1>
+    <button class="btn btn-danger col-md-1" (click)="logout()">Shkyqu</button>
+  </div>
   <h2>{{isEdit ? 'Ndrysho' : 'Regjistro'}}</h2>
   <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
     <div class="row">
@@ -45,33 +45,40 @@
             formControlName="cmimiIShitjes" placeholder="Çmimi i shitjes">
         </div>
 
-        <button type="submit" class="btn btn-success mt-3">{{isEdit ? 'Ndrysho' : 'Regjistro'}}</button>
+        <button type="submit" class="btn btn-success mt-3" [disabled]="isAddingProduct">
+          <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          {{isEdit ? 'Ndrysho' : 'Regjistro'}}
+        </button>
       </div>
-
     </div>
   </form>
+
   <h4 class="col-md-3 p-2">Kerko sipas kodit</h4>
-  <div class="searchbar row  col-md-12">
+  <div class="searchbar row col-md-12">
     <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.controls['search'].value)"
-      class="row ">
+      class="row">
       <div class="col-md-8">
         <input class="form-control p-2" type="text" formControlName="search" style="background-color: beige;"
           placeholder="Kerko">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-info py-2 px-5">Kerko</button>
+        <button type="submit" class="btn btn-info py-2 px-5" [disabled]="isSearchingProduct">
+          <span *ngIf="isSearchingProduct" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          Kerko
+        </button>
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn btn-danger  py-2 px-5" (click)="cancelSearch()">Anulo</button>
+        <button type="button" class="btn btn-danger py-2 px-5" (click)="cancelSearch()">Anulo</button>
       </div>
     </form>
   </div>
 
-
   <hr>
   <h1>Stoku</h1>
   <hr>
-  <div class="table-responsive mt-5 ">
+  <div class="table-responsive mt-5">
     <table class="table table-striped">
       <thead>
         <tr class="table-dark">
@@ -86,13 +93,12 @@
           <th scope="col">FITIMI</th>
           <th scope="col"></th>
           <th scope="col"></th>
-
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let pro of products">
           <td class="table-warning">{{pro.id}}</td>
-          <td class="table-warning">{{ pro.kodi }}</td>
+          <td class="table-warning">{{pro.kodi}}</td>
           <td class="table-warning">{{pro.masa}}</td>
           <td class="table-warning">{{pro.sasia}}</td>
           <td class="table-warning">{{pro.ngjyra}}</td>
@@ -100,18 +106,24 @@
           <td class="table-warning">{{pro.cmimiIBlerjes}}</td>
           <td class="table-warning">{{pro.cmimiIShitjes}}</td>
           <td class="table-warning">{{pro.fitimi}}</td>
-          <td class="table-warning"><button class="btn btn-warning " (click)="editProduct(pro.id)"
+          <td class="table-warning"><button class="btn btn-warning" (click)="editProduct(pro.id)"
               style="color: white;">Ndrysho</button></td>
-          <td class="table-warning"><button class="btn btn-delete " (click)="deleteProduct(pro.id)">Fshij</button>
-
+          <td class="table-warning"><button class="btn btn-delete" (click)="deleteProduct(pro.id)"
+              [disabled]="isDeletingProduct">
+              <span *ngIf="isDeletingProduct" class="spinner-border spinner-border-sm" role="status"
+                aria-hidden="true"></span>
+              Fshij
+            </button>
           </td>
-
+        </tr>
+      </tbody>
     </table>
   </div>
   <div class="row align-content-center justify-content-center">
-    <!-- <button (click)="getPreviousProducts()" class="btn btn-info col-md-1">Mbrapa</button> -->
-
-    <button (click)="loadMoreProducts()" class="btn btn-info  col-md-2">Faqja Tjetër</button>
-
+    <button (click)="loadMoreProducts()" class="btn btn-info col-md-2" [disabled]="isLoadingMoreProducts">
+      <span *ngIf="isLoadingMoreProducts" class="spinner-border spinner-border-sm" role="status"
+        aria-hidden="true"></span>
+      Faqja Tjetër
+    </button>
   </div>
 </div>

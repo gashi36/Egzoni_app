@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Egzoni_app.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240607075116_init")]
+    [Migration("20240610090748_init")]
     partial class init
     {
         /// <inheritdoc />

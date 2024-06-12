@@ -55,6 +55,7 @@ export class AdminComponent {
             // Login successful, navigate to the carpets route
             this.router.navigateByUrl('carpets');
             console.log('login successful', data);
+            localStorage.setItem(this.authSecretKey, token);
           } else {
             // Login failed, display an error message
             this.errorMessage = 'Invalid username or password.';
