@@ -1,0 +1,44 @@
+.gradient-background {
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  padding: 20px;
+}
+
+.custom-accordion-button {
+  background-color: #ffffff;
+  color: #007bff;
+  border: none;
+}
+
+.custom-accordion-button:focus {
+  box-shadow: none;
+}
+
+.custom-card {
+  background-color: transparent;
+  border: none;
+}
+
+.card-body {
+  background-color: transparent;
+  padding: 20px;
+
+}
+
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}

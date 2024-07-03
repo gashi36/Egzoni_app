@@ -8,11 +8,18 @@ import { GraphQLModule } from './graphql.module';
 import { CarpetsComponent } from './carpets/carpets.component';
 import { CommonModule } from '@angular/common';
 import { CarpetsModule } from './carpets/carpets.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbCollapse,
+  NgbCollapseModule,
+  NgbModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { AdminComponent } from './admin/admin.component';
 import { AdminModule } from './admin/admin.module';
+import { ShopComponent } from './shop/Shop.component';
+import { ShopModule } from './shop/shop.module';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,10 +29,12 @@ import { AdminModule } from './admin/admin.module';
     FormsModule,
     HttpClientModule,
     GraphQLModule,
+
     CommonModule,
     NgbModule,
     ReactiveFormsModule,
     AdminModule,
+    ShopModule,
   ],
   exports: [
     BrowserModule,
@@ -37,7 +46,7 @@ import { AdminModule } from './admin/admin.module';
     NgbModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

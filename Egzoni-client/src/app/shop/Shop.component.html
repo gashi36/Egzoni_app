@@ -1,0 +1,77 @@
+<div class="container gradient-background">
+  <div class="row">
+    <!-- Accordions Column -->
+    <div class="col-md-3">
+      <!-- Brands Accordion -->
+      <div class="accordion mb-4" id="accordionSidebar">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button custom-accordion-button" type="button" (click)="toggleBrands()">
+              Brendet
+            </button>
+          </h2>
+          <div [ngbCollapse]="isBrandsCollapsed" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <div *ngFor="let brand of brands" class="mb-2">
+                <!-- Button for each brand -->
+                <button class="btn btn-outline-primary brands-btn" (click)="filterProductsByBrand(brand.id)">
+                  {{ brand.name }}
+                </button>
+              </div>
+              <p *ngIf="brands.length === 0">Nuk jane gjetur brendet</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Accordion -->
+      <div class="accordion" id="accordionCategories">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button custom-accordion-button" type="button" (click)="toggleCategories()">
+              Kategorite
+            </button>
+          </h2>
+          <div [ngbCollapse]="isCategoriesCollapsed" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              <div *ngFor="let category of categories" class="mb-2">
+                <button class="btn btn-outline-primary categories-btn" (click)="filterProductsByCategory(category.id)">
+                  {{ category.name }}
+                </button>
+              </div>
+              <p *ngIf="categories.length === 0">Nuk jane gjetur kategorite</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        <div *ngFor="let product of products" class="col-md-4 mb-4">
+          <div class="card h-100 custom-card border-0 shadow-sm">
+            <div class="card-body">
+              <img src="http://localhost:5044/images/{{ product.id }}/Image.png" class="card-img-top rounded"
+                alt="{{ product.pictureUrl}}">
+              <h5 class="card-title">{{ product.code }}</h5>
+              <p class="card-text"><strong>size:</strong> {{ product.size }}</p>
+              <p class="card-text"><strong>Brendi:</strong> {{ getBrandName(product.brandId) }}</p>
+              <p class="card-text"><strong>Kategoria:</strong> {{ getCategoryName(product.categoryId) }}</p>
+              <p class="card-text"><strong>color:</strong> {{ product.color }}</p>
+              <p class="card-text"><strong>quantity:</strong> {{ product.quantity }}</p>
+              <p class="card-text"><strong>Cmimi:</strong> {{ product.retailPrice }}</p>
+
+              <!-- Description field -->
+              <p class="card-text"><strong>Description:</strong> {{ product.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4" *ngIf="hasNextPage">
+      <div class="col text-center">
+        <button (click)="loadMoreProducts()" class="btn btn-primary">Load More</button>
+      </div>
+    </div>
+  </div>
+</div>

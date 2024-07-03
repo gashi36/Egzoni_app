@@ -1,35 +1,26 @@
-import {
-  CanActivate,
-  CanActivateChild,
-  CanActivateFn,
-  CanDeactivate,
-  CanLoad,
-  Router,
-} from '@angular/router';
-import { AdminComponent } from './admin/admin.component';
-import { inject } from '@angular/core';
-
 import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard {
+export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    const localData = localStorage.getItem('Bearer Token');
-    console.log(localData);
-    if (localData != null) {
+    const token = localStorage.getItem('Bearer Token');
+    console.log('AuthGuard checking token:', token);
+    if (token) {
       return true;
     } else {
       this.router.navigateByUrl('/admin');
       return false;
     }
   }
+
   logout(): void {
     localStorage.removeItem('Bearer Token');
-    this.router.navigateByUrl('/admin');
     console.log('logging out...');
+    this.router.navigateByUrl('/admin');
   }
 }

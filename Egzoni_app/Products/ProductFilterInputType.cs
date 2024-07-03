@@ -10,10 +10,7 @@ namespace Egzoni_app.Products
     {
         protected override void Configure(IFilterInputTypeDescriptor<Product> descriptor)
         {
-            descriptor.BindFieldsImplicitly().
-            Field(k => k.Kodi);
+            descriptor.BindFieldsImplicitly().Field(k => k.Code);
         }
-
     }
-
 }

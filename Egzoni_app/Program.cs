@@ -24,32 +24,34 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddGraphQL();
-builder.Services.AddCors();
-builder.Services
-    .AddGraphQLServer()
-    .RegisterDbContext<ApplicationDbContext>()
-    .AddFiltering()
-    .AddSorting()
-    .AddTypes()
-    .AddAuthorization();
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  .AddJwtBearer(options =>
  {
      options.TokenValidationParameters = new TokenValidationParameters
      {
-         ValidateIssuer = true,
-         ValidateAudience = true,
-         ValidateLifetime = true,
+         ValidIssuer = builder.Configuration["Jwt:Issuer"],
+         ValidAudience = builder.Configuration["Jwt:Audience"],
          ValidateIssuerSigningKey = true,
-         //  ValidIssuer = jwtIssuer,
-         //  ValidAudience = jwtIssuer,
-         //  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
      };
  });
+
+builder.Services.AddAuthorization();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddGraphQL();
+builder.Services.AddCors();
+
+builder.Services
+    .AddGraphQLServer()
+    .AddAuthorization()
+    .RegisterDbContext<ApplicationDbContext>()
+    .AddFiltering()
+    .AddSorting()
+    .AddUploadType()
+    .AddTypes();
+
 
 var app = builder.Build();
 
@@ -62,7 +64,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseWebSockets();
-app.UseHttpsRedirection();
+app.UseStaticFiles();
+// app.UseHttpsRedirection();
 app.MapGraphQL();
 app.MapControllers();
 app.UseCors(options =>

@@ -6,6 +6,10 @@ using Egzoni_app.Database;
 
 namespace Egzoni_app.Admin
 {
+
+
+
+    [QueryType]
     public class AdminQuery
     {
         [UseDbContext(typeof(ApplicationDbContext))]

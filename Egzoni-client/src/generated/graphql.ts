@@ -17,17 +17,30 @@ export type Scalars = {
   Float: { input: number; output: number; }
   /** The built-in `Decimal` scalar type. */
   Decimal: { input: any; output: any; }
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: { input: any; output: any; }
+};
+
+export type AddBrandInput = {
+  name: Scalars['String']['input'];
+};
+
+export type AddCategoryInput = {
+  name: Scalars['String']['input'];
 };
 
 export type AddProductInput = {
-  cmimiIBlerjes?: InputMaybe<Scalars['Decimal']['input']>;
-  cmimiIShitjes?: InputMaybe<Scalars['Decimal']['input']>;
+  brandId?: InputMaybe<Scalars['Int']['input']>;
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  kodi?: InputMaybe<Scalars['String']['input']>;
-  masa?: InputMaybe<Scalars['String']['input']>;
-  ngjyra?: InputMaybe<Scalars['String']['input']>;
-  sasia?: InputMaybe<Scalars['Decimal']['input']>;
-  tipi?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['Upload']['input']>;
+  purchasePrice?: InputMaybe<Scalars['Decimal']['input']>;
+  quantity?: InputMaybe<Scalars['Decimal']['input']>;
+  retailPrice?: InputMaybe<Scalars['Decimal']['input']>;
+  size?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AdminPayloadBase = {
@@ -50,11 +63,69 @@ export type Administrator = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
+export type AdministratorFilterInput = {
+  and?: InputMaybe<Array<AdministratorFilterInput>>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  or?: InputMaybe<Array<AdministratorFilterInput>>;
+  password?: InputMaybe<StringOperationFilterInput>;
+  salt?: InputMaybe<StringOperationFilterInput>;
+  token?: InputMaybe<StringOperationFilterInput>;
+  username?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type AdministratorSortInput = {
+  id?: InputMaybe<SortEnumType>;
+  password?: InputMaybe<SortEnumType>;
+  salt?: InputMaybe<SortEnumType>;
+  token?: InputMaybe<SortEnumType>;
+  username?: InputMaybe<SortEnumType>;
+};
+
 export enum ApplyPolicy {
   AfterResolver = 'AFTER_RESOLVER',
   BeforeResolver = 'BEFORE_RESOLVER',
   Validation = 'VALIDATION'
 }
+
+export type Brand = {
+  __typename?: 'Brand';
+  id: Scalars['Int']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  products: Array<Product>;
+};
+
+export type BrandFilterInput = {
+  and?: InputMaybe<Array<BrandFilterInput>>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<BrandFilterInput>>;
+  products?: InputMaybe<ListFilterInputTypeOfProductFilterInput>;
+};
+
+export type BrandSortInput = {
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+};
+
+export type Category = {
+  __typename?: 'Category';
+  id: Scalars['Int']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  products: Array<Product>;
+};
+
+export type CategoryFilterInput = {
+  and?: InputMaybe<Array<CategoryFilterInput>>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<CategoryFilterInput>>;
+  products?: InputMaybe<ListFilterInputTypeOfProductFilterInput>;
+};
+
+export type CategorySortInput = {
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+};
 
 export type DecimalOperationFilterInput = {
   eq?: InputMaybe<Scalars['Decimal']['input']>;
@@ -86,6 +157,13 @@ export type IntOperationFilterInput = {
   nlte?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type ListFilterInputTypeOfProductFilterInput = {
+  all?: InputMaybe<ProductFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<ProductFilterInput>;
+  some?: InputMaybe<ProductFilterInput>;
+};
+
 export type LoginInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -93,11 +171,23 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addBrand: Brand;
+  addCategory: Category;
   addProduct: Product;
   addRegister: AdminPayloadBase;
   login: AdminPayloadBase;
   removeProductsById: Scalars['Boolean']['output'];
   update: UpdateProductPayload;
+};
+
+
+export type MutationAddBrandArgs = {
+  brandInput: AddBrandInput;
+};
+
+
+export type MutationAddCategoryArgs = {
+  categoryInput: AddCategoryInput;
 };
 
 
@@ -140,39 +230,54 @@ export type PageInfo = {
 
 export type Product = {
   __typename?: 'Product';
-  cmimiIBlerjes?: Maybe<Scalars['Decimal']['output']>;
-  cmimiIShitjes?: Maybe<Scalars['Decimal']['output']>;
-  fitimi?: Maybe<Scalars['Decimal']['output']>;
+  brand?: Maybe<Brand>;
+  brandId: Scalars['Int']['output'];
+  category?: Maybe<Category>;
+  categoryId: Scalars['Int']['output'];
+  code?: Maybe<Scalars['String']['output']>;
+  color?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
-  kodi?: Maybe<Scalars['String']['output']>;
-  masa?: Maybe<Scalars['String']['output']>;
-  ngjyra?: Maybe<Scalars['String']['output']>;
-  sasia?: Maybe<Scalars['Decimal']['output']>;
-  tipi?: Maybe<Scalars['String']['output']>;
+  pictureUrl?: Maybe<Scalars['String']['output']>;
+  profit?: Maybe<Scalars['Decimal']['output']>;
+  purchasePrice?: Maybe<Scalars['Decimal']['output']>;
+  quantity?: Maybe<Scalars['Decimal']['output']>;
+  retailPrice?: Maybe<Scalars['Decimal']['output']>;
+  size?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductFilterInput = {
   and?: InputMaybe<Array<ProductFilterInput>>;
-  cmimiIBlerjes?: InputMaybe<DecimalOperationFilterInput>;
-  cmimiIShitjes?: InputMaybe<DecimalOperationFilterInput>;
+  brand?: InputMaybe<BrandFilterInput>;
+  brandId?: InputMaybe<IntOperationFilterInput>;
+  category?: InputMaybe<CategoryFilterInput>;
+  categoryId?: InputMaybe<IntOperationFilterInput>;
+  code?: InputMaybe<StringOperationFilterInput>;
+  color?: InputMaybe<StringOperationFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
-  kodi?: InputMaybe<StringOperationFilterInput>;
-  masa?: InputMaybe<StringOperationFilterInput>;
-  ngjyra?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<ProductFilterInput>>;
-  sasia?: InputMaybe<DecimalOperationFilterInput>;
-  tipi?: InputMaybe<StringOperationFilterInput>;
+  pictureUrl?: InputMaybe<StringOperationFilterInput>;
+  purchasePrice?: InputMaybe<DecimalOperationFilterInput>;
+  quantity?: InputMaybe<DecimalOperationFilterInput>;
+  retailPrice?: InputMaybe<DecimalOperationFilterInput>;
+  size?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type ProductSortInput = {
-  cmimiIBlerjes?: InputMaybe<SortEnumType>;
-  cmimiIShitjes?: InputMaybe<SortEnumType>;
+  brand?: InputMaybe<BrandSortInput>;
+  brandId?: InputMaybe<SortEnumType>;
+  category?: InputMaybe<CategorySortInput>;
+  categoryId?: InputMaybe<SortEnumType>;
+  code?: InputMaybe<SortEnumType>;
+  color?: InputMaybe<SortEnumType>;
+  description?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
-  kodi?: InputMaybe<SortEnumType>;
-  masa?: InputMaybe<SortEnumType>;
-  ngjyra?: InputMaybe<SortEnumType>;
-  sasia?: InputMaybe<SortEnumType>;
-  tipi?: InputMaybe<SortEnumType>;
+  pictureUrl?: InputMaybe<SortEnumType>;
+  purchasePrice?: InputMaybe<SortEnumType>;
+  quantity?: InputMaybe<SortEnumType>;
+  retailPrice?: InputMaybe<SortEnumType>;
+  size?: InputMaybe<SortEnumType>;
 };
 
 /** A connection to a list of items. */
@@ -197,8 +302,28 @@ export type ProductsAsyncEdge = {
 
 export type Query = {
   __typename?: 'Query';
+  administrators: Array<Administrator>;
+  brands: Array<Brand>;
+  categories: Array<Category>;
   productById: Product;
   productsAsync?: Maybe<ProductsAsyncConnection>;
+};
+
+
+export type QueryAdministratorsArgs = {
+  order?: InputMaybe<Array<AdministratorSortInput>>;
+  where?: InputMaybe<AdministratorFilterInput>;
+};
+
+
+export type QueryBrandsArgs = {
+  order?: InputMaybe<Array<BrandSortInput>>;
+  where?: InputMaybe<BrandFilterInput>;
+};
+
+
+export type QueryCategoriesArgs = {
+  where?: InputMaybe<CategoryFilterInput>;
 };
 
 
@@ -253,41 +378,70 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null, fitimi?: any | null, id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', brandId: number, categoryId: number, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, description?: string | null, id: number, code?: string | null, size?: string | null, color?: string | null, pictureUrl?: string | null, quantity?: any | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', id: number, name?: string | null }> };
+
+export type GetBrandsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBrandsQuery = { __typename?: 'Query', brands: Array<{ __typename?: 'Brand', id: number, name?: string | null }> };
 
 export type SearchProductsQueryVariables = Exact<{
-  kodi?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type SearchProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', edges?: Array<{ __typename?: 'ProductsAsyncEdge', node: { __typename?: 'Product', kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIShitjes?: any | null, cmimiIBlerjes?: any | null, fitimi?: any | null } }> | null } | null };
+export type SearchProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', edges?: Array<{ __typename?: 'ProductsAsyncEdge', node: { __typename?: 'Product', code?: string | null, size?: string | null, color?: string | null, quantity?: any | null, retailPrice?: any | null, purchasePrice?: any | null, profit?: any | null } }> | null } | null };
 
 export type AddProductssMutationVariables = Exact<{
-  kodi: Scalars['String']['input'];
-  masa: Scalars['String']['input'];
-  sasia: Scalars['Decimal']['input'];
-  tipi: Scalars['String']['input'];
-  ngjyra: Scalars['String']['input'];
-  cmimiIShitjes: Scalars['Decimal']['input'];
-  cmimiIBlerjes: Scalars['Decimal']['input'];
+  code: Scalars['String']['input'];
+  size: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  quantity: Scalars['Decimal']['input'];
+  color: Scalars['String']['input'];
+  retailPrice: Scalars['Decimal']['input'];
+  purchasePrice: Scalars['Decimal']['input'];
+  brandId: Scalars['Int']['input'];
+  categoryId: Scalars['Int']['input'];
+  image: Scalars['Upload']['input'];
 }>;
 
 
-export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null } };
+export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrl?: string | null } };
+
+export type AddBrandAsyncMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type AddBrandAsyncMutation = { __typename?: 'Mutation', addBrand: { __typename?: 'Brand', id: number, name?: string | null } };
+
+export type AddCategoryAsyncMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type AddCategoryAsyncMutation = { __typename?: 'Mutation', addCategory: { __typename?: 'Category', id: number, name?: string | null } };
 
 export type EditProductMutationVariables = Exact<{
-  kodi: Scalars['String']['input'];
-  masa: Scalars['String']['input'];
-  sasia: Scalars['Decimal']['input'];
-  tipi: Scalars['String']['input'];
-  ngjyra: Scalars['String']['input'];
-  cmimiIShitjes: Scalars['Decimal']['input'];
-  cmimiIBlerjes: Scalars['Decimal']['input'];
+  code: Scalars['String']['input'];
+  size: Scalars['String']['input'];
+  quantity: Scalars['Decimal']['input'];
+  description: Scalars['String']['input'];
+  color: Scalars['String']['input'];
+  retailPrice: Scalars['Decimal']['input'];
+  purchasePrice: Scalars['Decimal']['input'];
   id?: InputMaybe<Scalars['Int']['input']>;
+  brandId: Scalars['Int']['input'];
+  categoryId: Scalars['Int']['input'];
 }>;
 
 
-export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, kodi?: string | null, masa?: string | null, ngjyra?: string | null, sasia?: any | null, tipi?: string | null, cmimiIBlerjes?: any | null, cmimiIShitjes?: any | null } } };
+export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number } } };
 
 export type DeleteProductMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -308,15 +462,18 @@ export const GetProductsDocument = gql`
     query getProducts($cursor: String, $first: Int) {
   productsAsync(first: $first, after: $cursor, order: {id: DESC}) {
     nodes {
-      cmimiIBlerjes
-      cmimiIShitjes
-      fitimi
+      brandId
+      categoryId
+      purchasePrice
+      retailPrice
+      profit
+      description
       id
-      kodi
-      masa
-      ngjyra
-      sasia
-      tipi
+      code
+      size
+      color
+      pictureUrl
+      quantity
     }
     pageInfo {
       endCursor
@@ -338,19 +495,56 @@ export const GetProductsDocument = gql`
       super(apollo);
     }
   }
+export const GetCategoriesDocument = gql`
+    query getCategories {
+  categories {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetCategoriesGQL extends Apollo.Query<GetCategoriesQuery, GetCategoriesQueryVariables> {
+    document = GetCategoriesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetBrandsDocument = gql`
+    query getBrands {
+  brands {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetBrandsGQL extends Apollo.Query<GetBrandsQuery, GetBrandsQueryVariables> {
+    document = GetBrandsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const SearchProductsDocument = gql`
-    query searchProducts($kodi: String) {
-  productsAsync(where: {kodi: {eq: $kodi}}) {
+    query searchProducts($code: String) {
+  productsAsync(where: {code: {eq: $code}}) {
     edges {
       node {
-        kodi
-        masa
-        ngjyra
-        sasia
-        tipi
-        cmimiIShitjes
-        cmimiIBlerjes
-        fitimi
+        code
+        size
+        color
+        quantity
+        retailPrice
+        purchasePrice
+        profit
       }
     }
   }
@@ -368,18 +562,21 @@ export const SearchProductsDocument = gql`
     }
   }
 export const AddProductssDocument = gql`
-    mutation addProductss($kodi: String!, $masa: String!, $sasia: Decimal!, $tipi: String!, $ngjyra: String!, $cmimiIShitjes: Decimal!, $cmimiIBlerjes: Decimal!) {
+    mutation addProductss($code: String!, $size: String!, $description: String!, $quantity: Decimal!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $brandId: Int!, $categoryId: Int!, $image: Upload!) {
   addProduct(
-    input: {kodi: $kodi, masa: $masa, ngjyra: $ngjyra, sasia: $sasia, tipi: $tipi, cmimiIShitjes: $cmimiIShitjes, cmimiIBlerjes: $cmimiIBlerjes}
+    input: {code: $code, size: $size, color: $color, description: $description, quantity: $quantity, retailPrice: $retailPrice, purchasePrice: $purchasePrice, categoryId: $categoryId, brandId: $brandId, image: $image}
   ) {
     id
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIBlerjes
-    cmimiIShitjes
+    code
+    size
+    color
+    description
+    quantity
+    purchasePrice
+    retailPrice
+    brandId
+    categoryId
+    pictureUrl
   }
 }
     `;
@@ -394,20 +591,60 @@ export const AddProductssDocument = gql`
       super(apollo);
     }
   }
+export const AddBrandAsyncDocument = gql`
+    mutation AddBrandAsync($name: String!) {
+  addBrand(brandInput: {name: $name}) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddBrandAsyncGQL extends Apollo.Mutation<AddBrandAsyncMutation, AddBrandAsyncMutationVariables> {
+    document = AddBrandAsyncDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddCategoryAsyncDocument = gql`
+    mutation AddCategoryAsync($name: String!) {
+  addCategory(categoryInput: {name: $name}) {
+    id
+    name
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddCategoryAsyncGQL extends Apollo.Mutation<AddCategoryAsyncMutation, AddCategoryAsyncMutationVariables> {
+    document = AddCategoryAsyncDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const EditProductDocument = gql`
-    mutation editProduct($kodi: String!, $masa: String!, $sasia: Decimal!, $tipi: String!, $ngjyra: String!, $cmimiIShitjes: Decimal!, $cmimiIBlerjes: Decimal!, $id: Int) {
+    mutation editProduct($code: String!, $size: String!, $quantity: Decimal!, $description: String!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $id: Int, $brandId: Int!, $categoryId: Int!) {
   update(
-    input: {kodi: $kodi, masa: $masa, ngjyra: $ngjyra, sasia: $sasia, tipi: $tipi, cmimiIShitjes: $cmimiIShitjes, cmimiIBlerjes: $cmimiIBlerjes, id: $id}
+    input: {code: $code, size: $size, color: $color, description: $description, quantity: $quantity, retailPrice: $retailPrice, purchasePrice: $purchasePrice, id: $id, categoryId: $categoryId, brandId: $brandId}
   ) {
     products {
       id
-      kodi
-      masa
-      ngjyra
-      sasia
-      tipi
-      cmimiIBlerjes
-      cmimiIShitjes
+      code
+      size
+      color
+      description
+      quantity
+      purchasePrice
+      retailPrice
+      brandId
+      categoryId
     }
   }
 }

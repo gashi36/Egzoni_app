@@ -54,7 +54,7 @@ namespace Egzoni_app.Admin
                 throw new ArgumentNullException("user.Username", "Username is null.");
             }
         }
-        private string GenerateJwtToken(string username, IConfiguration _config)
+        private static string GenerateJwtToken(string username, IConfiguration _config)
         {
             var key = _config["Jwt:Key"];
             if (key == null)

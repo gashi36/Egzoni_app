@@ -7,32 +7,40 @@ import {
   Product,
   DeleteProductGQL,
   SearchProductsGQL,
+  AddBrandAsyncGQL,
+  AddCategoryAsyncGQL,
+  GetBrandsGQL,
+  GetCategoriesGQL,
+  Category,
+  Brand,
 } from '../../generated/graphql';
-import { Subject } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthGuard } from '../auth.guard';
+import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'app-carpets',
   templateUrl: './carpets.component.html',
   styleUrls: ['./carpets.component.css'],
 })
 export class CarpetsComponent implements OnInit {
-  [x: string]: any;
   products: Product[] = [];
-  imagePath: string = 'assets/egzoni.png';
+  categories: Category[] = [];
+  brands: Brand[] = [];
+  imagePathLogo: string = 'assets/egzoni.png';
   isEdit: boolean = false;
   cursor: string | null = null;
   hasNextPage: boolean = false;
   private authSecretKey = 'Bearer Token';
-
   isLoadingProducts: boolean = false;
   isLoadingMoreProducts: boolean = false;
   isEditingProduct: boolean = false;
   isAddingProduct: boolean = false;
   isDeletingProduct: boolean = false;
   isSearchingProduct: boolean = false;
+  isAddingBrand: boolean = false;
+  isAddingCategory: boolean = false;
 
   searchProductForm: FormGroup = new FormGroup({
     search: new FormControl(''),
@@ -40,14 +48,23 @@ export class CarpetsComponent implements OnInit {
 
   addProductForm = new FormGroup({
     id: new FormControl<number | undefined>(undefined),
-    kodi: new FormControl(''),
-    masa: new FormControl(''),
-    ngjyra: new FormControl(''),
-    sasia: new FormControl(''),
-    tipi: new FormControl(''),
-    cmimiIBlerjes: new FormControl(''),
-    cmimiIShitjes: new FormControl(''),
+    code: new FormControl(''),
+    size: new FormControl(''),
+    color: new FormControl(''),
+    description: new FormControl(''),
+    quantity: new FormControl(''),
+    purchasePrice: new FormControl(''),
+    retailPrice: new FormControl(''),
+    categoryId: new FormControl<'' | undefined>(undefined),
+    brandId: new FormControl<'' | undefined>(undefined),
+    image: new FormControl<File | undefined>(undefined, [
+      Validators.required,
+      Validators.minLength(5),
+    ]),
   });
+
+  addBrandForm = new FormGroup({ addBrand: new FormControl('') });
+  addCategoryForm = new FormGroup({ addCategory: new FormControl('') });
 
   constructor(
     private router: Router,
@@ -56,49 +73,126 @@ export class CarpetsComponent implements OnInit {
     private addpro: AddProductssGQL,
     private deleteprod: DeleteProductGQL,
     private searchprod: SearchProductsGQL,
+    private addBrand: AddBrandAsyncGQL,
+    private addCategory: AddCategoryAsyncGQL,
+    private getbrands: GetBrandsGQL,
+    private getcategories: GetCategoriesGQL,
     private authGuard: AuthGuard
   ) {}
 
   ngOnInit(): void {
     this.getAllProducts();
+    this.getAllBrands();
+    this.getAllCategories();
+  }
+
+  getAllCategories(): void {
+    this.getcategories
+      .watch()
+      .valueChanges.pipe(map((result: any) => result.data.categories))
+      .subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            this.categories = data;
+          } else {
+            console.error('No categories found');
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching categories:', error);
+        },
+      });
+  }
+
+  getAllBrands(): void {
+    this.getbrands
+      .watch()
+      .valueChanges.pipe(map((result: any) => result.data.brands))
+      .subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            this.brands = data;
+          } else {
+            console.error('No brands found');
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching brands:', error);
+        },
+      });
+  }
+
+  addBrandAsync(): void {
+    const brandName = this.addBrandForm.controls.addBrand.value ?? '';
+    if (brandName) {
+      this.addBrand.mutate({ name: brandName }).subscribe({
+        next: (data) => {
+          console.log('Brand added:', data);
+          this.getAllBrands(); // Refresh the brands list
+        },
+        error: (error) => {
+          console.log('Error adding brand:', error);
+        },
+      });
+    }
+  }
+
+  addCategoryAsync(): void {
+    const categoryName = this.addCategoryForm.controls.addCategory.value ?? '';
+    if (categoryName) {
+      this.addCategory.mutate({ name: categoryName }).subscribe({
+        next: (data) => {
+          console.log('Category added:', data);
+          this.getAllCategories(); // Refresh the categories list
+        },
+        error: (error) => {
+          console.log('Error adding category:', error);
+        },
+      });
+    }
   }
 
   getAllProducts(first: number = 15): void {
     this.isLoadingProducts = true;
-    setTimeout(() => {
-      this.getproducts
-        .watch({ first, cursor: this.cursor })
-        .valueChanges.pipe(map((result: any) => result.data.productsAsync))
-        .subscribe({
-          next: (data) => {
-            this.isLoadingProducts = false;
-            if (data && data.nodes) {
-              this.products = data.nodes;
-
-              if (data.pageInfo) {
-                this.cursor = data.pageInfo.endCursor ?? null;
-                this.hasNextPage = data.pageInfo.hasNextPage;
-              }
-            } else {
-              console.error('No products found');
+    this.getproducts
+      .watch({ first, cursor: this.cursor })
+      .valueChanges.pipe(map((result: any) => result.data.productsAsync))
+      .subscribe({
+        next: (data) => {
+          this.isLoadingProducts = false;
+          if (data && data.nodes) {
+            this.products = data.nodes;
+            if (data.pageInfo) {
+              this.cursor = data.pageInfo.endCursor ?? null;
+              this.hasNextPage = data.pageInfo.hasNextPage;
             }
-          },
-          error: (error) => {
-            this.isLoadingProducts = false;
-            console.error('Error fetching products:', error);
-          },
-        });
-    }, 500);
+          } else {
+            console.error('No products found');
+          }
+        },
+        error: (error) => {
+          this.isLoadingProducts = false;
+          console.error('Error fetching products:', error);
+        },
+      });
   }
 
   loadMoreProducts(): void {
     if (this.hasNextPage) {
       this.isLoadingMoreProducts = true;
-      setTimeout(() => {
-        this.getAllProducts();
-        this.isLoadingMoreProducts = false;
-      }, 500);
+      this.getAllProducts();
+      this.isLoadingMoreProducts = false;
     }
+  }
+  getBrandName(brandId: number): string | undefined {
+    const brand = this.brands.find((brand) => brand.id === brandId);
+    return brand?.name!;
+  }
+  getCategoryName(categoryId: number): string | undefined {
+    const category = this.categories.find(
+      (category) => category.id === categoryId
+    );
+    return category?.name!;
   }
 
   editProduct(id: number): void {
@@ -112,16 +206,31 @@ export class CarpetsComponent implements OnInit {
     this.isEdit = true;
 
     this.addProductForm.controls.id.setValue(id);
-    this.addProductForm.controls.kodi.setValue(product.kodi!);
-    this.addProductForm.controls.masa.setValue(product.masa!);
-    this.addProductForm.controls.ngjyra.setValue(product.ngjyra!);
-    this.addProductForm.controls.sasia.setValue(product.sasia);
-    this.addProductForm.controls.tipi.setValue(product.tipi!);
-    this.addProductForm.controls.cmimiIBlerjes.setValue(product.cmimiIBlerjes);
-    this.addProductForm.controls.cmimiIShitjes.setValue(product.cmimiIShitjes);
-  }
+    this.addProductForm.controls.code.setValue(product.code!);
+    this.addProductForm.controls.size.setValue(product.size!);
+    this.addProductForm.controls.color.setValue(product.color!);
+    this.addProductForm.controls.quantity.setValue(product.quantity);
+    this.addProductForm.controls.purchasePrice.setValue(product.purchasePrice);
+    this.addProductForm.controls.retailPrice.setValue(product.retailPrice);
 
+    if (product.description) {
+      this.addProductForm.controls.description.setValue(product.description);
+    } else {
+      this.addProductForm.controls.description.setValue('');
+    }
+  }
   addProductsAsync(): void {
+    const formValues = this.addProductForm.value;
+    const image = formValues.image;
+    const brandId = parseInt(
+      this.addProductForm.controls.brandId.value ?? '',
+      10
+    );
+    const categoryId = parseInt(
+      this.addProductForm.controls.categoryId.value ?? '',
+      10
+    );
+
     if (this.addProductForm.valid) {
       this.isAddingProduct = true;
       setTimeout(() => {
@@ -129,20 +238,23 @@ export class CarpetsComponent implements OnInit {
           this.editProd
             .mutate({
               id: this.addProductForm.controls.id.value,
-              kodi: this.addProductForm.controls.kodi.value ?? '',
-              masa: this.addProductForm.controls.masa.value ?? '',
-              ngjyra: this.addProductForm.controls.ngjyra.value ?? '',
-              sasia:
-                parseFloat(this.addProductForm.controls.sasia.value ?? '') || 0,
-              tipi: this.addProductForm.controls.tipi.value ?? '',
-              cmimiIBlerjes:
+              code: this.addProductForm.controls.code.value ?? '',
+              size: this.addProductForm.controls.size.value ?? '',
+              color: this.addProductForm.controls.color.value ?? '',
+              quantity:
+                parseFloat(this.addProductForm.controls.quantity.value ?? '') ||
+                0,
+              purchasePrice:
                 parseFloat(
-                  this.addProductForm.controls.cmimiIBlerjes.value ?? ''
+                  this.addProductForm.controls.purchasePrice.value ?? ''
                 ) || 0,
-              cmimiIShitjes:
+              retailPrice:
                 parseFloat(
-                  this.addProductForm.controls.cmimiIShitjes.value ?? ''
+                  this.addProductForm.controls.retailPrice.value ?? ''
                 ) || 0,
+              description: this.addProductForm.controls.description.value ?? '',
+              brandId: brandId,
+              categoryId: categoryId,
             })
             .subscribe({
               next: ({ data }) => {
@@ -159,65 +271,106 @@ export class CarpetsComponent implements OnInit {
             });
         } else {
           this.addpro
-            .mutate({
-              kodi: this.addProductForm.controls.kodi.value ?? '',
-              masa: this.addProductForm.controls.masa.value ?? '',
-              ngjyra: this.addProductForm.controls.ngjyra.value ?? '',
-              sasia:
-                parseFloat(this.addProductForm.controls.sasia.value ?? '') || 0,
-              tipi: this.addProductForm.controls.tipi.value ?? '',
-              cmimiIBlerjes:
-                parseFloat(
-                  this.addProductForm.controls.cmimiIBlerjes.value ?? ''
-                ) || 0,
-              cmimiIShitjes:
-                parseFloat(
-                  this.addProductForm.controls.cmimiIShitjes.value ?? ''
-                ) || 0,
-            })
+            .mutate(
+              {
+                code: formValues.code ?? '',
+                size: formValues.size ?? '',
+                color: formValues.color ?? '',
+                description: formValues.description ?? '',
+                quantity: parseFloat(formValues.quantity ?? '') || 0,
+                purchasePrice: parseFloat(formValues.purchasePrice ?? '') || 0,
+                retailPrice: parseFloat(formValues.retailPrice ?? '') || 0,
+                categoryId: categoryId,
+                brandId: brandId,
+                image,
+              },
+              {
+                context: {
+                  useMultipart: true,
+                },
+              }
+            )
             .subscribe({
               next: ({ data }) => {
                 console.log('Mutation Done');
+
+                // Check and add brand if provided
+                if (formValues.brandId) {
+                  const existingBrand = this.brands.find(
+                    (b) => b.id === parseInt(formValues.brandId ?? '', 10)
+                  );
+                  if (!existingBrand) {
+                    // If brand doesn't exist in the list, add it
+                    this.addBrandAsync();
+                  }
+                }
+
+                // Check and add category if provided
+                if (formValues.categoryId) {
+                  const existingCategory = this.categories.find(
+                    (c) => c.id === parseInt(formValues.categoryId ?? '', 10)
+                  );
+                  if (!existingCategory) {
+                    // If category doesn't exist in the list, add it
+                    this.addCategoryAsync();
+                  }
+                }
+
                 this.isAddingProduct = false;
-                window.location.reload();
+                window.location.reload(); // Refresh page or update products list
               },
               error: (error) => {
                 this.isAddingProduct = false;
-                console.log(error);
+                console.error('ApolloError:', error);
+                if (error.graphQLErrors) {
+                  console.error('[[GraphQL Errors:]]', error.graphQLErrors);
+                }
+                if (error.networkError) {
+                  console.error('Network Error:', error.networkError);
+                }
+                if (error.clientErrors) {
+                  console.error('Client Errors:', error.clientErrors);
+                }
+                if (error.protocolErrors) {
+                  console.error('Protocol Errors:', error.protocolErrors);
+                }
+                if (!this.image) {
+                  console.error('Image is missing');
+                  return;
+                }
               },
             });
         }
       }, 500);
     }
   }
+  get image() {
+    return this.addProductForm.controls?.image;
+  }
+  setFile(event: any): void {
+    this.image.setValue(event.target.files[0]);
+  }
 
   deleteProduct(id: number): void {
     this.isDeletingProduct = true;
-    setTimeout(() => {
-      this.deleteprod
-        .mutate({
-          id: id,
-        })
-        .subscribe({
-          next: ({ data }) => {
-            console.log('Product removed');
-            this.isDeletingProduct = false;
-            window.location.reload();
-          },
-          error: (error) => {
-            this.isDeletingProduct = false;
-            console.log(error);
-          },
-        });
-    }, 500);
+    this.deleteprod.mutate({ id }).subscribe({
+      next: () => {
+        console.log('Product removed');
+        this.isDeletingProduct = false;
+        window.location.reload();
+      },
+      error: (error) => {
+        this.isDeletingProduct = false;
+        console.error('Error deleting product:', error);
+      },
+    });
   }
-
-  searchProduct(kodi: string): void {
+  searchProduct(code: string): void {
     this.isSearchingProduct = true;
     setTimeout(() => {
       this.searchprod
         .fetch({
-          kodi: kodi,
+          code: code,
         })
         .subscribe({
           next: ({ data }) => {

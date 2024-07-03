@@ -7,6 +7,7 @@ import { CarpetsRoutingModule } from './carpets-routing.module';
 import { RouterModule } from '@angular/router';
 import { AdminComponent } from '../admin/admin.component';
 import { AdminModule } from '../admin/admin.module';
+import { AuthGuard } from '../auth.guard';
 
 @NgModule({
   declarations: [CarpetsComponent],
@@ -16,5 +17,6 @@ import { AdminModule } from '../admin/admin.module';
     RouterModule,
     CarpetsRoutingModule,
   ],
+  providers: [AuthGuard],
 })
 export class CarpetsModule {}

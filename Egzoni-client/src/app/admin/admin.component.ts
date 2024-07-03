@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LoginGQL } from '../../generated/graphql';
 import { Router } from '@angular/router';
+import { AuthGuard } from '../auth.guard';
 
 @Component({
   selector: 'app-admin',
@@ -15,17 +16,20 @@ export class AdminComponent {
   errorMessage: string = '';
   private isAuthenticated = false;
   private authSecretKey = 'Bearer Token';
-  constructor(private login: LoginGQL, private router: Router) {
+
+  constructor(
+    private login: LoginGQL,
+    private router: Router,
+    private authGuard: AuthGuard // Inject AuthGuard here
+  ) {
     this.isAuthenticated = !!localStorage.getItem(this.authSecretKey);
   }
 
   onSubmit(): void {
-    // Reset error flags
     this.usernameInvalid = false;
     this.passwordInvalid = false;
     this.errorMessage = '';
 
-    // Check if either username or password is empty
     if (!this.username.trim()) {
       this.usernameInvalid = true;
     }
@@ -33,7 +37,6 @@ export class AdminComponent {
       this.passwordInvalid = true;
     }
 
-    // If either field is invalid, display an error
     if (this.usernameInvalid || this.passwordInvalid) {
       this.errorMessage = 'Please enter a valid username and password.';
       return;
@@ -52,12 +55,11 @@ export class AdminComponent {
         next: ({ data }) => {
           const token = data?.login?.administrator?.token;
           if (token) {
-            // Login successful, navigate to the carpets route
-            this.router.navigateByUrl('carpets');
-            console.log('login successful', data);
+            console.log('Login successful. Token:', token);
             localStorage.setItem(this.authSecretKey, token);
+            this.router.navigateByUrl('carpets');
           } else {
-            // Login failed, display an error message
+            console.log('Login failed. No token received.');
             this.errorMessage = 'Invalid username or password.';
           }
         },
@@ -67,11 +69,13 @@ export class AdminComponent {
         },
       });
   }
+
   isAuthenticatedUser(): boolean {
     return this.isAuthenticated;
   }
+
   logout(): void {
-    localStorage.removeItem(this.authSecretKey);
+    this.authGuard.logout(); // Call AuthGuard's logout function
     this.isAuthenticated = false;
   }
 }

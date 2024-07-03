@@ -12,6 +12,8 @@ namespace Egzoni_app.Database
     {
         public DbSet<Administrator> Admins { get; set; }
         public DbSet<Product> Products { get; set; } = default!;
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
     }
 }

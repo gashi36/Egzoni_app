@@ -1,48 +1,112 @@
-/* Custom styles */
-.dark {
-  background-color: #1a202c;
-  color: #fff;
+.text-primary {
+  color: #ff0000 !important;
 }
 
-.container {
-  font-family: 'Arial', sans-serif;
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
 }
 
-.table-auto {
-  border-collapse: collapse;
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
 }
 
-.table-auto th,
-.table-auto td {
-  border: 1px solid #e2e8f0;
+.custom-input {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
 }
 
-.table-auto th {
-  background-color: #edf2f7;
+.custom-table thead {
+  background-color: #007bff;
+  color: white;
 }
 
-.table-dark th {
-  background-color: #2d3748;
-  color: #fff;
+.custom-table tbody tr {
+  background-color: #f8f9fa;
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+.btn-outline-success {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-outline-info {
+  border-color: #17a2b8;
+  color: #17a2b8;
+}
+
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-outline-warning {
+  border-color: #ffc107;
+  color: #ffc107;
+}
+
+.btn-outline-warning:hover {
+  background-color: #ffc107;
+  color: white;
+}
+
+body {
+  background-color: #f8f9fa;
+}
+
+.custom-input {
+  border-radius: 0.375rem;
+  border: 1px solid #ced4da;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.btn-outline-danger,
+.btn-outline-info,
+.btn-outline-success,
+.btn-outline-warning {
+  border-width: 2px;
+}
+
+.table-primary {
+  background-color: #e9ecef;
+}
+
+.table {
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.table thead th {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody tr:hover {
+  background-color: #f1f3f5;
+}
+
+.spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.25rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  cursor: pointer;
-  display: inline-block;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  /* Add margin for spacing between buttons */
+  transition: background-color 0.3s ease;
 }
 
-.btn:hover {
-  opacity: 0.9;
-}
-
-.btn-delete {
-  background-color: #f56565;
-  color: white;
+h1,
+h2,
+h4 {
+  color: #343a40;
 }

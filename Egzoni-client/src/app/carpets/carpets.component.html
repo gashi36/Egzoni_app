@@ -1,76 +1,114 @@
-<div class="container text-center p-5">
-  <div class="row justify-content-between">
-    <h1 class="col-md-3"><b style="color: red;">Egzoni</b></h1>
-    <button class="btn btn-danger col-md-1" (click)="logout()">Shkyqu</button>
+<div class="container p-5">
+  <div class="row justify-content-between align-items-center mb-4">
+    <h1 class="col-md-3 text-primary"><b>Egzoni</b></h1>
+    <button class="btn btn-outline-danger col-md-2" (click)="logout()">Shkyqu</button>
   </div>
-  <h2>{{isEdit ? 'Ndrysho' : 'Regjistro'}}</h2>
-  <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="kodi">Kodi:</label>
-          <input type="text" id="kodi" class="form-control" style="background-color: beige;" formControlName="kodi"
-            placeholder="Kodi">
-        </div>
-        <div class="form-group">
-          <label for="masa">Masa:</label>
-          <input type="text" id="masa" class="form-control" style="background-color: beige;" formControlName="masa"
-            placeholder="Masa">
-        </div>
-        <div class="form-group">
-          <label for="sasia">Sasia:</label>
-          <input type="text" id="sasia" class="form-control" style="background-color: beige;" formControlName="sasia"
-            placeholder="Sasia">
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="ngjyra">Ngjyra:</label>
-          <input type="text" id="ngjyra" class="form-control" style="background-color: beige;" formControlName="ngjyra"
-            placeholder="Ngjyra">
-        </div>
-        <div class="form-group">
-          <label for="tipi">Tipi:</label>
-          <input type="text" id="tipi" class="form-control" style="background-color: beige;" formControlName="tipi"
-            placeholder="Tipi">
-        </div>
-        <div class="form-group">
-          <label for="cmimiIBlerjes">ÇMIMI I BLERJES:</label>
-          <input type="text" id="cmimiIBlerjes " class="form-control" style="background-color: beige;"
-            formControlName="cmimiIBlerjes" placeholder="Çmimi i blerjes">
-        </div>
-        <div class="form-group">
-          <label for="cmimiIShitjes">ÇMIMI I SHITJES:</label>
-          <input type="text" id="cmimiIShitjes" class="form-control" style="background-color: beige;"
-            formControlName="cmimiIShitjes" placeholder="Çmimi i shitjes">
-        </div>
 
-        <button type="submit" class="btn btn-success mt-3" [disabled]="isAddingProduct">
-          <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status"
-            aria-hidden="true"></span>
-          {{isEdit ? 'Ndrysho' : 'Regjistro'}}
-        </button>
+  <!-- Add Brand Form -->
+  <form [formGroup]="addBrandForm" (submit)="addBrandAsync()" class="mb-4">
+    <div class="row">
+      <div class="col-md-3">
+        <input type="text" formControlName="addBrand" class="form-control custom-input" placeholder="Shto brand">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingBrand">Shto Brand</button>
       </div>
     </div>
   </form>
 
-  <h4 class="col-md-3 p-2">Kerko sipas kodit</h4>
-  <div class="searchbar row col-md-12">
-    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.controls['search'].value)"
-      class="row">
-      <div class="col-md-8">
-        <input class="form-control p-2" type="text" formControlName="search" style="background-color: beige;"
-          placeholder="Kerko">
+  <!-- Add Category Form -->
+  <form [formGroup]="addCategoryForm" (submit)="addCategoryAsync()" class="mb-4">
+    <div class="row">
+      <div class="col-md-3">
+        <input type="text" formControlName="addCategory" class="form-control custom-input" placeholder="Shto kategori">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-info py-2 px-5" [disabled]="isSearchingProduct">
+        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingCategory">Shto
+          Kategori</button>
+      </div>
+    </div>
+  </form>
+
+  <h2 class="mb-4">{{ isEdit ? 'Ndrysho' : 'Regjistro' }}</h2>
+  <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="code" class="form-label">Kodi:</label>
+          <input type="text" id="code" class="form-control custom-input" formControlName="code" placeholder="code">
+        </div>
+        <div class="form-group mb-3">
+          <label for="size" class="form-label">Masa:</label>
+          <input type="text" id="size" class="form-control custom-input" formControlName="size" placeholder="size">
+        </div>
+        <div class="form-group mb-3">
+          <label for="quantity" class="form-label">Sasia:</label>
+          <input type="text" id="quantity" class="form-control custom-input" formControlName="quantity"
+            placeholder="quantity">
+        </div>
+        <div class="form-group mb-3">
+          <label for="color" class="form-label">Ngjyra:</label>
+          <input type="text" id="color" class="form-control custom-input" formControlName="color" placeholder="color">
+        </div>
+
+      </div>
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="purchasePrice" class="form-label">ÇMIMI I BLERJES:</label>
+          <input type="text" id="purchasePrice" class="form-control custom-input" formControlName="purchasePrice"
+            placeholder="Çmimi i blerjes">
+        </div>
+        <div class="form-group mb-3">
+          <label for="retailPrice" class="form-label">ÇMIMI I SHITJES:</label>
+          <input type="text" id="retailPrice" class="form-control custom-input" formControlName="retailPrice"
+            placeholder="Çmimi i shitjes">
+        </div>
+        <div class="form-group mb-3">
+          <label for="brandId" class="form-label">Brendi:</label>
+          <select id="brandId" name="brandId" class="form-control custom-input" formControlName="brandId" required>
+            <option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</option>
+          </select>
+        </div>
+        <div class="form-group mb-3">
+          <label for="categoryId" class="form-label">Kategoria:</label>
+          <select id="categoryId" name="categoryId" class="form-control custom-input" formControlName="categoryId"
+            required>
+            <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-md-6 mb-4">
+      <label for="image" class="form-label">Fotografia</label>
+      <input type="file" class="form-control custom-input" id="image" (change)="setFile($event)">
+    </div>
+    <div class="form-group mb-3 col-md-6">
+      <label for="description" class="form-label">Pershkrimi:</label>
+      <textarea id="description" class="form-control custom-input" formControlName="description" rows="3"
+        placeholder="Description"></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-success mt-3" [disabled]="isAddingProduct">
+      <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      {{ isEdit ? 'Ndrysho' : 'Regjistro' }}
+    </button>
+  </form>
+
+  <h4 class="col-md-3 p-2 mt-5">Kerko sipas codet</h4>
+  <div class="searchbar row col-md-12 mb-4">
+    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.controls['search'].value)"
+      class="row">
+      <div class="col-md-8 mb-3">
+        <input class="form-control custom-input p-2" type="text" formControlName="search" placeholder="Kerko">
+      </div>
+      <div class="col-md-2 mb-3">
+        <button type="submit" class="btn btn-outline-info py-2 px-5" [disabled]="isSearchingProduct">
           <span *ngIf="isSearchingProduct" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           Kerko
         </button>
       </div>
-      <div class="col-md-2">
-        <button type="button" class="btn btn-danger py-2 px-5" (click)="cancelSearch()">Anulo</button>
+      <div class="col-md-2 mb-3">
+        <button type="button" class="btn btn-outline-danger py-2 px-5" (click)="cancelSearch()">Anulo</button>
       </div>
     </form>
   </div>
@@ -78,38 +116,38 @@
   <hr>
   <h1>Stoku</h1>
   <hr>
+
   <div class="table-responsive mt-5">
-    <table class="table table-striped">
+    <table class="table table-hover custom-table">
       <thead>
-        <tr class="table-dark">
-          <th scope="col">ID</th>
-          <th scope="col">KODI</th>
-          <th scope="col">MASA</th>
-          <th scope="col">SASIA</th>
-          <th scope="col">NGJYRA</th>
-          <th scope="col">TIPI</th>
+        <tr class="table-primary">
+          <th scope="col">code</th>
+          <th scope="col">size</th>
+          <th scope="col">quantity</th>
+          <th scope="col">color</th>
           <th scope="col">ÇMIMI I BLERJES</th>
           <th scope="col">ÇMIMI I SHITJES</th>
-          <th scope="col">FITIMI</th>
+          <th scope="col">profit</th>
+          <th scope="col">Brendi</th>
+          <th scope="col">Kategoria</th>
           <th scope="col"></th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let pro of products">
-          <td class="table-warning">{{pro.id}}</td>
-          <td class="table-warning">{{pro.kodi}}</td>
-          <td class="table-warning">{{pro.masa}}</td>
-          <td class="table-warning">{{pro.sasia}}</td>
-          <td class="table-warning">{{pro.ngjyra}}</td>
-          <td class="table-warning">{{pro.tipi}}</td>
-          <td class="table-warning">{{pro.cmimiIBlerjes}}</td>
-          <td class="table-warning">{{pro.cmimiIShitjes}}</td>
-          <td class="table-warning">{{pro.fitimi}}</td>
-          <td class="table-warning"><button class="btn btn-warning" (click)="editProduct(pro.id)"
-              style="color: white;">Ndrysho</button></td>
-          <td class="table-warning"><button class="btn btn-delete" (click)="deleteProduct(pro.id)"
-              [disabled]="isDeletingProduct">
+          <td>{{pro.code}}</td>
+          <td>{{pro.size}}</td>
+          <td>{{pro.quantity}}</td>
+          <td>{{pro.color}}</td>
+          <td>{{pro.purchasePrice}}</td>
+          <td>{{pro.retailPrice}}</td>
+          <td>{{pro.profit}}</td>
+          <td>{{ getBrandName(pro.brandId) }}</td>
+          <td>{{ getCategoryName(pro.categoryId) }}</td>
+          <td><button class="btn btn-outline-warning" (click)="editProduct(pro.id)">Ndrysho</button></td>
+          <td>
+            <button class="btn btn-outline-danger" (click)="deleteProduct(pro.id)" [disabled]="isDeletingProduct">
               <span *ngIf="isDeletingProduct" class="spinner-border spinner-border-sm" role="status"
                 aria-hidden="true"></span>
               Fshij
@@ -119,8 +157,9 @@
       </tbody>
     </table>
   </div>
+
   <div class="row align-content-center justify-content-center">
-    <button (click)="loadMoreProducts()" class="btn btn-info col-md-2" [disabled]="isLoadingMoreProducts">
+    <button (click)="loadMoreProducts()" class="btn btn-outline-info col-md-2" [disabled]="isLoadingMoreProducts">
       <span *ngIf="isLoadingMoreProducts" class="spinner-border spinner-border-sm" role="status"
         aria-hidden="true"></span>
       Faqja Tjetër

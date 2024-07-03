@@ -7,6 +7,7 @@ using HotChocolate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using HotChocolate.Data;
+using HotChocolate.Authorization;
 namespace Egzoni_app.Products
 {
 

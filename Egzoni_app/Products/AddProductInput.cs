@@ -7,13 +7,17 @@ namespace Egzoni_app.Products
 {
     public record AddProductInput
     (
-        string? Kodi,
-        string? Tipi,
-        string? Masa,
-        decimal? Sasia,
-        string? Ngjyra,
-        decimal? CmimiIBlerjes,
-        decimal? CmimiIShitjes,
-        int? Id
+        string? Code,
+        string? Size,
+        decimal? Quantity,
+        string? Color,
+        string? Description,
+        decimal? PurchasePrice,
+        decimal? RetailPrice,
+        int? Id,
+        [GraphQLType(typeof(NonNullType<UploadType>))] IFile? Image,
+        int? BrandId,
+        int? CategoryId
+
     );
 }

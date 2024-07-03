@@ -1,15 +1,18 @@
 query getProducts($cursor: String, $first: Int) {
   productsAsync(first: $first, after: $cursor, order: { id: DESC }) {
     nodes {
-      cmimiIBlerjes
-      cmimiIShitjes
-      fitimi
+      brandId
+      categoryId
+      purchasePrice
+      retailPrice
+      profit
+      description
       id
-      kodi
-      masa
-      ngjyra
-      sasia
-      tipi
+      code
+      size
+      color
+      pictureUrl
+      quantity
     }
     pageInfo {
       endCursor
@@ -19,86 +22,127 @@ query getProducts($cursor: String, $first: Int) {
     }
   }
 }
-
-query searchProducts($kodi: String) {
-  productsAsync(where: { kodi: { eq: $kodi } }) {
+query getCategories {
+  categories {
+    id
+    name
+  }
+}
+query getBrands {
+  brands {
+    id
+    name
+  }
+}
+query searchProducts($code: String) {
+  productsAsync(where: { code: { eq: $code } }) {
     edges {
       node {
-        kodi
-        masa
-        ngjyra
-        sasia
-        tipi
-        cmimiIShitjes
-        cmimiIBlerjes
-        fitimi
+        code
+        size
+        color
+        quantity
+        retailPrice
+        purchasePrice
+        profit
       }
     }
   }
 }
 
 mutation addProductss(
-  $kodi: String!
-  $masa: String!
-  $sasia: Decimal!
-  $tipi: String!
-  $ngjyra: String!
-  $cmimiIShitjes: Decimal!
-  $cmimiIBlerjes: Decimal!
+  $code: String!
+  $size: String!
+  $description: String!
+  $quantity: Decimal!
+  $color: String!
+  $retailPrice: Decimal!
+  $purchasePrice: Decimal!
+  $brandId: Int!
+  $categoryId: Int!
+  $image: Upload! # Add the pictureUrl variable
 ) {
   addProduct(
     input: {
-      kodi: $kodi
-      masa: $masa
-      ngjyra: $ngjyra
-      sasia: $sasia
-      tipi: $tipi
-      cmimiIShitjes: $cmimiIShitjes
-      cmimiIBlerjes: $cmimiIBlerjes
+      code: $code
+      size: $size
+      color: $color
+      description: $description
+      quantity: $quantity
+      retailPrice: $retailPrice
+      purchasePrice: $purchasePrice
+      categoryId: $categoryId
+      brandId: $brandId
+      image: $image
     }
   ) {
     id
-    kodi
-    masa
-    ngjyra
-    sasia
-    tipi
-    cmimiIBlerjes
-    cmimiIShitjes
+    code
+    size
+    color
+    description
+    quantity
+    purchasePrice
+    retailPrice
+    brandId
+    categoryId
+    pictureUrl
+  }
+}
+
+mutation AddBrandAsync($name: String!) {
+  addBrand(brandInput: { name: $name }) {
+    id
+    name
+  }
+}
+mutation AddCategoryAsync($name: String!) {
+  addCategory(categoryInput: { name: $name }) {
+    id
+    name
   }
 }
 
 mutation editProduct(
-  $kodi: String!
-  $masa: String!
-  $sasia: Decimal!
-  $tipi: String!
-  $ngjyra: String!
-  $cmimiIShitjes: Decimal!
-  $cmimiIBlerjes: Decimal!
+  $code: String!
+  $size: String!
+  $quantity: Decimal!
+  $description: String!
+  $color: String!
+  $retailPrice: Decimal!
+  $purchasePrice: Decimal!
   $id: Int
-) {
+  $brandId: Int!
+  $categoryId: Int!
+) # $image: Upload!
+{
   update(
     input: {
-      kodi: $kodi
-      masa: $masa
-      ngjyra: $ngjyra
-      sasia: $sasia
-      tipi: $tipi
-      cmimiIShitjes: $cmimiIShitjes
-      cmimiIBlerjes: $cmimiIBlerjes
+      code: $code
+      size: $size
+      color: $color
+      description: $description
+      quantity: $quantity
+      retailPrice: $retailPrice
+      purchasePrice: $purchasePrice
       id: $id
+      categoryId: $categoryId
+      brandId: $brandId
+      # image: $image
     }
   ) {
     products {
       id
-      kodi
-      masa
-      ngjyra
-      sasia
-      tipi
-      cmimiIBlerjes
-      cmimiIShitjes
+      code
+      size
+      color
+      description
+      quantity
+      purchasePrice
+      retailPrice
+      brandId
+      categoryId
+      # pictureUrl
     }
   }
 }
