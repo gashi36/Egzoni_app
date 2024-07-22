@@ -1,20 +1,408 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\100\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\100\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\101\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\101\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\102\\Image.jpeg",
+      "PackagePath": "staticwebassets\\images\\102\\Image.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\10\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\10\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\11\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\11\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\12\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\12\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\13\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\13\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\14\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\14\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\15\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\15\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\16\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\16\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\17\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\17\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\18\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\18\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\19\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\19\\Image.jpg"
+    },
+    {
       "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\1\\Image.jpg",
       "PackagePath": "staticwebassets\\images\\1\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\20\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\20\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\21\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\21\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\22\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\22\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\23\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\23\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\24\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\24\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\25\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\25\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\26\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\26\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\27\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\27\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\28\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\28\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\29\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\29\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\30\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\30\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\31\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\31\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\32\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\32\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\33\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\33\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\34\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\34\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\35\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\35\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\36\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\36\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\37\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\37\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\38\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\38\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\39\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\39\\Image.jpg"
     },
     {
       "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\3\\Image.jpg",
       "PackagePath": "staticwebassets\\images\\3\\Image.jpg"
     },
     {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\40\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\40\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\41\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\41\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\42\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\42\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\43\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\43\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\44\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\44\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\45\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\45\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\46\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\46\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\47\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\47\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\48\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\48\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\49\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\49\\Image.jpg"
+    },
+    {
       "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\4\\Image.jpg",
       "PackagePath": "staticwebassets\\images\\4\\Image.jpg"
     },
     {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\50\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\50\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\51\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\51\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\52\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\52\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\53\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\53\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\54\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\54\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\55\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\55\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\56\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\56\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\57\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\57\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\58\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\58\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\59\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\59\\Image.jpg"
+    },
+    {
       "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\5\\Image.jpg",
       "PackagePath": "staticwebassets\\images\\5\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\60\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\60\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\61\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\61\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\62\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\62\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\63\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\63\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\64\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\64\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\65\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\65\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\66\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\66\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\67\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\67\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\68\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\68\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\69\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\69\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\6\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\6\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\70\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\70\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\71\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\71\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\72\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\72\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\73\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\73\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\74\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\74\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\75\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\75\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\76\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\76\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\77\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\77\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\78\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\78\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\79\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\79\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\7\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\7\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\80\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\80\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\81\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\81\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\82\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\82\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\83\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\83\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\84\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\84\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\85\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\85\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\86\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\86\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\87\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\87\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\88\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\88\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\89\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\89\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\8\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\8\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\90\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\90\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\91\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\91\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\92\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\92\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\93\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\93\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\94\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\94\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\95\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\95\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\96\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\96\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\97\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\97\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\98\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\98\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\99\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\99\\Image.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\images\\9\\Image.jpg",
+      "PackagePath": "staticwebassets\\images\\9\\Image.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Egzoni_app.Microsoft.AspNetCore.StaticWebAssets.props",

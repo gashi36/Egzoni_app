@@ -177,7 +177,7 @@ export type Mutation = {
   addRegister: AdminPayloadBase;
   login: AdminPayloadBase;
   removeProductsById: Scalars['Boolean']['output'];
-  update: UpdateProductPayload;
+  updateQuantity: Product;
 };
 
 
@@ -211,8 +211,9 @@ export type MutationRemoveProductsByIdArgs = {
 };
 
 
-export type MutationUpdateArgs = {
-  input: AddProductInput;
+export type MutationUpdateQuantityArgs = {
+  id: Scalars['Int']['input'];
+  newQuantity: Scalars['Decimal']['input'];
 };
 
 /** Information about pagination in a connection. */
@@ -361,11 +362,6 @@ export type StringOperationFilterInput = {
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateProductPayload = {
-  __typename?: 'UpdateProductPayload';
-  products: Product;
-};
-
 export type UserError = {
   __typename?: 'UserError';
   code: Scalars['String']['output'];
@@ -413,6 +409,14 @@ export type AddProductssMutationVariables = Exact<{
 
 export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrl?: string | null } };
 
+export type UpdateQuantityMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  newQuantity: Scalars['Decimal']['input'];
+}>;
+
+
+export type UpdateQuantityMutation = { __typename?: 'Mutation', updateQuantity: { __typename?: 'Product', id: number, brandId: number, categoryId: number, code?: string | null, color?: string | null, description?: string | null, pictureUrl?: string | null, profit?: any | null, purchasePrice?: any | null, quantity?: any | null, retailPrice?: any | null, size?: string | null } };
+
 export type AddBrandAsyncMutationVariables = Exact<{
   name: Scalars['String']['input'];
 }>;
@@ -426,22 +430,6 @@ export type AddCategoryAsyncMutationVariables = Exact<{
 
 
 export type AddCategoryAsyncMutation = { __typename?: 'Mutation', addCategory: { __typename?: 'Category', id: number, name?: string | null } };
-
-export type EditProductMutationVariables = Exact<{
-  code: Scalars['String']['input'];
-  size: Scalars['String']['input'];
-  quantity: Scalars['Decimal']['input'];
-  description: Scalars['String']['input'];
-  color: Scalars['String']['input'];
-  retailPrice: Scalars['Decimal']['input'];
-  purchasePrice: Scalars['Decimal']['input'];
-  id?: InputMaybe<Scalars['Int']['input']>;
-  brandId: Scalars['Int']['input'];
-  categoryId: Scalars['Int']['input'];
-}>;
-
-
-export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number } } };
 
 export type DeleteProductMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -591,6 +579,35 @@ export const AddProductssDocument = gql`
       super(apollo);
     }
   }
+export const UpdateQuantityDocument = gql`
+    mutation UpdateQuantity($id: Int!, $newQuantity: Decimal!) {
+  updateQuantity(id: $id, newQuantity: $newQuantity) {
+    id
+    brandId
+    categoryId
+    code
+    color
+    description
+    pictureUrl
+    profit
+    purchasePrice
+    quantity
+    retailPrice
+    size
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateQuantityGQL extends Apollo.Mutation<UpdateQuantityMutation, UpdateQuantityMutationVariables> {
+    document = UpdateQuantityDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const AddBrandAsyncDocument = gql`
     mutation AddBrandAsync($name: String!) {
   addBrand(brandInput: {name: $name}) {
@@ -624,37 +641,6 @@ export const AddCategoryAsyncDocument = gql`
   })
   export class AddCategoryAsyncGQL extends Apollo.Mutation<AddCategoryAsyncMutation, AddCategoryAsyncMutationVariables> {
     document = AddCategoryAsyncDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const EditProductDocument = gql`
-    mutation editProduct($code: String!, $size: String!, $quantity: Decimal!, $description: String!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $id: Int, $brandId: Int!, $categoryId: Int!) {
-  update(
-    input: {code: $code, size: $size, color: $color, description: $description, quantity: $quantity, retailPrice: $retailPrice, purchasePrice: $purchasePrice, id: $id, categoryId: $categoryId, brandId: $brandId}
-  ) {
-    products {
-      id
-      code
-      size
-      color
-      description
-      quantity
-      purchasePrice
-      retailPrice
-      brandId
-      categoryId
-    }
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class EditProductGQL extends Apollo.Mutation<EditProductMutation, EditProductMutationVariables> {
-    document = EditProductDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import {
   AddProductssGQL,
   GetProductsGQL,
-  EditProductGQL,
+  // EditProductGQL,
   Product,
   DeleteProductGQL,
   SearchProductsGQL,
@@ -13,11 +13,13 @@ import {
   GetCategoriesGQL,
   Category,
   Brand,
+  UpdateQuantityGQL,
 } from '../../generated/graphql';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthGuard } from '../auth.guard';
 import { map } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal/modal';
 
 @Component({
   selector: 'app-carpets',
@@ -25,6 +27,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./carpets.component.css'],
 })
 export class CarpetsComponent implements OnInit {
+  @ViewChild('updateQuantityModal') updateQuantityModal!: TemplateRef<any>;
   products: Product[] = [];
   categories: Category[] = [];
   brands: Brand[] = [];
@@ -62,6 +65,10 @@ export class CarpetsComponent implements OnInit {
       Validators.minLength(5),
     ]),
   });
+  updateQuantityForm = new FormGroup({
+    productId: new FormControl<number | undefined>(undefined),
+    quantity: new FormControl('', Validators.required),
+  });
 
   addBrandForm = new FormGroup({ addBrand: new FormControl('') });
   addCategoryForm = new FormGroup({ addCategory: new FormControl('') });
@@ -69,7 +76,7 @@ export class CarpetsComponent implements OnInit {
   constructor(
     private router: Router,
     private getproducts: GetProductsGQL,
-    private editProd: EditProductGQL,
+    // private editProd: EditProductGQL,
     private addpro: AddProductssGQL,
     private deleteprod: DeleteProductGQL,
     private searchprod: SearchProductsGQL,
@@ -77,7 +84,9 @@ export class CarpetsComponent implements OnInit {
     private addCategory: AddCategoryAsyncGQL,
     private getbrands: GetBrandsGQL,
     private getcategories: GetCategoriesGQL,
-    private authGuard: AuthGuard
+    private authGuard: AuthGuard,
+    private updateQuantityGQL: UpdateQuantityGQL,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -103,7 +112,19 @@ export class CarpetsComponent implements OnInit {
         },
       });
   }
-
+  updateProductQuantity(productId: number, newQuantity: number): void {
+    this.updateQuantityGQL
+      .mutate({ id: productId, newQuantity: newQuantity })
+      .subscribe({
+        next: () => {
+          // You may want to refresh the product list or update the specific product in the local state
+          this.getAllProducts();
+        },
+        error: (error) => {
+          console.error('Error updating quantity:', error);
+        },
+      });
+  }
   getAllBrands(): void {
     this.getbrands
       .watch()
@@ -194,31 +215,158 @@ export class CarpetsComponent implements OnInit {
     );
     return category?.name!;
   }
+  openUpdateQuantityModal(productId: number): void {
+    this.updateQuantityForm.patchValue({ productId });
+    this.modalService.open(this.updateQuantityModal);
+  }
 
-  editProduct(id: number): void {
-    const product = this.products.find((p) => p.id === id);
-
-    if (!product) {
-      window.alert('Product not found');
+  updateQuantity(): void {
+    if (this.updateQuantityForm.invalid) {
       return;
     }
-
-    this.isEdit = true;
-
-    this.addProductForm.controls.id.setValue(id);
-    this.addProductForm.controls.code.setValue(product.code!);
-    this.addProductForm.controls.size.setValue(product.size!);
-    this.addProductForm.controls.color.setValue(product.color!);
-    this.addProductForm.controls.quantity.setValue(product.quantity);
-    this.addProductForm.controls.purchasePrice.setValue(product.purchasePrice);
-    this.addProductForm.controls.retailPrice.setValue(product.retailPrice);
-
-    if (product.description) {
-      this.addProductForm.controls.description.setValue(product.description);
-    } else {
-      this.addProductForm.controls.description.setValue('');
-    }
   }
+  // editProduct(id: number): void {
+  //   const product = this.products.find((p) => p.id === id);
+
+  //   if (!product) {
+  //     window.alert('Product not found');
+  //     return;
+  //   }
+
+  //   this.isEdit = true;
+
+  //   this.addProductForm.controls.id.setValue(id);
+  //   this.addProductForm.controls.code.setValue(product.code!);
+  //   this.addProductForm.controls.size.setValue(product.size!);
+  //   this.addProductForm.controls.color.setValue(product.color!);
+  //   this.addProductForm.controls.quantity.setValue(product.quantity);
+  //   this.addProductForm.controls.purchasePrice.setValue(product.purchasePrice);
+  //   this.addProductForm.controls.retailPrice.setValue(product.retailPrice);
+
+  //   if (product.description) {
+  //     this.addProductForm.controls.description.setValue(product.description);
+  //   } else {
+  //     this.addProductForm.controls.description.setValue('');
+  //   }
+  // }
+  // addProductsAsync(): void {
+  //   const formValues = this.addProductForm.value;
+  //   const image = formValues.image;
+  //   const brandId = parseInt(
+  //     this.addProductForm.controls.brandId.value ?? '',
+  //     10
+  //   );
+  //   const categoryId = parseInt(
+  //     this.addProductForm.controls.categoryId.value ?? '',
+  //     10
+  //   );
+
+  //   if (this.addProductForm.valid) {
+  //     this.isAddingProduct = true;
+  //     setTimeout(() => {
+  //       if (this.isEdit) {
+  //         this.editProd
+  //           .mutate({
+  //             id: this.addProductForm.controls.id.value,
+  //             code: formValues.code ?? '',
+  //             size: formValues.size ?? '',
+  //             color: formValues.color ?? '',
+  //             description: formValues.description ?? '',
+  //             quantity: parseFloat(formValues.quantity ?? '') || 0,
+  //             purchasePrice: parseFloat(formValues.purchasePrice ?? '') || 0,
+  //             retailPrice: parseFloat(formValues.retailPrice ?? '') || 0,
+  //             categoryId: categoryId,
+  //             brandId: brandId,
+  //             image,
+  //           })
+  //           .subscribe({
+  //             next: ({ data }) => {
+  //               console.log('EDIT Done');
+  //               this.isEdit = false;
+  //               this.isAddingProduct = false;
+  //               window.location.reload();
+  //             },
+  //             error: (error) => {
+  //               this.isEdit = false;
+  //               this.isAddingProduct = false;
+  //               console.log(error);
+  //             },
+  //           });
+  //       } else {
+  //         this.addpro
+  //           .mutate(
+  //             {
+  //               code: formValues.code ?? '',
+  //               size: formValues.size ?? '',
+  //               color: formValues.color ?? '',
+  //               description: formValues.description ?? '',
+  //               quantity: parseFloat(formValues.quantity ?? '') || 0,
+  //               purchasePrice: parseFloat(formValues.purchasePrice ?? '') || 0,
+  //               retailPrice: parseFloat(formValues.retailPrice ?? '') || 0,
+  //               categoryId: categoryId,
+  //               brandId: brandId,
+  //               image,
+  //             },
+  //             {
+  //               context: {
+  //                 useMultipart: true,
+  //               },
+  //             }
+  //           )
+  //           .subscribe({
+  //             next: ({ data }) => {
+  //               console.log('Mutation Done');
+
+  //               // Check and add brand if provided
+  //               if (formValues.brandId) {
+  //                 const existingBrand = this.brands.find(
+  //                   (b) => b.id === parseInt(formValues.brandId ?? '', 10)
+  //                 );
+  //                 if (!existingBrand) {
+  //                   // If brand doesn't exist in the list, add it
+  //                   this.addBrandAsync();
+  //                 }
+  //               }
+
+  //               // Check and add category if provided
+  //               if (formValues.categoryId) {
+  //                 const existingCategory = this.categories.find(
+  //                   (c) => c.id === parseInt(formValues.categoryId ?? '', 10)
+  //                 );
+  //                 if (!existingCategory) {
+  //                   // If category doesn't exist in the list, add it
+  //                   this.addCategoryAsync();
+  //                 }
+  //               }
+
+  //               this.isAddingProduct = false;
+  //               window.location.reload(); // Refresh page or update products list
+  //             },
+  //             error: (error) => {
+  //               this.isAddingProduct = false;
+  //               console.error('ApolloError:', error);
+  //               if (error.graphQLErrors) {
+  //                 console.error('[[GraphQL Errors:]]', error.graphQLErrors);
+  //               }
+  //               if (error.networkError) {
+  //                 console.error('Network Error:', error.networkError);
+  //               }
+  //               if (error.clientErrors) {
+  //                 console.error('Client Errors:', error.clientErrors);
+  //               }
+  //               if (error.protocolErrors) {
+  //                 console.error('Protocol Errors:', error.protocolErrors);
+  //               }
+  //               if (!this.image) {
+  //                 console.error('Image is missing');
+  //                 return;
+  //               }
+  //             },
+  //           });
+  //       }
+  //     }, 500);
+  //   }
+  // }
   addProductsAsync(): void {
     const formValues = this.addProductForm.value;
     const image = formValues.image;
@@ -234,116 +382,80 @@ export class CarpetsComponent implements OnInit {
     if (this.addProductForm.valid) {
       this.isAddingProduct = true;
       setTimeout(() => {
-        if (this.isEdit) {
-          this.editProd
-            .mutate({
-              id: this.addProductForm.controls.id.value,
-              code: this.addProductForm.controls.code.value ?? '',
-              size: this.addProductForm.controls.size.value ?? '',
-              color: this.addProductForm.controls.color.value ?? '',
-              quantity:
-                parseFloat(this.addProductForm.controls.quantity.value ?? '') ||
-                0,
-              purchasePrice:
-                parseFloat(
-                  this.addProductForm.controls.purchasePrice.value ?? ''
-                ) || 0,
-              retailPrice:
-                parseFloat(
-                  this.addProductForm.controls.retailPrice.value ?? ''
-                ) || 0,
-              description: this.addProductForm.controls.description.value ?? '',
-              brandId: brandId,
+        this.addpro
+          .mutate(
+            {
+              code: formValues.code ?? '',
+              size: formValues.size ?? '',
+              color: formValues.color ?? '',
+              description: formValues.description ?? '',
+              quantity: parseFloat(formValues.quantity ?? '') || 0,
+              purchasePrice: parseFloat(formValues.purchasePrice ?? '') || 0,
+              retailPrice: parseFloat(formValues.retailPrice ?? '') || 0,
               categoryId: categoryId,
-            })
-            .subscribe({
-              next: ({ data }) => {
-                console.log('EDIT Done');
-                this.isEdit = false;
-                this.isAddingProduct = false;
-                window.location.reload();
+              brandId: brandId,
+              image,
+            },
+            {
+              context: {
+                useMultipart: true,
               },
-              error: (error) => {
-                this.isEdit = false;
-                this.isAddingProduct = false;
-                console.log(error);
-              },
-            });
-        } else {
-          this.addpro
-            .mutate(
-              {
-                code: formValues.code ?? '',
-                size: formValues.size ?? '',
-                color: formValues.color ?? '',
-                description: formValues.description ?? '',
-                quantity: parseFloat(formValues.quantity ?? '') || 0,
-                purchasePrice: parseFloat(formValues.purchasePrice ?? '') || 0,
-                retailPrice: parseFloat(formValues.retailPrice ?? '') || 0,
-                categoryId: categoryId,
-                brandId: brandId,
-                image,
-              },
-              {
-                context: {
-                  useMultipart: true,
-                },
+            }
+          )
+          .subscribe({
+            next: ({ data }) => {
+              console.log('Mutation Done');
+
+              // Check and add brand if provided
+              if (formValues.brandId) {
+                const existingBrand = this.brands.find(
+                  (b) => b.id === parseInt(formValues.brandId ?? '', 10)
+                );
+                if (!existingBrand) {
+                  // If brand doesn't exist in the list, add it
+                  this.addBrandAsync();
+                }
               }
-            )
-            .subscribe({
-              next: ({ data }) => {
-                console.log('Mutation Done');
 
-                // Check and add brand if provided
-                if (formValues.brandId) {
-                  const existingBrand = this.brands.find(
-                    (b) => b.id === parseInt(formValues.brandId ?? '', 10)
-                  );
-                  if (!existingBrand) {
-                    // If brand doesn't exist in the list, add it
-                    this.addBrandAsync();
-                  }
+              // Check and add category if provided
+              if (formValues.categoryId) {
+                const existingCategory = this.categories.find(
+                  (c) => c.id === parseInt(formValues.categoryId ?? '', 10)
+                );
+                if (!existingCategory) {
+                  // If category doesn't exist in the list, add it
+                  this.addCategoryAsync();
                 }
+              }
 
-                // Check and add category if provided
-                if (formValues.categoryId) {
-                  const existingCategory = this.categories.find(
-                    (c) => c.id === parseInt(formValues.categoryId ?? '', 10)
-                  );
-                  if (!existingCategory) {
-                    // If category doesn't exist in the list, add it
-                    this.addCategoryAsync();
-                  }
-                }
-
-                this.isAddingProduct = false;
-                window.location.reload(); // Refresh page or update products list
-              },
-              error: (error) => {
-                this.isAddingProduct = false;
-                console.error('ApolloError:', error);
-                if (error.graphQLErrors) {
-                  console.error('[[GraphQL Errors:]]', error.graphQLErrors);
-                }
-                if (error.networkError) {
-                  console.error('Network Error:', error.networkError);
-                }
-                if (error.clientErrors) {
-                  console.error('Client Errors:', error.clientErrors);
-                }
-                if (error.protocolErrors) {
-                  console.error('Protocol Errors:', error.protocolErrors);
-                }
-                if (!this.image) {
-                  console.error('Image is missing');
-                  return;
-                }
-              },
-            });
-        }
+              this.isAddingProduct = false;
+              window.location.reload(); // Refresh page or update products list
+            },
+            error: (error) => {
+              this.isAddingProduct = false;
+              console.error('ApolloError:', error);
+              if (error.graphQLErrors) {
+                console.error('[[GraphQL Errors:]]', error.graphQLErrors);
+              }
+              if (error.networkError) {
+                console.error('Network Error:', error.networkError);
+              }
+              if (error.clientErrors) {
+                console.error('Client Errors:', error.clientErrors);
+              }
+              if (error.protocolErrors) {
+                console.error('Protocol Errors:', error.protocolErrors);
+              }
+              if (!this.image) {
+                console.error('Image is missing');
+                return;
+              }
+            },
+          });
       }, 500);
     }
   }
+
   get image() {
     return this.addProductForm.controls?.image;
   }
@@ -359,7 +471,7 @@ export class CarpetsComponent implements OnInit {
         this.isDeletingProduct = false;
         window.location.reload();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isDeletingProduct = false;
         console.error('Error deleting product:', error);
       },

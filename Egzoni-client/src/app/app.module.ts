@@ -8,18 +8,14 @@ import { GraphQLModule } from './graphql.module';
 import { CarpetsComponent } from './carpets/carpets.component';
 import { CommonModule } from '@angular/common';
 import { CarpetsModule } from './carpets/carpets.module';
-import {
-  NgbCollapse,
-  NgbCollapseModule,
-  NgbModule,
-} from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AdminComponent } from './admin/admin.component';
 import { AdminModule } from './admin/admin.module';
 import { ShopComponent } from './shop/Shop.component';
 import { ShopModule } from './shop/shop.module';
 import { AuthGuard } from './auth.guard';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,12 +25,14 @@ import { AuthGuard } from './auth.guard';
     FormsModule,
     HttpClientModule,
     GraphQLModule,
-
-    CommonModule,
     NgbModule,
+    CommonModule,
     ReactiveFormsModule,
     AdminModule,
     ShopModule,
+    // RouterModule.forRoot([
+    //   { path: 'product/:id', component: ShopComponent }, // Define your route here
+    // ]),
   ],
   exports: [
     BrowserModule,

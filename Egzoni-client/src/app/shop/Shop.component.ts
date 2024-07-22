@@ -9,7 +9,6 @@ import {
   Brand,
   GetCategoriesGQL,
   Category,
-  SearchProductsGQL,
 } from '../../generated/graphql';
 import { map } from 'rxjs/operators';
 
@@ -20,8 +19,10 @@ import { map } from 'rxjs/operators';
 })
 export class ShopComponent implements OnInit {
   categories: Category[] = [];
+  filteredProducts: Product[] = [];
   brands: Brand[] = [];
   products: Product[] = [];
+  allProducts: Product[] = [];
   cursor: string | null = null;
   hasNextPage: boolean = false;
   isBrandsCollapsed: boolean = true;
@@ -52,7 +53,7 @@ export class ShopComponent implements OnInit {
           if (data && data.length > 0) {
             this.categories = data;
           } else {
-            console.error('No brands found');
+            console.error('No categories found');
           }
         },
         error: (error) => {
@@ -79,6 +80,16 @@ export class ShopComponent implements OnInit {
       });
   }
 
+  loadMoreProducts(): void {
+    if (this.hasNextPage) {
+      const currentLength = this.allProducts.length;
+      console.log('Current length:', currentLength);
+      this.getAllProducts(currentLength + 10);
+    } else {
+      console.log('No more products to load.');
+    }
+  }
+
   getAllProducts(first: number = 15): void {
     this.getproducts
       .watch({ first, cursor: this.cursor })
@@ -88,13 +99,21 @@ export class ShopComponent implements OnInit {
       .subscribe({
         next: (data) => {
           if (data && data.nodes) {
-            this.products = data.nodes;
+            const newProducts = data.nodes.map((product: Product) => ({
+              ...product,
+              showFullDescription: false,
+            }));
+            this.allProducts = [...this.allProducts, ...newProducts];
+            this.products = [...this.allProducts];
+            this.filteredProducts = [...this.allProducts];
             if (data.pageInfo) {
               this.cursor = data.pageInfo.endCursor ?? null;
               this.hasNextPage = data.pageInfo.hasNextPage;
+              console.log('Cursor:', this.cursor);
+              console.log('Has next page:', this.hasNextPage);
             }
           } else {
-            console.error('No products found');
+            console.error('No products found.');
           }
         },
         error: (error) => {
@@ -103,30 +122,26 @@ export class ShopComponent implements OnInit {
       });
   }
 
-  loadMoreProducts(): void {
-    if (this.hasNextPage) {
-      const currentLength = this.products.length;
-      this.getAllProducts(currentLength + 15);
-    }
-  }
-
   toggleBrands(): void {
     this.isBrandsCollapsed = !this.isBrandsCollapsed;
   }
+
   toggleCategories(): void {
     this.isCategoriesCollapsed = !this.isCategoriesCollapsed;
   }
 
   filterProductsByBrand(brandId: number): void {
-    // Example: Filter products based on the selected brand ID
-    this.products = this.products.filter(
+    this.filteredProducts = this.allProducts.filter(
       (product) => product.brandId === brandId
     );
+    this.products = [...this.filteredProducts]; // Update products array
   }
+
   getBrandName(brandId: number): string | undefined {
     const brand = this.brands.find((brand) => brand.id === brandId);
     return brand?.name!;
   }
+
   getCategoryName(categoryId: number): string | undefined {
     const category = this.categories.find(
       (category) => category.id === categoryId
@@ -135,16 +150,17 @@ export class ShopComponent implements OnInit {
   }
 
   filterProductsByCategory(categoryId: number): void {
-    // Example: Filter products based on the selected brand ID
-    this.products = this.products.filter(
+    this.filteredProducts = this.allProducts.filter(
       (product) => product.categoryId === categoryId
     );
+    this.products = [...this.filteredProducts]; // Update products array
   }
+
   searchProduct(code: string): void {
     // Implement search product functionality if needed
   }
 
-  cancelSearch(): void {
-    // Implement cancel search functionality if needed
+  navigateToProduct(productId: number): void {
+    this.router.navigate(['/product', productId]);
   }
 }

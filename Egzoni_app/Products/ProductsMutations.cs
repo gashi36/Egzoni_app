@@ -39,6 +39,7 @@ namespace Egzoni_app.Products
 
             if (input.Image != null)
             {
+
                 await input.Image.CopyToAsync(stream);
             }
             else
@@ -59,34 +60,82 @@ namespace Egzoni_app.Products
 
             return newProduct;
         }
-
-        public async Task<UpdateProductPayload> UpdateAsync(
-            AddProductInput input,
-            ApplicationDbContext context)
+        public async Task<Product> UpdateQuantityAsync(int id, decimal newQuantity, ApplicationDbContext context)
         {
-            var product = await context.Products.FindAsync(input.Id);
-
+            var product = await context.Products.FindAsync(id);
             if (product == null)
             {
-                throw new KeyNotFoundException($"Product with ID {input.Id} not found.");
+                throw new KeyNotFoundException($"Product with ID {id} not found.");
             }
 
-            product.Code = input.Code;
-            product.Size = input.Size;
-            product.Quantity = input.Quantity;
-            product.Color = input.Color;
-            product.Description = input.Description;
-            product.PurchasePrice = input.PurchasePrice;
-            product.RetailPrice = input.RetailPrice;
-            product.BrandId = input.BrandId;
-            product.CategoryId = input.CategoryId;
+            product.Quantity = newQuantity;
 
             context.Products.Update(product);
             await context.SaveChangesAsync();
 
-            return new UpdateProductPayload(product);
+            return product;
         }
+        //     public async Task<UpdateProductPayload> UpdateAsync(
+        //   AddProductInput input,
+        //   ApplicationDbContext context)
+        //     {
+        //         var product = await context.Products.FindAsync(input.Id);
 
+        //         if (product == null)
+        //         {
+        //             throw new KeyNotFoundException($"Product with ID {input.Id} not found.");
+        //         }
+
+        //         // Update product details
+        //         product.Code = input.Code;
+        //         product.Size = input.Size;
+        //         product.Quantity = input.Quantity;
+        //         product.Color = input.Color;
+        //         product.Description = input.Description;
+        //         product.PurchasePrice = input.PurchasePrice;
+        //         product.RetailPrice = input.RetailPrice;
+        //         product.BrandId = input.BrandId;
+        //         product.CategoryId = input.CategoryId;
+
+        //         if (input.Image != null)
+        //         {
+        //             var name = input.Image?.Name;
+        //             if (string.IsNullOrEmpty(name))
+        //             {
+        //                 throw new ArgumentNullException(nameof(input.Image), "Image cannot be null.");
+        //             }
+
+        //             var imageName = $"Image.{name[(name.LastIndexOf('.') + 1)..]}";
+        //             var path = System.IO.Path.Combine("wwwroot", "images", product.Id.ToString());
+
+        //             // Ensure the directory exists
+        //             if (!Directory.Exists(path))
+        //             {
+        //                 Directory.CreateDirectory(path);
+        //             }
+
+        //             // Remove the old image if it exists
+        //             var oldImagePath = System.IO.Path.Combine(path, product.PictureUrl);
+        //             if (File.Exists(oldImagePath))
+        //             {
+        //                 File.Delete(oldImagePath);
+        //             }
+
+        //             // Save the new image
+        //             using var stream = new MemoryStream();
+        //             await input.Image.CopyToAsync(stream);
+        //             var newImagePath = System.IO.Path.Combine(path, imageName);
+        //             await File.WriteAllBytesAsync(newImagePath, stream.ToArray());
+
+        //             // Update product's image URL
+        //             product.PictureUrl = imageName;
+        //         }
+
+        //         context.Products.Update(product);
+        //         await context.SaveChangesAsync();
+
+        //         return new UpdateProductPayload(product);
+        //     }
         public async Task<bool> RemoveProductsById(int id, ApplicationDbContext context)
         {
             var product = await context.Products.FindAsync(id);
@@ -100,5 +149,6 @@ namespace Egzoni_app.Products
 
             return true;
         }
+
     }
 }

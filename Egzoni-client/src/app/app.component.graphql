@@ -89,6 +89,39 @@ mutation addProductss(
     pictureUrl
   }
 }
+# mutation updateQuantityInput ($id:Int!, $newQuantity: Decimal!)
+#  { updateQuantity {id: $id, newQuantity: $newQuantity}
+#    {
+#     brandId
+#     categoryId
+#     code
+#     color
+#     description
+#     id
+#     pictureUrl
+#     profit
+#     purchasePrice
+#     quantity
+#     retailPrice
+#     size
+#   }}
+
+mutation UpdateQuantity($id: Int!, $newQuantity: Decimal!) {
+  updateQuantity(id: $id, newQuantity: $newQuantity) {
+    id
+    brandId
+    categoryId
+    code
+    color
+    description
+    pictureUrl
+    profit
+    purchasePrice
+    quantity
+    retailPrice
+    size
+  }
+}
 
 mutation AddBrandAsync($name: String!) {
   addBrand(brandInput: { name: $name }) {
@@ -103,49 +136,49 @@ mutation AddCategoryAsync($name: String!) {
   }
 }
 
-mutation editProduct(
-  $code: String!
-  $size: String!
-  $quantity: Decimal!
-  $description: String!
-  $color: String!
-  $retailPrice: Decimal!
-  $purchasePrice: Decimal!
-  $id: Int
-  $brandId: Int!
-  $categoryId: Int!
-) # $image: Upload!
-{
-  update(
-    input: {
-      code: $code
-      size: $size
-      color: $color
-      description: $description
-      quantity: $quantity
-      retailPrice: $retailPrice
-      purchasePrice: $purchasePrice
-      id: $id
-      categoryId: $categoryId
-      brandId: $brandId
-      # image: $image
-    }
-  ) {
-    products {
-      id
-      code
-      size
-      color
-      description
-      quantity
-      purchasePrice
-      retailPrice
-      brandId
-      categoryId
-      # pictureUrl
-    }
-  }
-}
+# mutation editProduct(
+#   $code: String!
+#   $size: String!
+#   $quantity: Decimal!
+#   $description: String!
+#   $color: String!
+#   $retailPrice: Decimal!
+#   $purchasePrice: Decimal!
+#   $id: Int
+#   $brandId: Int!
+#   $categoryId: Int!
+#   $image: Upload! # $image: Upload!
+# ) {
+#   update(
+#     input: {
+#       code: $code
+#       size: $size
+#       color: $color
+#       description: $description
+#       quantity: $quantity
+#       retailPrice: $retailPrice
+#       purchasePrice: $purchasePrice
+#       id: $id
+#       categoryId: $categoryId
+#       brandId: $brandId
+#       image: $image
+#     }
+#   ) {
+#     products {
+#       id
+#       code
+#       size
+#       color
+#       description
+#       quantity
+#       purchasePrice
+#       retailPrice
+#       brandId
+#       categoryId
+#       pictureUrl
+#     }
+#   }
+# }
 
 mutation deleteProduct($id: Int!) {
   removeProductsById(id: $id)

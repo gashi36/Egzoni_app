@@ -50,7 +50,6 @@
           <label for="color" class="form-label">Ngjyra:</label>
           <input type="text" id="color" class="form-control custom-input" formControlName="color" placeholder="color">
         </div>
-
       </div>
       <div class="col-md-6">
         <div class="form-group mb-3">
@@ -66,14 +65,14 @@
         <div class="form-group mb-3">
           <label for="brandId" class="form-label">Brendi:</label>
           <select id="brandId" name="brandId" class="form-control custom-input" formControlName="brandId" required>
-            <option *ngFor="let brand of brands" [value]="brand.id">{{brand.name}}</option>
+            <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
           </select>
         </div>
         <div class="form-group mb-3">
           <label for="categoryId" class="form-label">Kategoria:</label>
           <select id="categoryId" name="categoryId" class="form-control custom-input" formControlName="categoryId"
             required>
-            <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
           </select>
         </div>
       </div>
@@ -121,31 +120,34 @@
     <table class="table table-hover custom-table">
       <thead>
         <tr class="table-primary">
-          <th scope="col">code</th>
-          <th scope="col">size</th>
-          <th scope="col">quantity</th>
-          <th scope="col">color</th>
-          <th scope="col">ÇMIMI I BLERJES</th>
-          <th scope="col">ÇMIMI I SHITJES</th>
-          <th scope="col">profit</th>
-          <th scope="col">Brendi</th>
-          <th scope="col">Kategoria</th>
-          <th scope="col"></th>
+          <th scope="col">kodi</th>
+          <th scope="col">masa</th>
+          <th scope="col">sasia</th>
+          <th scope="col">ngjyra</th>
+          <th scope="col">cmimi i blerjes</th>
+          <th scope="col">cmimi i shitjes</th>
+          <th scope="col">profiti</th>
+          <th scope="col">brendi</th>
+          <th scope="col">kategoria</th>
+          <th scope="col">Ndrysho sasinë</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let pro of products">
-          <td>{{pro.code}}</td>
-          <td>{{pro.size}}</td>
-          <td>{{pro.quantity}}</td>
-          <td>{{pro.color}}</td>
-          <td>{{pro.purchasePrice}}</td>
-          <td>{{pro.retailPrice}}</td>
-          <td>{{pro.profit}}</td>
+          <td>{{ pro.code }}</td>
+          <td>{{ pro.size }}</td>
+          <td>{{ pro.quantity }}</td>
+          <td>{{ pro.color }}</td>
+          <td>{{ pro.purchasePrice }}</td>
+          <td>{{ pro.retailPrice }}</td>
+          <td>{{ pro.profit }}</td>
           <td>{{ getBrandName(pro.brandId) }}</td>
           <td>{{ getCategoryName(pro.categoryId) }}</td>
-          <td><button class="btn btn-outline-warning" (click)="editProduct(pro.id)">Ndrysho</button></td>
+          <td>
+            <!-- Update Quantity Button -->
+            <button class="btn btn-outline-warning" (click)="openUpdateQuantityModal(pro.id)">Ndrysho Sasinë</button>
+          </td>
           <td>
             <button class="btn btn-outline-danger" (click)="deleteProduct(pro.id)" [disabled]="isDeletingProduct">
               <span *ngIf="isDeletingProduct" class="spinner-border spinner-border-sm" role="status"
@@ -158,6 +160,33 @@
     </table>
   </div>
 
+  <ng-template #updateQuantityModal let-modal>
+    <!-- Update Quantity Modal -->
+    <div class="modal fade" id="updateQuantityModal" tabindex="-1" role="dialog"
+      aria-labelledby="updateQuantityModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="updateQuantityModalLabel">Ndrysho Sasinë</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="updateQuantityForm" (ngSubmit)="updateQuantity()">
+              <div class="form-group">
+                <label for="quantity">Sasia e Re:</label>
+                <input type="number" id="quantity" class="form-control" formControlName="quantity"
+                  placeholder="Sasia e re">
+              </div>
+              <input type="hidden" formControlName="productId">
+              <button type="submit" class="btn btn-primary">Ruaj</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
   <div class="row align-content-center justify-content-center">
     <button (click)="loadMoreProducts()" class="btn btn-outline-info col-md-2" [disabled]="isLoadingMoreProducts">
       <span *ngIf="isLoadingMoreProducts" class="spinner-border spinner-border-sm" role="status"
