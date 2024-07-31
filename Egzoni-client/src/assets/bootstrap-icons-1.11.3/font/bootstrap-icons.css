@@ -836,7 +836,7 @@ url("./fonts/bootstrap-icons.woff?dd67030699838ea613ee6dbda90effa6") format("wof
 .bi-image-alt::before { content: "\f428"; }
 .bi-image-fill::before { content: "\f429"; }
 .bi-image::before { content: "\f42a"; }
-.bi-images::before { content: "\f42b"; }
+.bi-pictureUrl::before { content: "\f42b"; }
 .bi-inbox-fill::before { content: "\f42c"; }
 .bi-inbox::before { content: "\f42d"; }
 .bi-inboxes-fill::before { content: "\f42e"; }

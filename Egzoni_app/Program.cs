@@ -45,6 +45,7 @@ builder.Services.AddCors();
 
 builder.Services
     .AddGraphQLServer()
+
     .AddAuthorization()
     .RegisterDbContext<ApplicationDbContext>()
     .AddFiltering()

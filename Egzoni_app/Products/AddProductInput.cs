@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using HotChocolate.Types;
 
 namespace Egzoni_app.Products
 {
@@ -15,9 +14,8 @@ namespace Egzoni_app.Products
         decimal? PurchasePrice,
         decimal? RetailPrice,
         int? Id,
-        [GraphQLType(typeof(NonNullType<UploadType>))] IFile? Image,
-        int? BrandId,
+  [GraphQLType(typeof(NonNullType<ListType<UploadType>>))] IReadOnlyList<IFile>? Image,
+       int? BrandId,
         int? CategoryId
-
     );
 }

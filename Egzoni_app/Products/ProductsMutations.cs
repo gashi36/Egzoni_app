@@ -2,7 +2,10 @@ using Egzoni_app.Database;
 using HotChocolate.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Egzoni_app.Products
 {
@@ -11,13 +14,13 @@ namespace Egzoni_app.Products
     {
         public async Task<Product> AddProductAsync(AddProductInput input, ApplicationDbContext context)
         {
-            var name = input.Image?.Name;
-            if (string.IsNullOrEmpty(name))
+            // Ensure input.Image is not null or empty
+            if (input.Image == null || input.Image.Count == 0)
             {
-                throw new ArgumentNullException(nameof(input.Image), "Image cannot be null.");
+                throw new ArgumentNullException(nameof(input.Image), "Images cannot be null.");
             }
 
-            var imageName = $"Image.{name[(name.LastIndexOf('.') + 1)..]}";
+            // Initialize a new Product instance with the provided input data
             var newProduct = new Product
             {
                 Code = input.Code,
@@ -27,115 +30,73 @@ namespace Egzoni_app.Products
                 Description = input.Description,
                 PurchasePrice = input.PurchasePrice,
                 RetailPrice = input.RetailPrice,
-                PictureUrl = imageName,
                 BrandId = input.BrandId,
-                CategoryId = input.CategoryId
-
+                CategoryId = input.CategoryId,
+                PictureUrls = new List<string>() // Initialize PictureUrls list
             };
 
+            // Add the new product to the database context
             context.Products.Add(newProduct);
-            await context.SaveChangesAsync();
-            using var stream = new MemoryStream();
+            await context.SaveChangesAsync(); // Save changes to generate the product ID
 
-            if (input.Image != null)
-            {
-
-                await input.Image.CopyToAsync(stream);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(input.Image), "Image cannot be null.");
-            }
-
+            // Create a directory for the product's images using the product ID
             var path = System.IO.Path.Combine("wwwroot", "images", newProduct.Id.ToString());
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
-            path = System.IO.Path.Combine(path, imageName);
+            // Process each uploaded image
+            foreach (var image in input.Image)
+            {
+                if (image.Length > 0) // Ensure the file is of type IFormFile and not empty
+                {
+                    // Generate a unique filename for the image
+                    var imageName = $"Image_{Guid.NewGuid()}{System.IO.Path.GetExtension(image.Name)}";
+                    var imagePath = System.IO.Path.Combine(path, imageName);
 
-            await File.WriteAllBytesAsync(path, stream.ToArray());
+                    try
+                    {
+                        // Save the file to the specified path
+                        using (var stream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
 
+                        // Add the image name to the PictureUrls list
+                        newProduct.PictureUrls.Add(imageName);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception (you might need a logging mechanism here)
+                        // Log.Error($"Error saving image {formFile.FileName}: {ex.Message}");
+                        throw new InvalidOperationException($"Error saving image {image.Name}", ex);
+                    }
+                }
+            }
+
+            // Update the product to include the list of PictureUrls
+            context.Products.Update(newProduct);
+            await context.SaveChangesAsync(); // Save the changes to the database
 
             return newProduct;
         }
-        public async Task<Product> UpdateQuantityAsync(int id, decimal newQuantity, ApplicationDbContext context)
+        public async Task<UpdateProductPayload> UpdateAsync(AddProductInput input, ApplicationDbContext context)
         {
-            var product = await context.Products.FindAsync(id);
+            var product = await context.Products.FindAsync(input.Id);
             if (product == null)
             {
-                throw new KeyNotFoundException($"Product with ID {id} not found.");
+                throw new KeyNotFoundException($"Product with ID {input.Id} not found.");
             }
 
-            product.Quantity = newQuantity;
-
+            product.Quantity = input.Quantity;
+            // Update other fields if needed
             context.Products.Update(product);
             await context.SaveChangesAsync();
 
-            return product;
+            return new UpdateProductPayload(product);
         }
-        //     public async Task<UpdateProductPayload> UpdateAsync(
-        //   AddProductInput input,
-        //   ApplicationDbContext context)
-        //     {
-        //         var product = await context.Products.FindAsync(input.Id);
 
-        //         if (product == null)
-        //         {
-        //             throw new KeyNotFoundException($"Product with ID {input.Id} not found.");
-        //         }
-
-        //         // Update product details
-        //         product.Code = input.Code;
-        //         product.Size = input.Size;
-        //         product.Quantity = input.Quantity;
-        //         product.Color = input.Color;
-        //         product.Description = input.Description;
-        //         product.PurchasePrice = input.PurchasePrice;
-        //         product.RetailPrice = input.RetailPrice;
-        //         product.BrandId = input.BrandId;
-        //         product.CategoryId = input.CategoryId;
-
-        //         if (input.Image != null)
-        //         {
-        //             var name = input.Image?.Name;
-        //             if (string.IsNullOrEmpty(name))
-        //             {
-        //                 throw new ArgumentNullException(nameof(input.Image), "Image cannot be null.");
-        //             }
-
-        //             var imageName = $"Image.{name[(name.LastIndexOf('.') + 1)..]}";
-        //             var path = System.IO.Path.Combine("wwwroot", "images", product.Id.ToString());
-
-        //             // Ensure the directory exists
-        //             if (!Directory.Exists(path))
-        //             {
-        //                 Directory.CreateDirectory(path);
-        //             }
-
-        //             // Remove the old image if it exists
-        //             var oldImagePath = System.IO.Path.Combine(path, product.PictureUrl);
-        //             if (File.Exists(oldImagePath))
-        //             {
-        //                 File.Delete(oldImagePath);
-        //             }
-
-        //             // Save the new image
-        //             using var stream = new MemoryStream();
-        //             await input.Image.CopyToAsync(stream);
-        //             var newImagePath = System.IO.Path.Combine(path, imageName);
-        //             await File.WriteAllBytesAsync(newImagePath, stream.ToArray());
-
-        //             // Update product's image URL
-        //             product.PictureUrl = imageName;
-        //         }
-
-        //         context.Products.Update(product);
-        //         await context.SaveChangesAsync();
-
-        //         return new UpdateProductPayload(product);
-        //     }
         public async Task<bool> RemoveProductsById(int id, ApplicationDbContext context)
         {
             var product = await context.Products.FindAsync(id);
@@ -149,6 +110,5 @@ namespace Egzoni_app.Products
 
             return true;
         }
-
     }
 }

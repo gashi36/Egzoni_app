@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApolloQueryResult } from '@apollo/client/core';
 import { Router } from '@angular/router';
@@ -13,15 +13,14 @@ import {
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-Shop',
-  templateUrl: './Shop.component.html',
-  styleUrls: ['./Shop.component.css'],
+  selector: 'app-shop',
+  templateUrl: './shop.component.html',
+  styleUrls: ['./shop.component.css'],
 })
 export class ShopComponent implements OnInit {
   categories: Category[] = [];
   filteredProducts: Product[] = [];
   brands: Brand[] = [];
-  products: Product[] = [];
   allProducts: Product[] = [];
   cursor: string | null = null;
   hasNextPage: boolean = false;
@@ -29,6 +28,14 @@ export class ShopComponent implements OnInit {
   isCategoriesCollapsed: boolean = true;
   searchProductForm: FormGroup = new FormGroup({
     search: new FormControl(''),
+  });
+  baseImageUrl: string = 'http://localhost:5044/images/';
+
+  filterForm = new FormGroup({
+    brand: new FormControl(null),
+    category: new FormControl(null),
+    minPrice: new FormControl(null),
+    maxPrice: new FormControl(null),
   });
 
   constructor(
@@ -42,6 +49,26 @@ export class ShopComponent implements OnInit {
     this.getAllProducts();
     this.getAllBrands();
     this.getAllCategories();
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: any): void {
+    const scrollTop = event.target.scrollingElement.scrollTop;
+    const scrollHeight = event.target.scrollingElement.scrollHeight;
+    const clientHeight = event.target.scrollingElement.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      // Trigger when near bottom
+      this.loadMoreProducts();
+    }
+  }
+  getProductThumbnailUrl(product: Product): string {
+    // Assuming the first image is used as the thumbnail
+    const thumbnailUrl =
+      product.pictureUrls.length > 0
+        ? product.pictureUrls[0]
+        : 'default-thumbnail.jpg';
+    return `${this.baseImageUrl}${product.id}/${thumbnailUrl}`;
   }
 
   getAllCategories(): void {
@@ -80,40 +107,31 @@ export class ShopComponent implements OnInit {
       });
   }
 
-  loadMoreProducts(): void {
-    if (this.hasNextPage) {
-      const currentLength = this.allProducts.length;
-      console.log('Current length:', currentLength);
-      this.getAllProducts(currentLength + 10);
-    } else {
-      console.log('No more products to load.');
-    }
-  }
-
   getAllProducts(first: number = 15): void {
+    const { brand, category, minPrice, maxPrice } = this.filterForm.value;
+
     this.getproducts
-      .watch({ first, cursor: this.cursor })
+      .watch({
+        first,
+        cursor: this.cursor,
+        brandId: brand ? parseInt(brand, 10) : null,
+        categoryId: category ? parseInt(category, 10) : null,
+        minPrice: minPrice ? parseFloat(minPrice) : null,
+        maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+      })
       .valueChanges.pipe(
         map((result: ApolloQueryResult<any>) => result.data.productsAsync)
       )
       .subscribe({
         next: (data) => {
           if (data && data.nodes) {
-            const newProducts = data.nodes.map((product: Product) => ({
-              ...product,
-              showFullDescription: false,
-            }));
-            this.allProducts = [...this.allProducts, ...newProducts];
-            this.products = [...this.allProducts];
-            this.filteredProducts = [...this.allProducts];
+            this.allProducts = [...this.allProducts, ...data.nodes];
+            this.filteredProducts = this.applyFilters(this.allProducts); // Apply filters to all products
+
             if (data.pageInfo) {
               this.cursor = data.pageInfo.endCursor ?? null;
               this.hasNextPage = data.pageInfo.hasNextPage;
-              console.log('Cursor:', this.cursor);
-              console.log('Has next page:', this.hasNextPage);
             }
-          } else {
-            console.error('No products found.');
           }
         },
         error: (error) => {
@@ -122,19 +140,80 @@ export class ShopComponent implements OnInit {
       });
   }
 
+  applyFilters(products: Product[]): Product[] {
+    const { brand, category, minPrice, maxPrice } = this.filterForm.value;
+
+    return products.filter((product) => {
+      const matchesBrand = !brand || product.brandId === parseInt(brand, 10);
+      const matchesCategory =
+        !category || product.categoryId === parseInt(category, 10);
+      const matchesMinPrice =
+        !minPrice || product.retailPrice >= parseFloat(minPrice);
+      const matchesMaxPrice =
+        !maxPrice || product.retailPrice <= parseFloat(maxPrice);
+
+      return (
+        matchesBrand && matchesCategory && matchesMinPrice && matchesMaxPrice
+      );
+    });
+  }
+
+  loadMoreProducts(): void {
+    if (this.hasNextPage) {
+      this.getAllProducts(15); // Load next chunk of products
+    } else {
+      console.log('No more products to load.');
+    }
+  }
+
+  filterProducts(): void {
+    const { brand, category, minPrice, maxPrice } = this.filterForm.value;
+    console.log('Filtering products');
+
+    // Reset the product list and cursor before applying filters
+    this.allProducts = [];
+    this.filteredProducts = [];
+    this.cursor = null;
+
+    this.getproducts
+      .watch()
+      .refetch({
+        first: 15,
+        brandId: brand ? parseInt(brand, 10) : null,
+        categoryId: category ? parseInt(category, 10) : null,
+        minPrice: minPrice ? parseFloat(minPrice) : null,
+        maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+      })
+      .then((data) => {
+        if (data && data.data.productsAsync?.nodes) {
+          console.log('Fetched products with filters:', {
+            brand,
+            category,
+            minPrice,
+            maxPrice,
+          });
+          console.log('Data received:', data.data.productsAsync?.nodes);
+
+          this.allProducts = data.data.productsAsync.nodes;
+          this.filteredProducts = this.applyFilters(this.allProducts); // Apply filters to all products
+
+          if (data.data.productsAsync.pageInfo) {
+            this.cursor = data.data.productsAsync.pageInfo.endCursor ?? null;
+            this.hasNextPage = data.data.productsAsync.pageInfo.hasNextPage;
+          }
+        }
+      });
+
+    console.log('Filter values:', { brand, category, minPrice, maxPrice });
+    this.filteredProducts = this.applyFilters(this.allProducts); // Apply filters to all products
+  }
+
   toggleBrands(): void {
     this.isBrandsCollapsed = !this.isBrandsCollapsed;
   }
 
   toggleCategories(): void {
     this.isCategoriesCollapsed = !this.isCategoriesCollapsed;
-  }
-
-  filterProductsByBrand(brandId: number): void {
-    this.filteredProducts = this.allProducts.filter(
-      (product) => product.brandId === brandId
-    );
-    this.products = [...this.filteredProducts]; // Update products array
   }
 
   getBrandName(brandId: number): string | undefined {
@@ -149,18 +228,12 @@ export class ShopComponent implements OnInit {
     return category?.name!;
   }
 
-  filterProductsByCategory(categoryId: number): void {
-    this.filteredProducts = this.allProducts.filter(
-      (product) => product.categoryId === categoryId
-    );
-    this.products = [...this.filteredProducts]; // Update products array
-  }
-
   searchProduct(code: string): void {
     // Implement search product functionality if needed
   }
 
   navigateToProduct(productId: number): void {
+    console.log(`Navigating to product with ID: ${productId}`);
     this.router.navigate(['/product', productId]);
   }
 }

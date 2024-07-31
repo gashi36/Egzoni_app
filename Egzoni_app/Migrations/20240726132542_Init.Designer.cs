@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Egzoni_app.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240722084837_Initialises")]
-    partial class Initialises
+    [Migration("20240726132542_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,6 @@ namespace Egzoni_app.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Salt")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Token")
@@ -108,7 +107,8 @@ namespace Egzoni_app.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PictureUrl")
+                    b.Property<string>("PictureUrls")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PurchasePrice")

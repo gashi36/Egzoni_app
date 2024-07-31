@@ -1,18 +1,33 @@
-query getProducts($cursor: String, $first: Int) {
-  productsAsync(first: $first, after: $cursor, order: { id: DESC }) {
+query getProducts(
+  $cursor: String
+  $first: Int
+  $brandId: Int
+  $categoryId: Int
+  $minPrice: Decimal
+  $maxPrice: Decimal
+) {
+  productsAsync(
+    first: $first
+    after: $cursor
+    order: { id: DESC }
+    brandId: $brandId
+    categoryId: $categoryId
+    minPrice: $minPrice
+    maxPrice: $maxPrice
+  ) {
     nodes {
-      brandId
-      categoryId
+      id
+      code
+      description
+      size
+      color
+      quantity
       purchasePrice
       retailPrice
       profit
-      description
-      id
-      code
-      size
-      color
-      pictureUrl
-      quantity
+      pictureUrls
+      brandId
+      categoryId
     }
     pageInfo {
       endCursor
@@ -22,6 +37,7 @@ query getProducts($cursor: String, $first: Int) {
     }
   }
 }
+
 query getCategories {
   categories {
     id
@@ -60,7 +76,7 @@ mutation addProductss(
   $purchasePrice: Decimal!
   $brandId: Int!
   $categoryId: Int!
-  $image: Upload! # Add the pictureUrl variable
+  $image: [Upload!]! # Add the pictureUrl variable
 ) {
   addProduct(
     input: {
@@ -86,42 +102,26 @@ mutation addProductss(
     retailPrice
     brandId
     categoryId
-    pictureUrl
+    pictureUrls
   }
 }
-# mutation updateQuantityInput ($id:Int!, $newQuantity: Decimal!)
-#  { updateQuantity {id: $id, newQuantity: $newQuantity}
-#    {
+
+# mutation UpdateQuantity($id: Int!, $newQuantity: Decimal!) {
+#   updateQuantity(id: $id, newQuantity: $newQuantity) {
+#     id
 #     brandId
 #     categoryId
 #     code
 #     color
 #     description
-#     id
 #     pictureUrl
 #     profit
 #     purchasePrice
 #     quantity
 #     retailPrice
 #     size
-#   }}
-
-mutation UpdateQuantity($id: Int!, $newQuantity: Decimal!) {
-  updateQuantity(id: $id, newQuantity: $newQuantity) {
-    id
-    brandId
-    categoryId
-    code
-    color
-    description
-    pictureUrl
-    profit
-    purchasePrice
-    quantity
-    retailPrice
-    size
-  }
-}
+#   }
+# }
 
 mutation AddBrandAsync($name: String!) {
   addBrand(brandInput: { name: $name }) {
@@ -136,49 +136,23 @@ mutation AddCategoryAsync($name: String!) {
   }
 }
 
-# mutation editProduct(
-#   $code: String!
-#   $size: String!
-#   $quantity: Decimal!
-#   $description: String!
-#   $color: String!
-#   $retailPrice: Decimal!
-#   $purchasePrice: Decimal!
-#   $id: Int
-#   $brandId: Int!
-#   $categoryId: Int!
-#   $image: Upload! # $image: Upload!
-# ) {
-#   update(
-#     input: {
-#       code: $code
-#       size: $size
-#       color: $color
-#       description: $description
-#       quantity: $quantity
-#       retailPrice: $retailPrice
-#       purchasePrice: $purchasePrice
-#       id: $id
-#       categoryId: $categoryId
-#       brandId: $brandId
-#       image: $image
-#     }
-#   ) {
-#     products {
-#       id
-#       code
-#       size
-#       color
-#       description
-#       quantity
-#       purchasePrice
-#       retailPrice
-#       brandId
-#       categoryId
-#       pictureUrl
-#     }
-#   }
-# }
+mutation editProduct($quantity: Decimal!, $id: Int) {
+  update(input: { quantity: $quantity, id: $id }) {
+    products {
+      id
+      code
+      size
+      color
+      description
+      quantity
+      purchasePrice
+      retailPrice
+      brandId
+      categoryId
+      pictureUrls
+    }
+  }
+}
 
 mutation deleteProduct($id: Int!) {
   removeProductsById(id: $id)
@@ -192,5 +166,21 @@ mutation Login($username: String!, $password: String!) {
       token
       username
     }
+  }
+}
+query GetProductById($id: Int!) {
+  productById(id: $id) {
+    brandId
+    categoryId
+    code
+    color
+    description
+    id
+    pictureUrls
+    profit
+    purchasePrice
+    quantity
+    retailPrice
+    size
   }
 }

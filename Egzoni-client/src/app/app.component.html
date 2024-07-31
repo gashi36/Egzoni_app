@@ -1,1 +1,91 @@
+<header class="py-3">
+  <div class="container">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">
+        <img src="../../assets/EGZONI2.png" alt="Your Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <form class="d-flex justify-content-start align-items-center flex-grow-1 search-form">
+          <input class="form-control me-2 flex-grow-1" type="search" placeholder="Kerkoni..." aria-label="Search">
+          <button class="btn" type="submit"><i class="bi bi-search"></i></button>
+        </form>
+        <div class="d-flex align-items-center ms-auto">
+          <a href="#" class="text-light text-decoration-none me-3"><i class="bi bi-person"></i> Hyrja e anëtarit</a>
+          <a href="#" class="text-light text-decoration-none position-relative">
+            <i class="bi bi-bag"></i> Shporta ime
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+              0
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <hr>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="collapse navbar-collapse" id="navbarNavSecondary">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/shop" routerLinkActive="active">Produktet</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home" routerLinkActive="active"><i class="bi bi-geo-alt-fill"></i> Pikat e
+              shitjes</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>>
+
 <router-outlet></router-outlet>
+
+<footer class="bg-light text-dark py-4">
+  <div class="container">
+    <div class="row">
+      <!-- Quick Links -->
+      <div class="col-md-3">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-dark">Home</a></li>
+          <li><a href="#" class="text-dark">Products</a></li>
+          <li><a href="#" class="text-dark">About Us</a></li>
+          <li><a href="#" class="text-dark">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="col-md-4">
+        <h5>Contact Us</h5>
+        <ul class="list-unstyled">
+          <li><i class="bi bi-geo-alt-fill"></i> Address: Your Address Here</li>
+          <li><i class="bi bi-envelope-fill"></i> Email: <a href="mailto:info@example.com"
+              class="text-dark">infoexample.com</a></li>
+          <li><i class="bi bi-phone-fill"></i> Phone: +1234567890</li>
+        </ul>
+      </div>
+
+      <!-- Social Media Links -->
+      <div class="col-md-5">
+        <h5>Follow Us</h5>
+        <div class="social-links">
+          <a href="#" class="text-dark"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-dark"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-dark"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-dark"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="row mt-3">
+      <div class="col text-center">
+        <p>&copy; 2024 Egzoni Trade. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>

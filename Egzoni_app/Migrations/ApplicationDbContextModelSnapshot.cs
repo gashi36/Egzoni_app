@@ -34,7 +34,6 @@ namespace Egzoni_app.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Salt")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Token")
@@ -105,7 +104,8 @@ namespace Egzoni_app.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PictureUrl")
+                    b.Property<string>("PictureUrls")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PurchasePrice")

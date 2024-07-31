@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { ShopComponent } from './Shop.component';
+import { ShopComponent } from './shop.component';
 
 describe('ShopComponent', () => {
   let component: ShopComponent;
@@ -11,9 +11,8 @@ describe('ShopComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShopComponent ]
-    })
-    .compileComponents();
+      declarations: [ShopComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

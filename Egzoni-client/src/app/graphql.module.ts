@@ -33,7 +33,7 @@ export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {
 
   const http = ApolloLink.from([
     auth,
-    httpLink.create({ uri: httpUri, extractFiles }),
+    httpLink.create({ uri: httpUri, extractFiles: extractFiles }),
   ]);
 
   const ws = new GraphQLWsLink(createClient({ url: wsUri }));

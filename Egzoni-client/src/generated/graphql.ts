@@ -36,7 +36,7 @@ export type AddProductInput = {
   color?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['Int']['input']>;
-  image?: InputMaybe<Scalars['Upload']['input']>;
+  image?: InputMaybe<Array<Scalars['Upload']['input']>>;
   purchasePrice?: InputMaybe<Scalars['Decimal']['input']>;
   quantity?: InputMaybe<Scalars['Decimal']['input']>;
   retailPrice?: InputMaybe<Scalars['Decimal']['input']>;
@@ -58,7 +58,7 @@ export type Administrator = {
   __typename?: 'Administrator';
   id: Scalars['Int']['output'];
   password?: Maybe<Scalars['String']['output']>;
-  salt: Scalars['String']['output'];
+  salt?: Maybe<Scalars['String']['output']>;
   token?: Maybe<Scalars['String']['output']>;
   username?: Maybe<Scalars['String']['output']>;
 };
@@ -164,6 +164,13 @@ export type ListFilterInputTypeOfProductFilterInput = {
   some?: InputMaybe<ProductFilterInput>;
 };
 
+export type ListStringOperationFilterInput = {
+  all?: InputMaybe<StringOperationFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<StringOperationFilterInput>;
+  some?: InputMaybe<StringOperationFilterInput>;
+};
+
 export type LoginInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -177,7 +184,7 @@ export type Mutation = {
   addRegister: AdminPayloadBase;
   login: AdminPayloadBase;
   removeProductsById: Scalars['Boolean']['output'];
-  updateQuantity: Product;
+  update: UpdateProductPayload;
 };
 
 
@@ -211,9 +218,8 @@ export type MutationRemoveProductsByIdArgs = {
 };
 
 
-export type MutationUpdateQuantityArgs = {
-  id: Scalars['Int']['input'];
-  newQuantity: Scalars['Decimal']['input'];
+export type MutationUpdateArgs = {
+  input: AddProductInput;
 };
 
 /** Information about pagination in a connection. */
@@ -239,7 +245,7 @@ export type Product = {
   color?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
-  pictureUrl?: Maybe<Scalars['String']['output']>;
+  pictureUrls: Array<Scalars['String']['output']>;
   profit?: Maybe<Scalars['Decimal']['output']>;
   purchasePrice?: Maybe<Scalars['Decimal']['output']>;
   quantity?: Maybe<Scalars['Decimal']['output']>;
@@ -258,7 +264,7 @@ export type ProductFilterInput = {
   description?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   or?: InputMaybe<Array<ProductFilterInput>>;
-  pictureUrl?: InputMaybe<StringOperationFilterInput>;
+  pictureUrls?: InputMaybe<ListStringOperationFilterInput>;
   purchasePrice?: InputMaybe<DecimalOperationFilterInput>;
   quantity?: InputMaybe<DecimalOperationFilterInput>;
   retailPrice?: InputMaybe<DecimalOperationFilterInput>;
@@ -274,7 +280,6 @@ export type ProductSortInput = {
   color?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
-  pictureUrl?: InputMaybe<SortEnumType>;
   purchasePrice?: InputMaybe<SortEnumType>;
   quantity?: InputMaybe<SortEnumType>;
   retailPrice?: InputMaybe<SortEnumType>;
@@ -336,8 +341,12 @@ export type QueryProductByIdArgs = {
 export type QueryProductsAsyncArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  brandId?: InputMaybe<Scalars['Int']['input']>;
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  maxPrice?: InputMaybe<Scalars['Decimal']['input']>;
+  minPrice?: InputMaybe<Scalars['Decimal']['input']>;
   order?: InputMaybe<Array<ProductSortInput>>;
   where?: InputMaybe<ProductFilterInput>;
 };
@@ -362,6 +371,11 @@ export type StringOperationFilterInput = {
   startsWith?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateProductPayload = {
+  __typename?: 'UpdateProductPayload';
+  products: Product;
+};
+
 export type UserError = {
   __typename?: 'UserError';
   code: Scalars['String']['output'];
@@ -371,10 +385,14 @@ export type UserError = {
 export type GetProductsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  brandId?: InputMaybe<Scalars['Int']['input']>;
+  categoryId?: InputMaybe<Scalars['Int']['input']>;
+  minPrice?: InputMaybe<Scalars['Decimal']['input']>;
+  maxPrice?: InputMaybe<Scalars['Decimal']['input']>;
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', brandId: number, categoryId: number, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, description?: string | null, id: number, code?: string | null, size?: string | null, color?: string | null, pictureUrl?: string | null, quantity?: any | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', id: number, code?: string | null, description?: string | null, size?: string | null, color?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, pictureUrls: Array<string>, brandId: number, categoryId: number }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -403,19 +421,11 @@ export type AddProductssMutationVariables = Exact<{
   purchasePrice: Scalars['Decimal']['input'];
   brandId: Scalars['Int']['input'];
   categoryId: Scalars['Int']['input'];
-  image: Scalars['Upload']['input'];
+  image: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
 }>;
 
 
-export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrl?: string | null } };
-
-export type UpdateQuantityMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
-  newQuantity: Scalars['Decimal']['input'];
-}>;
-
-
-export type UpdateQuantityMutation = { __typename?: 'Mutation', updateQuantity: { __typename?: 'Product', id: number, brandId: number, categoryId: number, code?: string | null, color?: string | null, description?: string | null, pictureUrl?: string | null, profit?: any | null, purchasePrice?: any | null, quantity?: any | null, retailPrice?: any | null, size?: string | null } };
+export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrls: Array<string> } };
 
 export type AddBrandAsyncMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -431,6 +441,14 @@ export type AddCategoryAsyncMutationVariables = Exact<{
 
 export type AddCategoryAsyncMutation = { __typename?: 'Mutation', addCategory: { __typename?: 'Category', id: number, name?: string | null } };
 
+export type EditProductMutationVariables = Exact<{
+  quantity: Scalars['Decimal']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrls: Array<string> } } };
+
 export type DeleteProductMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
@@ -444,24 +462,39 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AdminPayloadBase', administrator?: { __typename?: 'Administrator', id: number, password?: string | null, salt: string, token?: string | null, username?: string | null } | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'AdminPayloadBase', administrator?: { __typename?: 'Administrator', id: number, password?: string | null, salt?: string | null, token?: string | null, username?: string | null } | null } };
+
+export type GetProductByIdQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetProductByIdQuery = { __typename?: 'Query', productById: { __typename?: 'Product', brandId: number, categoryId: number, code?: string | null, color?: string | null, description?: string | null, id: number, pictureUrls: Array<string>, profit?: any | null, purchasePrice?: any | null, quantity?: any | null, retailPrice?: any | null, size?: string | null } };
 
 export const GetProductsDocument = gql`
-    query getProducts($cursor: String, $first: Int) {
-  productsAsync(first: $first, after: $cursor, order: {id: DESC}) {
+    query getProducts($cursor: String, $first: Int, $brandId: Int, $categoryId: Int, $minPrice: Decimal, $maxPrice: Decimal) {
+  productsAsync(
+    first: $first
+    after: $cursor
+    order: {id: DESC}
+    brandId: $brandId
+    categoryId: $categoryId
+    minPrice: $minPrice
+    maxPrice: $maxPrice
+  ) {
     nodes {
-      brandId
-      categoryId
+      id
+      code
+      description
+      size
+      color
+      quantity
       purchasePrice
       retailPrice
       profit
-      description
-      id
-      code
-      size
-      color
-      pictureUrl
-      quantity
+      pictureUrls
+      brandId
+      categoryId
     }
     pageInfo {
       endCursor
@@ -550,7 +583,7 @@ export const SearchProductsDocument = gql`
     }
   }
 export const AddProductssDocument = gql`
-    mutation addProductss($code: String!, $size: String!, $description: String!, $quantity: Decimal!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $brandId: Int!, $categoryId: Int!, $image: Upload!) {
+    mutation addProductss($code: String!, $size: String!, $description: String!, $quantity: Decimal!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $brandId: Int!, $categoryId: Int!, $image: [Upload!]!) {
   addProduct(
     input: {code: $code, size: $size, color: $color, description: $description, quantity: $quantity, retailPrice: $retailPrice, purchasePrice: $purchasePrice, categoryId: $categoryId, brandId: $brandId, image: $image}
   ) {
@@ -564,7 +597,7 @@ export const AddProductssDocument = gql`
     retailPrice
     brandId
     categoryId
-    pictureUrl
+    pictureUrls
   }
 }
     `;
@@ -574,35 +607,6 @@ export const AddProductssDocument = gql`
   })
   export class AddProductssGQL extends Apollo.Mutation<AddProductssMutation, AddProductssMutationVariables> {
     document = AddProductssDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UpdateQuantityDocument = gql`
-    mutation UpdateQuantity($id: Int!, $newQuantity: Decimal!) {
-  updateQuantity(id: $id, newQuantity: $newQuantity) {
-    id
-    brandId
-    categoryId
-    code
-    color
-    description
-    pictureUrl
-    profit
-    purchasePrice
-    quantity
-    retailPrice
-    size
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UpdateQuantityGQL extends Apollo.Mutation<UpdateQuantityMutation, UpdateQuantityMutationVariables> {
-    document = UpdateQuantityDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -646,6 +650,36 @@ export const AddCategoryAsyncDocument = gql`
       super(apollo);
     }
   }
+export const EditProductDocument = gql`
+    mutation editProduct($quantity: Decimal!, $id: Int) {
+  update(input: {quantity: $quantity, id: $id}) {
+    products {
+      id
+      code
+      size
+      color
+      description
+      quantity
+      purchasePrice
+      retailPrice
+      brandId
+      categoryId
+      pictureUrls
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class EditProductGQL extends Apollo.Mutation<EditProductMutation, EditProductMutationVariables> {
+    document = EditProductDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteProductDocument = gql`
     mutation deleteProduct($id: Int!) {
   removeProductsById(id: $id)
@@ -681,6 +715,35 @@ export const LoginDocument = gql`
   })
   export class LoginGQL extends Apollo.Mutation<LoginMutation, LoginMutationVariables> {
     document = LoginDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetProductByIdDocument = gql`
+    query GetProductById($id: Int!) {
+  productById(id: $id) {
+    brandId
+    categoryId
+    code
+    color
+    description
+    id
+    pictureUrls
+    profit
+    purchasePrice
+    quantity
+    retailPrice
+    size
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetProductByIdGQL extends Apollo.Query<GetProductByIdQuery, GetProductByIdQueryVariables> {
+    document = GetProductByIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

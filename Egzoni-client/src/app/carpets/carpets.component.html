@@ -4,63 +4,67 @@
     <button class="btn btn-outline-danger col-md-2" (click)="logout()">Shkyqu</button>
   </div>
 
-  <!-- Add Brand Form -->
-  <form [formGroup]="addBrandForm" (submit)="addBrandAsync()" class="mb-4">
+  <form [formGroup]="addBrandForm" (ngSubmit)="addBrandAsync()" class="mb-4">
     <div class="row">
       <div class="col-md-3">
         <input type="text" formControlName="addBrand" class="form-control custom-input" placeholder="Shto brand">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingBrand">Shto Brand</button>
+        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingBrand">
+          <span *ngIf="isAddingBrand" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Shto Brand
+        </button>
       </div>
     </div>
   </form>
 
-  <!-- Add Category Form -->
-  <form [formGroup]="addCategoryForm" (submit)="addCategoryAsync()" class="mb-4">
+  <form [formGroup]="addCategoryForm" (ngSubmit)="addCategoryAsync()" class="mb-4">
     <div class="row">
       <div class="col-md-3">
         <input type="text" formControlName="addCategory" class="form-control custom-input" placeholder="Shto kategori">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingCategory">Shto
-          Kategori</button>
+        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingCategory">
+          <span *ngIf="isAddingCategory" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          Shto Kategori
+        </button>
       </div>
     </div>
   </form>
 
   <h2 class="mb-4">{{ isEdit ? 'Ndrysho' : 'Regjistro' }}</h2>
-  <form [formGroup]="addProductForm" (submit)="addProductsAsync()">
+  <form [formGroup]="addProductForm" (ngSubmit)="addProductsAsync()">
     <div class="row mb-4">
       <div class="col-md-6">
         <div class="form-group mb-3">
           <label for="code" class="form-label">Kodi:</label>
-          <input type="text" id="code" class="form-control custom-input" formControlName="code" placeholder="code">
+          <input type="text" id="code" class="form-control custom-input" formControlName="code" placeholder="Kodi">
         </div>
         <div class="form-group mb-3">
           <label for="size" class="form-label">Masa:</label>
-          <input type="text" id="size" class="form-control custom-input" formControlName="size" placeholder="size">
+          <input type="text" id="size" class="form-control custom-input" formControlName="size" placeholder="Masa">
         </div>
         <div class="form-group mb-3">
           <label for="quantity" class="form-label">Sasia:</label>
           <input type="text" id="quantity" class="form-control custom-input" formControlName="quantity"
-            placeholder="quantity">
+            placeholder="Sasia">
         </div>
         <div class="form-group mb-3">
           <label for="color" class="form-label">Ngjyra:</label>
-          <input type="text" id="color" class="form-control custom-input" formControlName="color" placeholder="color">
+          <input type="text" id="color" class="form-control custom-input" formControlName="color" placeholder="Ngjyra">
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group mb-3">
           <label for="purchasePrice" class="form-label">ÇMIMI I BLERJES:</label>
           <input type="text" id="purchasePrice" class="form-control custom-input" formControlName="purchasePrice"
-            placeholder="Çmimi i blerjes">
+            placeholder="Çmimi i Blerjes">
         </div>
         <div class="form-group mb-3">
           <label for="retailPrice" class="form-label">ÇMIMI I SHITJES:</label>
           <input type="text" id="retailPrice" class="form-control custom-input" formControlName="retailPrice"
-            placeholder="Çmimi i shitjes">
+            placeholder="Çmimi i Shitjes">
         </div>
         <div class="form-group mb-3">
           <label for="brandId" class="form-label">Brendi:</label>
@@ -78,13 +82,14 @@
       </div>
     </div>
     <div class="form-group col-md-6 mb-4">
-      <label for="image" class="form-label">Fotografia</label>
-      <input type="file" class="form-control custom-input" id="image" (change)="setFile($event)">
+      <label for="image">Images</label>
+      <input type="file" (change)="setFile($event)" multiple />
+
     </div>
     <div class="form-group mb-3 col-md-6">
-      <label for="description" class="form-label">Pershkrimi:</label>
+      <label for="description" class="form-label">Përshkrimi:</label>
       <textarea id="description" class="form-control custom-input" formControlName="description" rows="3"
-        placeholder="Description"></textarea>
+        placeholder="Përshkrimi"></textarea>
     </div>
     <button type="submit" class="btn btn-outline-success mt-3" [disabled]="isAddingProduct">
       <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -92,24 +97,24 @@
     </button>
   </form>
 
-  <h4 class="col-md-3 p-2 mt-5">Kerko sipas codet</h4>
+  <h4 class="col-md-3 p-2 mt-5">Kërko sipas kodit</h4>
   <div class="searchbar row col-md-12 mb-4">
-    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.controls['search'].value)"
-      class="row">
+    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.get('search')?.value ?? '')">
       <div class="col-md-8 mb-3">
-        <input class="form-control custom-input p-2" type="text" formControlName="search" placeholder="Kerko">
+        <input class="form-control custom-input p-2" type="text" formControlName="search" placeholder="Kërko">
       </div>
       <div class="col-md-2 mb-3">
         <button type="submit" class="btn btn-outline-info py-2 px-5" [disabled]="isSearchingProduct">
           <span *ngIf="isSearchingProduct" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
-          Kerko
+          Kërko
         </button>
       </div>
       <div class="col-md-2 mb-3">
         <button type="button" class="btn btn-outline-danger py-2 px-5" (click)="cancelSearch()">Anulo</button>
       </div>
     </form>
+
   </div>
 
   <hr>
@@ -117,19 +122,19 @@
   <hr>
 
   <div class="table-responsive mt-5">
-    <table class="table table-hover custom-table">
+    <table class="table table-hover custom-table">`
       <thead>
         <tr class="table-primary">
-          <th scope="col">kodi</th>
-          <th scope="col">masa</th>
-          <th scope="col">sasia</th>
-          <th scope="col">ngjyra</th>
-          <th scope="col">cmimi i blerjes</th>
-          <th scope="col">cmimi i shitjes</th>
-          <th scope="col">profiti</th>
-          <th scope="col">brendi</th>
-          <th scope="col">kategoria</th>
-          <th scope="col">Ndrysho sasinë</th>
+          <th scope="col">Kodi</th>
+          <th scope="col">Masa</th>
+          <th scope="col">Sasia</th>
+          <th scope="col">Ngjyra</th>
+          <th scope="col">Çmimi i Blerjes</th>
+          <th scope="col">Çmimi i Shitjes</th>
+          <th scope="col">Profiti</th>
+          <th scope="col">Brendi</th>
+          <th scope="col">Kategoria</th>
+          <th scope="col">Ndrysho Sasinë</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -145,8 +150,9 @@
           <td>{{ getBrandName(pro.brandId) }}</td>
           <td>{{ getCategoryName(pro.categoryId) }}</td>
           <td>
-            <!-- Update Quantity Button -->
-            <button class="btn btn-outline-warning" (click)="openUpdateQuantityModal(pro.id)">Ndrysho Sasinë</button>
+            <button class="btn btn-outline-warning" (click)="editProduct(pro.id)">
+              Ndrysho
+            </button>
           </td>
           <td>
             <button class="btn btn-outline-danger" (click)="deleteProduct(pro.id)" [disabled]="isDeletingProduct">
@@ -160,33 +166,6 @@
     </table>
   </div>
 
-  <ng-template #updateQuantityModal let-modal>
-    <!-- Update Quantity Modal -->
-    <div class="modal fade" id="updateQuantityModal" tabindex="-1" role="dialog"
-      aria-labelledby="updateQuantityModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="updateQuantityModalLabel">Ndrysho Sasinë</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form [formGroup]="updateQuantityForm" (ngSubmit)="updateQuantity()">
-              <div class="form-group">
-                <label for="quantity">Sasia e Re:</label>
-                <input type="number" id="quantity" class="form-control" formControlName="quantity"
-                  placeholder="Sasia e re">
-              </div>
-              <input type="hidden" formControlName="productId">
-              <button type="submit" class="btn btn-primary">Ruaj</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
   <div class="row align-content-center justify-content-center">
     <button (click)="loadMoreProducts()" class="btn btn-outline-info col-md-2" [disabled]="isLoadingMoreProducts">
       <span *ngIf="isLoadingMoreProducts" class="spinner-border spinner-border-sm" role="status"
