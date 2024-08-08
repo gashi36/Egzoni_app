@@ -1,0 +1,38 @@
+<!-- checkout.component.html
+<div class="container">
+  <h2>Checkout</h2>
+
+  <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input formControlName="name" id="name" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label">Delivery Address:</label>
+      <input formControlName="address" id="address" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone Number:</label>
+      <input formControlName="phone" id="phone" class="form-control" required />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input formControlName="email" id="email" class="form-control" type="email" required />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Additional Order Details:</label>
+      <textarea formControlName="description" id="description" class="form-control"></textarea>
+    </div>
+
+    <div *ngIf="products.length > 0">
+      <h3>Products in Cart</h3>
+      <div *ngFor="let product of products" class="mb-3">
+        <p>{{ product.name }} - {{ product.quantity }} x {{ product.price }}</p>
+        <button type="button" (click)="incrementQuantity(product)">Increase Quantity</button>
+      </div>
+      <h4>Total Price: {{ totalPrice }}</h4>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Order</button>
+  </form>
+</div> -->

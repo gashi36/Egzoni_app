@@ -40,9 +40,9 @@ export class ShopComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private getproducts: GetProductsGQL,
-    private getbrands: GetBrandsGQL,
-    private getcategories: GetCategoriesGQL
+    private getProductsGQL: GetProductsGQL,
+    private getBrandsGQL: GetBrandsGQL,
+    private getCategoriesGQL: GetCategoriesGQL
   ) {}
 
   ngOnInit(): void {
@@ -58,30 +58,22 @@ export class ShopComponent implements OnInit {
     const clientHeight = event.target.scrollingElement.clientHeight;
 
     if (scrollTop + clientHeight >= scrollHeight - 10) {
-      // Trigger when near bottom
       this.loadMoreProducts();
     }
   }
+
   getProductThumbnailUrl(product: Product): string {
-    // Assuming the first image is used as the thumbnail
-    const thumbnailUrl =
-      product.pictureUrls.length > 0
-        ? product.pictureUrls[0]
-        : 'default-thumbnail.jpg';
+    const thumbnailUrl = product.thumbnailUrl || 'default-thumbnail.jpg';
     return `${this.baseImageUrl}${product.id}/${thumbnailUrl}`;
   }
 
   getAllCategories(): void {
-    this.getcategories
+    this.getCategoriesGQL
       .watch()
       .valueChanges.pipe(map((result: any) => result.data.categories))
       .subscribe({
         next: (data) => {
-          if (data && data.length > 0) {
-            this.categories = data;
-          } else {
-            console.error('No categories found');
-          }
+          this.categories = data || [];
         },
         error: (error) => {
           console.error('Error fetching categories:', error);
@@ -90,16 +82,12 @@ export class ShopComponent implements OnInit {
   }
 
   getAllBrands(): void {
-    this.getbrands
+    this.getBrandsGQL
       .watch()
       .valueChanges.pipe(map((result: any) => result.data.brands))
       .subscribe({
         next: (data) => {
-          if (data && data.length > 0) {
-            this.brands = data;
-          } else {
-            console.error('No brands found');
-          }
+          this.brands = data || [];
         },
         error: (error) => {
           console.error('Error fetching brands:', error);
@@ -110,7 +98,7 @@ export class ShopComponent implements OnInit {
   getAllProducts(first: number = 15): void {
     const { brand, category, minPrice, maxPrice } = this.filterForm.value;
 
-    this.getproducts
+    this.getProductsGQL
       .watch({
         first,
         cursor: this.cursor,
@@ -126,7 +114,7 @@ export class ShopComponent implements OnInit {
         next: (data) => {
           if (data && data.nodes) {
             this.allProducts = [...this.allProducts, ...data.nodes];
-            this.filteredProducts = this.applyFilters(this.allProducts); // Apply filters to all products
+            this.filteredProducts = this.applyFilters(this.allProducts);
 
             if (data.pageInfo) {
               this.cursor = data.pageInfo.endCursor ?? null;
@@ -160,7 +148,7 @@ export class ShopComponent implements OnInit {
 
   loadMoreProducts(): void {
     if (this.hasNextPage) {
-      this.getAllProducts(15); // Load next chunk of products
+      this.getAllProducts(15);
     } else {
       console.log('No more products to load.');
     }
@@ -168,44 +156,39 @@ export class ShopComponent implements OnInit {
 
   filterProducts(): void {
     const { brand, category, minPrice, maxPrice } = this.filterForm.value;
-    console.log('Filtering products');
 
-    // Reset the product list and cursor before applying filters
     this.allProducts = [];
     this.filteredProducts = [];
     this.cursor = null;
 
-    this.getproducts
-      .watch()
-      .refetch({
+    this.getProductsGQL
+      .watch({
         first: 15,
+        cursor: null,
         brandId: brand ? parseInt(brand, 10) : null,
         categoryId: category ? parseInt(category, 10) : null,
         minPrice: minPrice ? parseFloat(minPrice) : null,
         maxPrice: maxPrice ? parseFloat(maxPrice) : null,
       })
-      .then((data) => {
-        if (data && data.data.productsAsync?.nodes) {
-          console.log('Fetched products with filters:', {
-            brand,
-            category,
-            minPrice,
-            maxPrice,
-          });
-          console.log('Data received:', data.data.productsAsync?.nodes);
+      .valueChanges.pipe(
+        map((result: ApolloQueryResult<any>) => result.data.productsAsync)
+      )
+      .subscribe({
+        next: (data) => {
+          if (data && data.nodes) {
+            this.allProducts = data.nodes;
+            this.filteredProducts = this.applyFilters(this.allProducts);
 
-          this.allProducts = data.data.productsAsync.nodes;
-          this.filteredProducts = this.applyFilters(this.allProducts); // Apply filters to all products
-
-          if (data.data.productsAsync.pageInfo) {
-            this.cursor = data.data.productsAsync.pageInfo.endCursor ?? null;
-            this.hasNextPage = data.data.productsAsync.pageInfo.hasNextPage;
+            if (data.pageInfo) {
+              this.cursor = data.pageInfo.endCursor ?? null;
+              this.hasNextPage = data.pageInfo.hasNextPage;
+            }
           }
-        }
+        },
+        error: (error) => {
+          console.error('Error fetching products with filters:', error);
+        },
       });
-
-    console.log('Filter values:', { brand, category, minPrice, maxPrice });
-    this.filteredProducts = this.applyFilters(this.allProducts); // Apply filters to all products
   }
 
   toggleBrands(): void {
@@ -227,7 +210,6 @@ export class ShopComponent implements OnInit {
     );
     return category?.name!;
   }
-
   searchProduct(code: string): void {
     // Implement search product functionality if needed
   }

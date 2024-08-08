@@ -1,31 +1,46 @@
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-overlay">
+    <div class="hero-content">
+      <h2>Zbuloni Luksin e Tepihëve të Jashtme</h2>
+      <p>Ngrini hapësirën tuaj me përzgjedhjen tonë të kuratorëve të tepave dhe qilimëve të lartë.</p>
+      <a class="btn-primary" href="shop">Eksploroni Koleksionin Tonë</a>
+
+    </div>
+  </div>
+</section>
+
 <div class="container gradient-background py-4">
   <div class="row">
     <div class="col-md-3">
       <!-- Filters -->
-      <div class="mb-4">
+      <div class="mb-4 filter-container">
+        <h4 class="filter-title">Filtro:</h4>
         <form [formGroup]="filterForm" (ngSubmit)="filterProducts()">
-          <div class="mb-3">
-            <label for="brand" class="form-label">Brand:</label>
+          <div class="filter-group">
+            <label for="brand" class="form-label">Brendi:</label>
             <select formControlName="brand" id="brand" class="form-select">
-              <option value="">All Brands</option>
+              <option value="">Të gjitha</option>
               <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="category" class="form-label">Category:</label>
+          <div class="filter-group">
+            <label for="category" class="form-label">Kategoria:</label>
             <select formControlName="category" id="category" class="form-select">
-              <option value="">All Categories</option>
+              <option value="">Të gjitha</option>
               <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="minPrice" class="form-label">Min Price:</label>
-            <input type="number" formControlName="minPrice" id="minPrice" class="form-control" placeholder="Min Price">
+          <div class="filter-group">
+            <label for="minPrice" class="form-label">Çmimi min:</label>
+            <input type="number" formControlName="minPrice" id="minPrice" class="form-control" placeholder="10">
           </div>
-          <div class="mb-3">
-            <label for="maxPrice" class="form-label">Max Price:</label>
-            <input type="number" formControlName="maxPrice" id="maxPrice" class="form-control" placeholder="Max Price">
+          <div class="filter-group">
+            <label for="maxPrice" class="form-label">Çmimi max:</label>
+            <input type="number" formControlName="maxPrice" id="maxPrice" class="form-control" placeholder="299">
           </div>
+
+          <br>
           <button type="submit" class="btn btn-primary">Apply Filters</button>
         </form>
       </div>
@@ -51,3 +66,5 @@
         </div>
       </div>
     </div>
+  </div>
+</div>

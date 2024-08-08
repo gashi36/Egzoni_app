@@ -358,3 +358,7 @@ C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\runtimes\win\lib\ne
 C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\Egzoni_app.staticwebassets.runtime.json
+C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\MailKit.dll
+C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\MimeKit.dll
+C:\Users\asus\Desktop\Egzoni_app\Egzoni_app\bin\Debug\net8.0\System.Formats.Asn1.dll

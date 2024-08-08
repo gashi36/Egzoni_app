@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  isDropdownOpen: boolean = false; // State to manage dropdown visibility
+
   ngOnInit(): void {
     this.updateCartBadge();
   }
@@ -33,5 +35,15 @@ export class AppComponent implements OnInit {
     } catch (error) {
       console.error('Error updating cart badge:', error);
     }
+  }
+
+  // Method to toggle dropdown visibility
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  // Method to close dropdown
+  closeDropdown(): void {
+    this.isDropdownOpen = false;
   }
 }

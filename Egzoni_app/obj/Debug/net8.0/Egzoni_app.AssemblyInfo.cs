@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Egzoni_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5174d197ec397d2e8b42bcccbdf99eb03c7e153")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1eaf530184e1caab36295be7f88e63589945bfe9")]
 [assembly: System.Reflection.AssemblyProductAttribute("Egzoni_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Egzoni_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

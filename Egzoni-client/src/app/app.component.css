@@ -103,3 +103,37 @@ footer .social-links a:hover {
   width: 100%;
   max-width: 500px;
 }
+
+/* Dropdown Menu Styles */
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+/* Ensure the dropdown menu is hidden on large screens */
+@media (min-width: 992px) {
+  .dropdown-menu {
+    display: none !important;
+  }
+}
+
+/* Ensure the dropdown menu is displayed on small screens */
+@media (max-width: 991px) {
+  .dropdown-menu.show {
+    display: block;
+  }
+}
+
+/* Make sure basket and user icons are visible on small screens */
+@media (max-width: 991px) {
+  .d-lg-flex {
+    display: none;
+  }
+
+  .d-lg-none {
+    display: block;
+  }
+}

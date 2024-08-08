@@ -32,7 +32,7 @@ namespace Egzoni_app.Products
 
         // Change from string? to List<string>
         public List<string> PictureUrls { get; set; } = new List<string>();
-
+        public string ThumbnailUrl { get; set; }
         [Required]
         public int? BrandId { get; set; }
         public Brand? Brand { get; set; }

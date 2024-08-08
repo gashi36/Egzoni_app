@@ -28,6 +28,7 @@ query getProducts(
       pictureUrls
       brandId
       categoryId
+      thumbnailUrl
     }
     pageInfo {
       endCursor

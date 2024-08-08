@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100vh;
+  padding: 20px;
+}
+
+.map-container {
+  flex: 2;
+  margin-right: 20px;
+}
+
+.info-container {
+  flex: 1;
+  max-width: 400px;
+  /* Adjust width as needed */
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.get-directions-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.get-directions-button:hover {
+  background-color: #0056b3;
+}

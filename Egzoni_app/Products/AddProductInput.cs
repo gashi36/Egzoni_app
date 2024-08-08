@@ -15,6 +15,9 @@ namespace Egzoni_app.Products
         decimal? RetailPrice,
         int? Id,
   [GraphQLType(typeof(NonNullType<ListType<UploadType>>))] IReadOnlyList<IFile>? Image,
+     [GraphQLType(typeof(UploadType))] // Use UploadType for single file upload
+        IFile? Thumbnail,
+
        int? BrandId,
         int? CategoryId
     );

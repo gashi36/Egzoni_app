@@ -32,7 +32,8 @@ namespace Egzoni_app.Products
                 RetailPrice = input.RetailPrice,
                 BrandId = input.BrandId,
                 CategoryId = input.CategoryId,
-                PictureUrls = new List<string>() // Initialize PictureUrls list
+                PictureUrls = new List<string>(), // Initialize PictureUrls list
+                ThumbnailUrl = string.Empty // Initialize ThumbnailUrl
             };
 
             // Add the new product to the database context
@@ -65,22 +66,28 @@ namespace Egzoni_app.Products
 
                         // Add the image name to the PictureUrls list
                         newProduct.PictureUrls.Add(imageName);
+
+                        // Set the first image as the ThumbnailUrl
+                        if (newProduct.ThumbnailUrl == string.Empty)
+                        {
+                            newProduct.ThumbnailUrl = imageName;
+                        }
                     }
                     catch (Exception ex)
                     {
                         // Log the exception (you might need a logging mechanism here)
-                        // Log.Error($"Error saving image {formFile.FileName}: {ex.Message}");
                         throw new InvalidOperationException($"Error saving image {image.Name}", ex);
                     }
                 }
             }
 
-            // Update the product to include the list of PictureUrls
+            // Update the product to include the list of PictureUrls and ThumbnailUrl
             context.Products.Update(newProduct);
             await context.SaveChangesAsync(); // Save the changes to the database
 
             return newProduct;
         }
+
         public async Task<UpdateProductPayload> UpdateAsync(AddProductInput input, ApplicationDbContext context)
         {
             var product = await context.Products.FindAsync(input.Id);

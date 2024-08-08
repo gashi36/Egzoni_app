@@ -15,6 +15,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
+  DateTime: { input: any; output: any; }
   /** The built-in `Decimal` scalar type. */
   Decimal: { input: any; output: any; }
   /** The `Upload` scalar type represents a file upload. */
@@ -41,6 +43,7 @@ export type AddProductInput = {
   quantity?: InputMaybe<Scalars['Decimal']['input']>;
   retailPrice?: InputMaybe<Scalars['Decimal']['input']>;
   size?: InputMaybe<Scalars['String']['input']>;
+  thumbnail?: InputMaybe<Scalars['Upload']['input']>;
 };
 
 export type AdminPayloadBase = {
@@ -183,6 +186,7 @@ export type Mutation = {
   addProduct: Product;
   addRegister: AdminPayloadBase;
   login: AdminPayloadBase;
+  placeOrder: Order;
   removeProductsById: Scalars['Boolean']['output'];
   update: UpdateProductPayload;
 };
@@ -213,6 +217,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationPlaceOrderArgs = {
+  input: OrderInput;
+};
+
+
 export type MutationRemoveProductsByIdArgs = {
   id: Scalars['Int']['input'];
 };
@@ -220,6 +229,32 @@ export type MutationRemoveProductsByIdArgs = {
 
 export type MutationUpdateArgs = {
   input: AddProductInput;
+};
+
+export type Order = {
+  __typename?: 'Order';
+  additionalMessage: Scalars['String']['output'];
+  costumerName: Scalars['String']['output'];
+  deliveryAddress: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  orderDate: Scalars['DateTime']['output'];
+  phoneNumber: Scalars['String']['output'];
+  product: Product;
+  productId: Scalars['Int']['output'];
+  productThumbnailUrl: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
+  totalPrice: Scalars['Decimal']['output'];
+};
+
+export type OrderInput = {
+  additionalMessage?: InputMaybe<Scalars['String']['input']>;
+  costumerName?: InputMaybe<Scalars['String']['input']>;
+  deliveryAddress?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  productId?: InputMaybe<Scalars['Int']['input']>;
+  quantity?: InputMaybe<Scalars['Int']['input']>;
 };
 
 /** Information about pagination in a connection. */
@@ -251,6 +286,7 @@ export type Product = {
   quantity?: Maybe<Scalars['Decimal']['output']>;
   retailPrice?: Maybe<Scalars['Decimal']['output']>;
   size?: Maybe<Scalars['String']['output']>;
+  thumbnailUrl: Scalars['String']['output'];
 };
 
 export type ProductFilterInput = {
@@ -269,6 +305,7 @@ export type ProductFilterInput = {
   quantity?: InputMaybe<DecimalOperationFilterInput>;
   retailPrice?: InputMaybe<DecimalOperationFilterInput>;
   size?: InputMaybe<StringOperationFilterInput>;
+  thumbnailUrl?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type ProductSortInput = {
@@ -284,6 +321,7 @@ export type ProductSortInput = {
   quantity?: InputMaybe<SortEnumType>;
   retailPrice?: InputMaybe<SortEnumType>;
   size?: InputMaybe<SortEnumType>;
+  thumbnailUrl?: InputMaybe<SortEnumType>;
 };
 
 /** A connection to a list of items. */
@@ -392,7 +430,7 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', id: number, code?: string | null, description?: string | null, size?: string | null, color?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, pictureUrls: Array<string>, brandId: number, categoryId: number }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', id: number, code?: string | null, description?: string | null, size?: string | null, color?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, pictureUrls: Array<string>, brandId: number, categoryId: number, thumbnailUrl: string }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -495,6 +533,7 @@ export const GetProductsDocument = gql`
       pictureUrls
       brandId
       categoryId
+      thumbnailUrl
     }
     pageInfo {
       endCursor
