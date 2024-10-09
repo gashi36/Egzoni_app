@@ -1,0 +1,8 @@
+.invalid-feedback {
+  display: none;
+}
+
+input.ng-invalid.ng-touched~.invalid-feedback {
+  display: block;
+  /* This makes the feedback visible */
+}

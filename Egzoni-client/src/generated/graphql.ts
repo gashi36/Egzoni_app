@@ -57,6 +57,12 @@ export type AdminRegisterInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type AdminUpdateInput = {
+  id: Scalars['Int']['input'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
 export type Administrator = {
   __typename?: 'Administrator';
   id: Scalars['Int']['output'];
@@ -82,6 +88,26 @@ export type AdministratorSortInput = {
   salt?: InputMaybe<SortEnumType>;
   token?: InputMaybe<SortEnumType>;
   username?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type AllOrdersConnection = {
+  __typename?: 'AllOrdersConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<AllOrdersEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<Order>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type AllOrdersEdge = {
+  __typename?: 'AllOrdersEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: Order;
 };
 
 export enum ApplyPolicy {
@@ -130,6 +156,21 @@ export type CategorySortInput = {
   name?: InputMaybe<SortEnumType>;
 };
 
+export type DateTimeOperationFilterInput = {
+  eq?: InputMaybe<Scalars['DateTime']['input']>;
+  gt?: InputMaybe<Scalars['DateTime']['input']>;
+  gte?: InputMaybe<Scalars['DateTime']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  lt?: InputMaybe<Scalars['DateTime']['input']>;
+  lte?: InputMaybe<Scalars['DateTime']['input']>;
+  neq?: InputMaybe<Scalars['DateTime']['input']>;
+  ngt?: InputMaybe<Scalars['DateTime']['input']>;
+  ngte?: InputMaybe<Scalars['DateTime']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  nlt?: InputMaybe<Scalars['DateTime']['input']>;
+  nlte?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type DecimalOperationFilterInput = {
   eq?: InputMaybe<Scalars['Decimal']['input']>;
   gt?: InputMaybe<Scalars['Decimal']['input']>;
@@ -160,6 +201,13 @@ export type IntOperationFilterInput = {
   nlte?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type ListFilterInputTypeOfOrderItemFilterInput = {
+  all?: InputMaybe<OrderItemFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<OrderItemFilterInput>;
+  some?: InputMaybe<OrderItemFilterInput>;
+};
+
 export type ListFilterInputTypeOfProductFilterInput = {
   all?: InputMaybe<ProductFilterInput>;
   any?: InputMaybe<Scalars['Boolean']['input']>;
@@ -179,6 +227,24 @@ export type LoginInput = {
   username: Scalars['String']['input'];
 };
 
+export type MonthlyProductStats = {
+  __typename?: 'MonthlyProductStats';
+  month: Scalars['Int']['output'];
+  totalProfit: Scalars['Decimal']['output'];
+  totalPurchasePrice: Scalars['Decimal']['output'];
+  totalRetailPrice: Scalars['Decimal']['output'];
+  year: Scalars['Int']['output'];
+};
+
+export type MostSoldProduct = {
+  __typename?: 'MostSoldProduct';
+  brand?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  productCode?: Maybe<Scalars['String']['output']>;
+  productId: Scalars['Int']['output'];
+  quantitySold: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBrand: Brand;
@@ -189,6 +255,7 @@ export type Mutation = {
   placeOrder: Order;
   removeProductsById: Scalars['Boolean']['output'];
   update: UpdateProductPayload;
+  updateAdmin: AdminPayloadBase;
 };
 
 
@@ -231,6 +298,11 @@ export type MutationUpdateArgs = {
   input: AddProductInput;
 };
 
+
+export type MutationUpdateAdminArgs = {
+  adminUpdateInput: AdminUpdateInput;
+};
+
 export type Order = {
   __typename?: 'Order';
   additionalMessage: Scalars['String']['output'];
@@ -239,22 +311,93 @@ export type Order = {
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   orderDate: Scalars['DateTime']['output'];
+  orderItems: Array<OrderItem>;
   phoneNumber: Scalars['String']['output'];
-  product: Product;
-  productId: Scalars['Int']['output'];
-  productThumbnailUrl: Scalars['String']['output'];
-  quantity: Scalars['Int']['output'];
   totalPrice: Scalars['Decimal']['output'];
 };
 
+export type OrderFilterInput = {
+  additionalMessage?: InputMaybe<StringOperationFilterInput>;
+  and?: InputMaybe<Array<OrderFilterInput>>;
+  costumerName?: InputMaybe<StringOperationFilterInput>;
+  deliveryAddress?: InputMaybe<StringOperationFilterInput>;
+  email?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  or?: InputMaybe<Array<OrderFilterInput>>;
+  orderDate?: InputMaybe<DateTimeOperationFilterInput>;
+  orderItems?: InputMaybe<ListFilterInputTypeOfOrderItemFilterInput>;
+  phoneNumber?: InputMaybe<StringOperationFilterInput>;
+  totalPrice?: InputMaybe<DecimalOperationFilterInput>;
+};
+
 export type OrderInput = {
-  additionalMessage?: InputMaybe<Scalars['String']['input']>;
-  costumerName?: InputMaybe<Scalars['String']['input']>;
-  deliveryAddress?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  phoneNumber?: InputMaybe<Scalars['String']['input']>;
-  productId?: InputMaybe<Scalars['Int']['input']>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
+  additionalMessage: Scalars['String']['input'];
+  costumerName: Scalars['String']['input'];
+  deliveryAddress: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  items: Array<OrderItemInput>;
+  phoneNumber: Scalars['String']['input'];
+};
+
+export type OrderItem = {
+  __typename?: 'OrderItem';
+  code?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  order?: Maybe<Order>;
+  orderId: Scalars['Int']['output'];
+  price: Scalars['Decimal']['output'];
+  product?: Maybe<Product>;
+  productId: Scalars['Int']['output'];
+  quantity: Scalars['Int']['output'];
+};
+
+export type OrderItemFilterInput = {
+  and?: InputMaybe<Array<OrderItemFilterInput>>;
+  code?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  or?: InputMaybe<Array<OrderItemFilterInput>>;
+  order?: InputMaybe<OrderFilterInput>;
+  orderId?: InputMaybe<IntOperationFilterInput>;
+  price?: InputMaybe<DecimalOperationFilterInput>;
+  product?: InputMaybe<ProductFilterInput>;
+  productId?: InputMaybe<IntOperationFilterInput>;
+  quantity?: InputMaybe<IntOperationFilterInput>;
+};
+
+export type OrderItemInput = {
+  productId: Scalars['Int']['input'];
+  quantity: Scalars['Int']['input'];
+};
+
+export type OrderPriceStats = {
+  __typename?: 'OrderPriceStats';
+  month: Scalars['Int']['output'];
+  monthName: Scalars['String']['output'];
+  mostSoldProductCode?: Maybe<Scalars['String']['output']>;
+  totalOrders: Scalars['Int']['output'];
+  totalPurchasePrice: Scalars['Decimal']['output'];
+  totalRetailPrice: Scalars['Decimal']['output'];
+  year: Scalars['Int']['output'];
+};
+
+export type OrderSortInput = {
+  additionalMessage?: InputMaybe<SortEnumType>;
+  costumerName?: InputMaybe<SortEnumType>;
+  deliveryAddress?: InputMaybe<SortEnumType>;
+  email?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  orderDate?: InputMaybe<SortEnumType>;
+  phoneNumber?: InputMaybe<SortEnumType>;
+  totalPrice?: InputMaybe<SortEnumType>;
+};
+
+export type OrderStats = {
+  __typename?: 'OrderStats';
+  month: Scalars['Int']['output'];
+  monthName: Scalars['String']['output'];
+  mostSoldProductCode?: Maybe<Scalars['String']['output']>;
+  totalOrders: Scalars['Int']['output'];
+  year: Scalars['Int']['output'];
 };
 
 /** Information about pagination in a connection. */
@@ -286,7 +429,7 @@ export type Product = {
   quantity?: Maybe<Scalars['Decimal']['output']>;
   retailPrice?: Maybe<Scalars['Decimal']['output']>;
   size?: Maybe<Scalars['String']['output']>;
-  thumbnailUrl: Scalars['String']['output'];
+  thumbnailUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductFilterInput = {
@@ -347,16 +490,32 @@ export type ProductsAsyncEdge = {
 export type Query = {
   __typename?: 'Query';
   administrators: Array<Administrator>;
+  allOrders?: Maybe<AllOrdersConnection>;
   brands: Array<Brand>;
   categories: Array<Category>;
+  monthlyPricesAndStatsForYear: Array<OrderPriceStats>;
+  monthlyProductStatsForCurrentAndLastYear: Array<MonthlyProductStats>;
+  orderById?: Maybe<Order>;
+  ordersAndStatsForYear: Array<OrderStats>;
   productById: Product;
   productsAsync?: Maybe<ProductsAsyncConnection>;
+  tenMostSoldProducts: Array<MostSoldProduct>;
 };
 
 
 export type QueryAdministratorsArgs = {
   order?: InputMaybe<Array<AdministratorSortInput>>;
   where?: InputMaybe<AdministratorFilterInput>;
+};
+
+
+export type QueryAllOrdersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<OrderSortInput>>;
+  where?: InputMaybe<OrderFilterInput>;
 };
 
 
@@ -368,6 +527,21 @@ export type QueryBrandsArgs = {
 
 export type QueryCategoriesArgs = {
   where?: InputMaybe<CategoryFilterInput>;
+};
+
+
+export type QueryMonthlyPricesAndStatsForYearArgs = {
+  year: Scalars['Int']['input'];
+};
+
+
+export type QueryOrderByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryOrdersAndStatsForYearArgs = {
+  year: Scalars['Int']['input'];
 };
 
 
@@ -422,6 +596,7 @@ export type UserError = {
 
 export type GetProductsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   brandId?: InputMaybe<Scalars['Int']['input']>;
   categoryId?: InputMaybe<Scalars['Int']['input']>;
@@ -430,7 +605,41 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', id: number, code?: string | null, description?: string | null, size?: string | null, color?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, pictureUrls: Array<string>, brandId: number, categoryId: number, thumbnailUrl: string }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+export type GetProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', nodes?: Array<{ __typename?: 'Product', id: number, code?: string | null, description?: string | null, size?: string | null, color?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, profit?: any | null, pictureUrls: Array<string>, brandId: number, categoryId: number, thumbnailUrl?: string | null }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+
+export type GetAllOrdersQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetAllOrdersQuery = { __typename?: 'Query', allOrders?: { __typename?: 'AllOrdersConnection', nodes?: Array<{ __typename?: 'Order', additionalMessage: string, costumerName: string, deliveryAddress: string, email: string, id: number, orderDate: any, phoneNumber: string, totalPrice: any, orderItems: Array<{ __typename?: 'OrderItem', code?: string | null, id: number, orderId: number, price: any, productId: number, quantity: number }> }> | null, edges?: Array<{ __typename?: 'AllOrdersEdge', cursor: string }> | null, pageInfo: { __typename?: 'PageInfo', endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null } } | null };
+
+export type SearchByCostumerNameQueryVariables = Exact<{
+  customerNameSearch?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchByCostumerNameQuery = { __typename?: 'Query', allOrders?: { __typename?: 'AllOrdersConnection', edges?: Array<{ __typename?: 'AllOrdersEdge', cursor: string }> | null, nodes?: Array<{ __typename?: 'Order', additionalMessage: string, costumerName: string, deliveryAddress: string, email: string, id: number, orderDate: any, phoneNumber: string, totalPrice: any }> | null } | null };
+
+export type GetSalesForYearQueryVariables = Exact<{
+  year: Scalars['Int']['input'];
+}>;
+
+
+export type GetSalesForYearQuery = { __typename?: 'Query', monthlyPricesAndStatsForYear: Array<{ __typename?: 'OrderPriceStats', month: number, monthName: string, mostSoldProductCode?: string | null, totalOrders: number, totalPurchasePrice: any, totalRetailPrice: any, year: number }> };
+
+export type GetOrdersAndStatsForYearQueryVariables = Exact<{
+  year: Scalars['Int']['input'];
+}>;
+
+
+export type GetOrdersAndStatsForYearQuery = { __typename?: 'Query', ordersAndStatsForYear: Array<{ __typename?: 'OrderStats', month: number, monthName: string, mostSoldProductCode?: string | null, totalOrders: number, year: number }> };
+
+export type TenMostSoldProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TenMostSoldProductsQuery = { __typename?: 'Query', tenMostSoldProducts: Array<{ __typename?: 'MostSoldProduct', productId: number, brand?: string | null, category?: string | null, productCode?: string | null, quantitySold: number }> };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -464,6 +673,13 @@ export type AddProductssMutationVariables = Exact<{
 
 
 export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrls: Array<string> } };
+
+export type PlaceOrderMutationVariables = Exact<{
+  input: OrderInput;
+}>;
+
+
+export type PlaceOrderMutation = { __typename?: 'Mutation', placeOrder: { __typename?: 'Order', id: number, deliveryAddress: string, costumerName: string, email: string, phoneNumber: string, additionalMessage: string, orderDate: any, totalPrice: any, orderItems: Array<{ __typename?: 'OrderItem', productId: number, quantity: number, price: any }> } };
 
 export type AddBrandAsyncMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -507,11 +723,12 @@ export type GetProductByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetProductByIdQuery = { __typename?: 'Query', productById: { __typename?: 'Product', brandId: number, categoryId: number, code?: string | null, color?: string | null, description?: string | null, id: number, pictureUrls: Array<string>, profit?: any | null, purchasePrice?: any | null, quantity?: any | null, retailPrice?: any | null, size?: string | null } };
+export type GetProductByIdQuery = { __typename?: 'Query', productById: { __typename?: 'Product', brandId: number, categoryId: number, code?: string | null, color?: string | null, description?: string | null, id: number, pictureUrls: Array<string>, profit?: any | null, purchasePrice?: any | null, quantity?: any | null, retailPrice?: any | null, size?: string | null, thumbnailUrl?: string | null } };
 
 export const GetProductsDocument = gql`
-    query getProducts($cursor: String, $first: Int, $brandId: Int, $categoryId: Int, $minPrice: Decimal, $maxPrice: Decimal) {
+    query getProducts($cursor: String, $last: Int, $first: Int, $brandId: Int, $categoryId: Int, $minPrice: Decimal, $maxPrice: Decimal) {
   productsAsync(
+    last: $last
     first: $first
     after: $cursor
     order: {id: DESC}
@@ -550,6 +767,148 @@ export const GetProductsDocument = gql`
   })
   export class GetProductsGQL extends Apollo.Query<GetProductsQuery, GetProductsQueryVariables> {
     document = GetProductsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetAllOrdersDocument = gql`
+    query getAllOrders($before: String, $after: String) {
+  allOrders(before: $before, after: $after, order: {id: DESC}) {
+    nodes {
+      additionalMessage
+      costumerName
+      deliveryAddress
+      email
+      id
+      orderDate
+      phoneNumber
+      totalPrice
+      orderItems {
+        code
+        id
+        orderId
+        price
+        productId
+        quantity
+      }
+    }
+    edges {
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetAllOrdersGQL extends Apollo.Query<GetAllOrdersQuery, GetAllOrdersQueryVariables> {
+    document = GetAllOrdersDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SearchByCostumerNameDocument = gql`
+    query searchByCostumerName($customerNameSearch: String) {
+  allOrders(where: {costumerName: {startsWith: $customerNameSearch}}) {
+    edges {
+      cursor
+    }
+    nodes {
+      additionalMessage
+      costumerName
+      deliveryAddress
+      email
+      id
+      orderDate
+      phoneNumber
+      totalPrice
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SearchByCostumerNameGQL extends Apollo.Query<SearchByCostumerNameQuery, SearchByCostumerNameQueryVariables> {
+    document = SearchByCostumerNameDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetSalesForYearDocument = gql`
+    query getSalesForYear($year: Int!) {
+  monthlyPricesAndStatsForYear(year: $year) {
+    month
+    monthName
+    mostSoldProductCode
+    totalOrders
+    totalPurchasePrice
+    totalRetailPrice
+    year
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetSalesForYearGQL extends Apollo.Query<GetSalesForYearQuery, GetSalesForYearQueryVariables> {
+    document = GetSalesForYearDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetOrdersAndStatsForYearDocument = gql`
+    query getOrdersAndStatsForYear($year: Int!) {
+  ordersAndStatsForYear(year: $year) {
+    month
+    monthName
+    mostSoldProductCode
+    totalOrders
+    year
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetOrdersAndStatsForYearGQL extends Apollo.Query<GetOrdersAndStatsForYearQuery, GetOrdersAndStatsForYearQueryVariables> {
+    document = GetOrdersAndStatsForYearDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const TenMostSoldProductsDocument = gql`
+    query tenMostSoldProducts {
+  tenMostSoldProducts {
+    productId
+    brand
+    category
+    productCode
+    quantitySold
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class TenMostSoldProductsGQL extends Apollo.Query<TenMostSoldProductsQuery, TenMostSoldProductsQueryVariables> {
+    document = TenMostSoldProductsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -646,6 +1005,36 @@ export const AddProductssDocument = gql`
   })
   export class AddProductssGQL extends Apollo.Mutation<AddProductssMutation, AddProductssMutationVariables> {
     document = AddProductssDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const PlaceOrderDocument = gql`
+    mutation PlaceOrder($input: OrderInput!) {
+  placeOrder(input: $input) {
+    id
+    deliveryAddress
+    costumerName
+    email
+    phoneNumber
+    additionalMessage
+    orderDate
+    totalPrice
+    orderItems {
+      productId
+      quantity
+      price
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class PlaceOrderGQL extends Apollo.Mutation<PlaceOrderMutation, PlaceOrderMutationVariables> {
+    document = PlaceOrderDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -774,6 +1163,7 @@ export const GetProductByIdDocument = gql`
     quantity
     retailPrice
     size
+    thumbnailUrl
   }
 }
     `;

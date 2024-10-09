@@ -76,6 +76,32 @@ namespace Egzoni_app.Admin
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+        public async Task<AdminPayloadBase> UpdateAdminAsync(AdminUpdateInput adminUpdateInput, ApplicationDbContext context)
+        {
+            var admin = await context.Admins.FindAsync(adminUpdateInput.Id);
+
+            if (admin == null)
+            {
+                throw new Exception("Admin not found.");
+            }
+
+            if (!string.IsNullOrEmpty(adminUpdateInput.Username))
+            {
+                admin.Username = adminUpdateInput.Username;
+            }
+
+            if (!string.IsNullOrEmpty(adminUpdateInput.Password))
+            {
+                var (hashedPassword, salt) = PasswordHasher.HashPassword(adminUpdateInput.Password);
+                admin.Password = hashedPassword;
+                admin.Salt = salt;
+            }
+
+            context.Admins.Update(admin);
+            await context.SaveChangesAsync();
+
+            return new AdminPayloadBase(admin);
+        }
 
 
     }

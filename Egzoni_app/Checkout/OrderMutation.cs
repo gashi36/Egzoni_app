@@ -1,197 +1,264 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using System.Threading;
 using Egzoni_app.Database;
+using Microsoft.EntityFrameworkCore;
+using HotChocolate;
 using Egzoni_app.Checkout;
 using Egzoni_app.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Egzoni_app.Checkouts
 {
     [MutationType]
     public class OrderMutation
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
         private readonly IEmailService _emailService;
-        private readonly string _imageBaseUrl;
+        private readonly string _adminEmail;
 
-        public OrderMutation(ApplicationDbContext context, IEmailService emailService, string imageBaseUrl)
+        public OrderMutation(IDbContextFactory<ApplicationDbContext> dbContextFactory, IEmailService emailService, string adminEmail)
         {
-            _context = context;
+            _dbContextFactory = dbContextFactory;
             _emailService = emailService;
-            _imageBaseUrl = imageBaseUrl;
+            _adminEmail = adminEmail;
         }
 
-        public async Task<Order> PlaceOrderAsync(OrderInput input)
+        public async Task<Order> PlaceOrderAsync(OrderInput input, CancellationToken cancellationToken)
         {
-            if (!input.ProductId.HasValue || !input.Quantity.HasValue)
+            if (input.Items == null || !input.Items.Any())
             {
-                throw new GraphQLException("ProductId and Quantity are required.");
+                throw new GraphQLException("At least one item is required.");
             }
 
-            var product = await _context.Products
-                .Where(p => p.Id == input.ProductId)
-                .Select(p => new
+            using (var context = _dbContextFactory.CreateDbContext())
+            {
+                // Create the order
+                var order = new Order
                 {
-                    p.Id,
-                    p.Code,
-                    p.RetailPrice,
-                    p.Quantity,
-                    ThumbnailUrl = p.ThumbnailUrl // Get the thumbnail URL
-                })
-                .FirstOrDefaultAsync();
+                    DeliveryAddress = input.DeliveryAddress,
+                    CostumerName = input.CostumerName,
+                    Email = input.Email,
+                    PhoneNumber = input.PhoneNumber,
+                    AdditionalMessage = input.AdditionalMessage,
+                    OrderDate = DateTime.UtcNow, // Set the current date and time
+                    OrderItems = new List<OrderItem>()
+                };
 
-            if (product == null)
-            {
-                throw new Exception("Product not found.");
+                decimal totalPrice = 0;
+
+                // Loop through items and add them to the order
+                foreach (var itemInput in input.Items)
+                {
+                    var product = await context.Products
+                        .Where(p => p.Id == itemInput.ProductId)
+                        .Select(p => new
+                        {
+                            p.Id,
+                            p.RetailPrice,
+                            p.Quantity,
+                            p.Code // Ensure ProductCode is available
+                        })
+                        .FirstOrDefaultAsync(cancellationToken);
+
+                    if (product == null)
+                    {
+                        throw new GraphQLException($"Product with ID {itemInput.ProductId} not found.");
+                    }
+
+                    if (product.Quantity < itemInput.Quantity)
+                    {
+                        throw new GraphQLException($"Insufficient quantity for product with ID {itemInput.ProductId}.");
+                    }
+
+                    // Deduct product quantity
+                    var productEntity = await context.Products.FindAsync(product.Id);
+                    productEntity.Quantity -= itemInput.Quantity;
+
+                    var orderItem = new OrderItem
+                    {
+                        ProductId = product.Id,
+                        Code = product.Code, // Set ProductCode
+                        Quantity = itemInput.Quantity,
+                        Price = product.RetailPrice ?? 0 // Assuming RetailPrice is nullable
+                    };
+
+                    order.OrderItems.Add(orderItem);
+                    totalPrice += orderItem.Price * orderItem.Quantity;
+                }
+
+                // Set the total price of the order
+                order.TotalPrice = totalPrice;
+
+                // Save the order to the database
+                context.Orders.Add(order);
+                await context.SaveChangesAsync(cancellationToken);
+
+                // Generate email body
+                var subject = "Konfirmimi i Porosisë";
+                var body = GenerateEmailBody(order);
+
+                // Send email to the customer
+                await _emailService.SendEmailAsync(order.Email, subject, body);
+
+                // // Send email to the admin
+                // var adminSubject = "Njoftim i Ri për Porosi";
+                // var adminBody = GenerateEmailBodyForAdmin(order);
+                // await _emailService.SendEmailAsync(_adminEmail, adminSubject, adminBody);
+
+                return order;
             }
-
-            if (product.Quantity < input.Quantity.Value)
-            {
-                throw new GraphQLException("Insufficient product quantity available.");
-            }
-
-            var updatedQuantity = product.Quantity - input.Quantity.Value;
-
-            var productEntity = await _context.Products.FindAsync(product.Id);
-            if (productEntity == null)
-            {
-                throw new Exception("Product not found.");
-            }
-
-            productEntity.Quantity = updatedQuantity;
-
-            var order = new Order
-            {
-                ProductId = product.Id,
-                Quantity = input.Quantity.Value,
-                DeliveryAddress = input.DeliveryAddress ?? string.Empty,
-                CostumerName = input.CostumerName ?? string.Empty,
-                Email = input.Email ?? string.Empty,
-                PhoneNumber = input.PhoneNumber ?? string.Empty,
-                OrderDate = DateTime.UtcNow,
-                AdditionalMessage = input.AdditionalMessage ?? string.Empty,
-                TotalPrice = product.RetailPrice.HasValue ? product.RetailPrice.Value * input.Quantity.Value : 0,
-                ProductThumbnailUrl = product.ThumbnailUrl ?? "default-thumbnail-url.jpg"
-            };
-
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            // Prepare product image URL for emails
-            var imageUrl = $"{_imageBaseUrl}/{order.ProductThumbnailUrl}";
-            var base64Image = await GetBase64StringFromImageUrl(imageUrl);
-
-            // Prepare email HTML
-            var adminSubject = "New Order Received";
-            var adminBody = $@"
-<html>
-<head>
-    <style>
-        body {{ font-family: Arial, sans-serif; color: #333; }}
-        .container {{ max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }}
-        h1 {{ color: #e74c3c; }}
-        h2 {{ color: #2c3e50; }}
-        p {{ margin: 8px 0; }}
-        .footer {{ margin-top: 20px; font-size: 12px; color: #aaa; }}
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <h1>Order Details</h1>
-        <p><strong>Customer Name:</strong> {order.CostumerName}</p>
-        <p><strong>Delivery Address:</strong> {order.DeliveryAddress}</p>
-        <p><strong>Phone Number:</strong> {order.PhoneNumber}</p>
-        <p><strong>Email:</strong> {order.Email}</p>
-        <p><strong>Order Date:</strong> {order.OrderDate}</p>
-        <p><strong>Additional Message:</strong> {order.AdditionalMessage}</p>
-        <p><strong>Total Price:</strong> {order.TotalPrice:C}</p>
-        <h2>Product Details</h2>
-        <p><strong>Product Code:</strong> {product.Code}</p>
-        <p><strong>Quantity:</strong> {order.Quantity}</p>
-        <p><strong>Product Image:</strong></p>
-        <img src='data:image/jpeg;base64,{base64Image}' alt='Product Image' style='width: 200px;' />
-        <div class='footer'>
-            <p>Thank you for your business.</p>
-            <p>Egzoni Center</p>
-        </div>
-    </div>
-</body>
-</html>
-";
-
-            await _emailService.SendEmailAsync("egzonicenter@gmail.com", adminSubject, adminBody);
-
-            var customerSubject = "Order Confirmation";
-            var customerBody = $@"
-<html>
-<head>
-    <style>
-        body {{ font-family: Arial, sans-serif; color: #333; }}
-        .container {{ max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }}
-        h1 {{ color: #2ecc71; }}
-        h2 {{ color: #34495e; }}
-        p {{ margin: 8px 0; }}
-        .footer {{ margin-top: 20px; font-size: 12px; color: #aaa; }}
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <h1>Thank You for Your Order!</h1>
-        <p><strong>Customer Name:</strong> {order.CostumerName}</p>
-        <p><strong>Delivery Address:</strong> {order.DeliveryAddress}</p>
-        <p><strong>Phone Number:</strong> {order.PhoneNumber}</p>
-        <p><strong>Email:</strong> {order.Email}</p>
-        <p><strong>Order Date:</strong> {order.OrderDate}</p>
-        <p><strong>Additional Message:</strong> {order.AdditionalMessage}</p>
-        <p><strong>Total Price:</strong> {order.TotalPrice:C}</p>
-        <h2>Product Details</h2>
-        <p><strong>Product Code:</strong> {product.Code}</p>
-        <p><strong>Quantity:</strong> {order.Quantity}</p>
-        <p><strong>Product Image:</strong></p>
-        <img src='data:image/jpeg;base64,{base64Image}' alt='Product Image' style='width: 200px;' />
-        <div class='footer'>
-            <p>We appreciate your business and hope to serve you again soon!</p>
-            <p>Egzoni Center</p>
-        </div>
-    </div>
-</body>
-</html>
-";
-
-            await _emailService.SendEmailAsync(order.Email, customerSubject, customerBody);
-
-            return order;
         }
 
-        private async Task<string> GetBase64StringFromImageUrl(string imageUrl)
+
+
+        private string GenerateEmailBody(Order order)
         {
-            if (string.IsNullOrWhiteSpace(imageUrl) || !Uri.IsWellFormedUriString(imageUrl, UriKind.Absolute))
+            var body = $@"
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: 'Arial', sans-serif;
+                    background-color: #f4f4f4; /* Light grey background */
+                    margin: 0;
+                    padding: 0;
+                }}
+                .container {{
+                    width: 600px;
+                    margin: 20px auto;
+                    background-color: #fff; /* White background */
+                    color: #333; /* Dark text */
+                    border: 1px solid #d4af37; /* Gold border */
+                    border-radius: 8px; /* Rounded corners */
+                    padding: 20px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+                }}
+                .header {{
+                    background-color: #d4af37; /* Gold background */
+                    color: #fff; /* White text */
+                    padding: 20px;
+                    border-radius: 8px 8px 0 0; /* Rounded top corners */
+                    text-align: center;
+                }}
+                .header img {{
+                    max-width: 150px; /* Adjust the width as needed */
+                    height: auto;
+                }}
+                .header h1 {{
+                    margin: 0;
+                    font-size: 24px;
+                }}
+                .content {{
+                    padding: 20px;
+                }}
+                .footer {{
+                    background-color: #f9f9f9; /* Light grey background */
+                    padding: 15px;
+                    text-align: center;
+                    border-radius: 0 0 8px 8px; /* Rounded bottom corners */
+                    border-top: 1px solid #d4af37; /* Gold border */
+                }}
+                .item {{
+                    border-bottom: 1px solid #d4af37; /* Gold border */
+                    padding: 10px 0;
+                }}
+                .total {{
+                    font-weight: bold;
+                    font-size: 1.2em;
+                    margin-top: 20px;
+                }}
+                h2 {{
+                    border-bottom: 2px solid #d4af37; /* Gold underline */
+                    padding-bottom: 5px;
+                    font-size: 20px;
+                    margin-top: 0;
+                }}
+                p {{
+                    margin: 10px 0;
+                }}
+                ul {{
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }}
+                li {{
+                    padding: 5px 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <img src='https://scontent.fprn9-1.fna.fbcdn.net/v/t1.6435-9/158629143_117592383709173_9199318107638377155_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=WODKBOJZ9uoQ7kNvgF7a_hE&_nc_ht=scontent.fprn9-1.fna&_nc_gid=AyIuMqO-npR6rVemyWlS7Wn&oh=00_AYD5sOl4e6M8DmoPdKy94uV9kqQVR3Rkxz4c0uxqsSIkng&oe=6707867B' alt='Your Company Logo' />
+                    <h1>Konfirmimi i Porosisë</h1>
+                </div>
+                <div class='content'>
+                    <p>Faleminderit për porosinë tuaj, <strong>{order.CostumerName}</strong>!</p>
+                    <p><strong>Numri i Porosisë:</strong> {order.Id}</p>
+                    <p><strong>Data e Porosisë:</strong> {order.OrderDate}</p>
+                    <p><strong>Adresa e Dërgesës:</strong> {order.DeliveryAddress}</p>
+                    <p><strong>Numri i Telefonit:</strong> {order.PhoneNumber}</p>
+                    <p><strong>Mesazhi Shtesë:</strong> {order.AdditionalMessage}</p>
+                    <h2>Artikujt e Porosisë</h2>
+                    <ul>";
+
+            foreach (var item in order.OrderItems)
             {
-                throw new ArgumentException("The provided image URL is invalid.", nameof(imageUrl));
+                body += $@"
+            <li class='item'>
+                <strong>Kodi i Produktit:</strong> {item.Code} - <strong>Sasia:</strong> {item.Quantity} - <strong>Çmimi:</strong> ${item.Price}
+            </li>";
             }
 
-            using (var httpClient = new HttpClient())
-            {
-                try
-                {
-                    var response = await httpClient.GetAsync(imageUrl);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var imageBytes = await response.Content.ReadAsByteArrayAsync();
-                        return Convert.ToBase64String(imageBytes);
-                    }
-                    else
-                    {
-                        throw new Exception("Failed to retrieve image. Status code: " + response.StatusCode);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("An error occurred while retrieving the image.", ex);
-                }
-            }
+            body += $@"
+                </ul>
+                <p class='total'><strong>Çmimi Total:</strong> ${order.TotalPrice}</p>
+            </div>
+            <div class='footer'>
+                <p>Faleminderit që blejti me ne!</p>
+            </div>
+        </div>
+    </body>
+    </html>";
+
+            return body;
         }
+
+
+        // private string GenerateEmailBodyForAdmin(Order order)
+        // {
+        //     var body = $@"
+        //         <html>
+        //         <body>
+        //             <h1>Njoftim i Ri për Porosi</h1>
+        //             <p>Ka ardhur një porosi e re nga {order.CostumerName}.</p>
+        //             <p>Numri i Porosisë: {order.Id}</p>
+        //             <p>Data e Porosisë: {order.OrderDate}</p>
+        //             <p>Adresa e Dërgesës: {order.DeliveryAddress}</p>
+        //             <p>Numri i Telefonit: {order.PhoneNumber}</p>
+        //             <p>Mesazhi Shtesë: {order.AdditionalMessage}</p>
+        //             <h2>Artikujt e Porosisë</h2>
+        //             <ul>";
+
+        //     foreach (var item in order.OrderItems)
+        //     {
+        //         body += $@"
+        //             <li>
+        //                 Kodi i Produktit: {item.Code} - Sasia: {item.Quantity} - Çmimi: ${item.Price}
+        //             </li>";
+        //     }
+
+        //     body += $@"
+        //             </ul>
+        //             <p>Çmimi Total: ${order.TotalPrice}</p>
+        //             <p>Ju lutem, kontrolloni porosinë në sistemin tuaj.</p>
+        //         </body>
+        //         </html>";
+
+        //     return body;
+        // }
     }
+
 }

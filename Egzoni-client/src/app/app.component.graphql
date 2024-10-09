@@ -1,5 +1,6 @@
 query getProducts(
   $cursor: String
+  $last:Int
   $first: Int
   $brandId: Int
   $categoryId: Int
@@ -7,6 +8,7 @@ query getProducts(
   $maxPrice: Decimal
 ) {
   productsAsync(
+    last:$last
     first: $first
     after: $cursor
     order: { id: DESC }
@@ -38,6 +40,85 @@ query getProducts(
     }
   }
 }
+query getAllOrders($before: String, $after: String) {
+  allOrders(before: $before, after: $after, order: { id: DESC }) {
+    nodes {
+      additionalMessage
+      costumerName
+      deliveryAddress
+      email
+      id
+      orderDate
+      phoneNumber
+      totalPrice
+      orderItems {
+        code
+        id
+        orderId
+        price
+        productId
+        quantity
+      }
+    }
+    edges {
+      cursor
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+query searchByCostumerName($customerNameSearch: String) {
+  allOrders(where: { costumerName: { startsWith: $customerNameSearch } }) {
+    edges {
+      cursor
+    }
+    nodes {
+      additionalMessage
+      costumerName
+      deliveryAddress
+      email
+      id
+      orderDate
+      phoneNumber
+      totalPrice
+    }
+  }
+}
+query getSalesForYear ($year: Int!) {
+  monthlyPricesAndStatsForYear(year:$year
+  ) {
+    month
+    monthName
+    mostSoldProductCode
+    totalOrders
+    totalPurchasePrice
+    totalRetailPrice
+    year
+  }
+}
+query getOrdersAndStatsForYear($year: Int!) {
+  ordersAndStatsForYear(year: $year) {
+    month
+    monthName
+    mostSoldProductCode
+    totalOrders
+    year
+  }
+}
+
+query tenMostSoldProducts {
+  tenMostSoldProducts {
+    productId
+    brand
+    category
+    productCode
+    quantitySold
+  }
+}
 
 query getCategories {
   categories {
@@ -45,12 +126,14 @@ query getCategories {
     name
   }
 }
+
 query getBrands {
   brands {
     id
     name
   }
 }
+
 query searchProducts($code: String) {
   productsAsync(where: { code: { eq: $code } }) {
     edges {
@@ -66,6 +149,7 @@ query searchProducts($code: String) {
     }
   }
 }
+
 
 mutation addProductss(
   $code: String!
@@ -124,12 +208,31 @@ mutation addProductss(
 #   }
 # }
 
+mutation PlaceOrder($input: OrderInput!) {
+  placeOrder(input: $input) {
+    id
+    deliveryAddress
+    costumerName
+    email
+    phoneNumber
+    additionalMessage
+    orderDate
+    totalPrice
+    orderItems {
+      productId
+      quantity
+      price
+    }
+  }
+}
+
 mutation AddBrandAsync($name: String!) {
   addBrand(brandInput: { name: $name }) {
     id
     name
   }
 }
+
 mutation AddCategoryAsync($name: String!) {
   addCategory(categoryInput: { name: $name }) {
     id
@@ -158,6 +261,7 @@ mutation editProduct($quantity: Decimal!, $id: Int) {
 mutation deleteProduct($id: Int!) {
   removeProductsById(id: $id)
 }
+
 mutation Login($username: String!, $password: String!) {
   login(loginInput: { username: $username, password: $password }) {
     administrator {
@@ -169,6 +273,7 @@ mutation Login($username: String!, $password: String!) {
     }
   }
 }
+
 query GetProductById($id: Int!) {
   productById(id: $id) {
     brandId
@@ -183,5 +288,6 @@ query GetProductById($id: Int!) {
     quantity
     retailPrice
     size
+    thumbnailUrl
   }
 }

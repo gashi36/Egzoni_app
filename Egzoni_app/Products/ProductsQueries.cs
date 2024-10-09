@@ -13,6 +13,13 @@ namespace Egzoni_app.Products
     [QueryType]
     public class ProductsQueries
     {
+        private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
+
+        public ProductsQueries(IDbContextFactory<ApplicationDbContext> dbContextFactory)
+        {
+            _dbContextFactory = dbContextFactory;
+        }
+
         [UsePaging]
         [UseFiltering(typeof(ProductFilterInputType))]
         [UseSorting]
@@ -72,5 +79,47 @@ namespace Egzoni_app.Products
                 .Where(s => ids.Contains(s.Id))
                 .ToDictionaryAsync(t => t.Id, cancellationToken);
         }
+
+        // Query to get monthly statistics for retail prices, purchase prices, and profit for the current and last year
+        public async Task<List<MonthlyProductStats>> GetMonthlyProductStatsForCurrentAndLastYearAsync(
+      CancellationToken cancellationToken)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
+            int currentYear = DateTime.Now.Year;
+            int lastYear = currentYear - 1;
+            var months = Enumerable.Range(1, 12); // All 12 months
+
+            var monthlyProductStats = months.GroupJoin(
+                context.Products
+                    .Where(p => p.Quantity > 0)
+                    .SelectMany(p => context.Orders
+                        .Where(o => o.OrderItems.Any(oi => oi.Code == p.Code) &&
+                                    (o.OrderDate.Year == currentYear || o.OrderDate.Year == lastYear))
+                        .SelectMany(o => o.OrderItems, (o, oi) => new { o.OrderDate, p, oi })),
+                m => m,
+                x => x.OrderDate.Month,
+                (m, groupedData) => new MonthlyProductStats
+                {
+                    Year = currentYear, // Adjust for correct year
+                    Month = m,
+                    TotalRetailPrice = (decimal)groupedData.Sum(x => x.p.RetailPrice * x.oi.Quantity),
+                    TotalPurchasePrice = (decimal)groupedData.Sum(x => x.p.PurchasePrice * x.oi.Quantity),
+                    TotalProfit = (decimal)groupedData.Sum(x => (x.p.RetailPrice - x.p.PurchasePrice) * x.oi.Quantity)
+                }
+            ).ToList();
+
+
+            return monthlyProductStats;
+        }
+
+        public class MonthlyProductStats
+        {
+            public int Year { get; set; }
+            public int Month { get; set; }
+            public decimal TotalRetailPrice { get; set; }
+            public decimal TotalPurchasePrice { get; set; }
+            public decimal TotalProfit { get; set; }
+        }
+
     }
 }

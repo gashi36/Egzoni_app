@@ -43,7 +43,7 @@ export class ShopComponent implements OnInit {
     private getProductsGQL: GetProductsGQL,
     private getBrandsGQL: GetBrandsGQL,
     private getCategoriesGQL: GetCategoriesGQL
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllProducts();

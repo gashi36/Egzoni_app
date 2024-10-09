@@ -5,66 +5,68 @@
       <h2>Zbuloni Luksin e Tepihëve të Jashtme</h2>
       <p>Ngrini hapësirën tuaj me përzgjedhjen tonë të kuratorëve të tepave dhe qilimëve të lartë.</p>
       <a class="btn-primary" href="shop">Eksploroni Koleksionin Tonë</a>
-
     </div>
   </div>
 </section>
 
-<div class="container gradient-background py-4">
+<div class="container-fluid gradient-background py-4">
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-12">
       <!-- Filters -->
-      <div class="mb-4 filter-container">
+      <div class="mb-4 filter-container text-center">
         <h4 class="filter-title">Filtro:</h4>
-        <form [formGroup]="filterForm" (ngSubmit)="filterProducts()">
-          <div class="filter-group">
+        <form [formGroup]="filterForm" (ngSubmit)="filterProducts()"
+          class="d-flex justify-content-center align-items-end flex-wrap">
+          <div class="filter-group me-2">
             <label for="brand" class="form-label">Brendi:</label>
             <select formControlName="brand" id="brand" class="form-select">
               <option value="">Të gjitha</option>
               <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
             </select>
           </div>
-          <div class="filter-group">
+          <div class="filter-group me-2">
             <label for="category" class="form-label">Kategoria:</label>
             <select formControlName="category" id="category" class="form-select">
               <option value="">Të gjitha</option>
               <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
             </select>
           </div>
-          <div class="filter-group">
+          <div class="filter-group me-2">
             <label for="minPrice" class="form-label">Çmimi min:</label>
             <input type="number" formControlName="minPrice" id="minPrice" class="form-control" placeholder="10">
           </div>
-          <div class="filter-group">
+          <div class="filter-group me-2">
             <label for="maxPrice" class="form-label">Çmimi max:</label>
             <input type="number" formControlName="maxPrice" id="maxPrice" class="form-control" placeholder="299">
           </div>
-
-          <br>
-          <button type="submit" class="btn btn-primary">Apply Filters</button>
+          <button type="submit" class="btn btn-primary-filters ms-2">Apliko Filtrat</button>
         </form>
       </div>
+
+
     </div>
 
-    <div class="col-md-9">
-      <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div *ngFor="let product of filteredProducts" class="col mb-4">
-          <div class="card h-100 custom-card border-0 shadow-sm product-card" (click)="navigateToProduct(product.id)">
+    <div class="col-md-9 mx-auto">
+      <div class="row row-cols-1 row-cols-md-5 g-2 justify-content-center">
+        <div *ngFor="let product of filteredProducts" class="col mb-4 card-width">
+          <div class="card h-100 custom-card border-0 product-card" (click)="navigateToProduct(product.id)">
             <!-- Image Section -->
             <div class="card-img-container">
               <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="">
             </div>
             <!-- Details Section -->
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{{ product.code }}</h5>
-              <p class="card-text"><strong>Masa:</strong> {{ product.size }}</p>
-              <p class="card-text"><strong>Brendi:</strong> {{ getBrandName(product.brandId) }}</p>
-              <p class="card-text"><strong>Kategoria:</strong> {{ getCategoryName(product.categoryId) }}</p>
-              <p class="card-text"><strong>Cmimi:</strong> {{ product.retailPrice }}</p>
+            <div class="card-body ">
+              <h5 class="card-title pb-3 pt-3">{{ product.code }}</h5>
+              <p class="card-text">
+                <span class="product-size">Masa: {{ product.size }}</span>
+                <span class="product-price">Çmimi: {{ product.retailPrice }} €</span>
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+
   </div>
 </div>

@@ -1,34 +1,17 @@
-// product-details.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Apollo, gql } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import {
   Brand,
   Category,
+  GetProductByIdGQL,
   GetBrandsGQL,
   GetCategoriesGQL,
 } from '../../generated/graphql';
-
-const GET_PRODUCT_BY_ID = gql`
-  query GetProductById($id: Int!) {
-    productById(id: $id) {
-      id
-      code
-      color
-      description
-      pictureUrls
-      profit
-      purchasePrice
-      quantity
-      retailPrice
-      size
-      brandId
-      categoryId
-    }
-  }
-`;
+import { ToastrService } from 'ngx-toastr';
+import { Modal } from 'bootstrap'; // Import Modal from bootstrap
 
 @Component({
   selector: 'app-product-details',
@@ -39,6 +22,7 @@ export class ProductDetailsComponent implements OnInit {
   product$: Observable<any> | undefined;
   images: { src: string; thumb: string }[] = [];
   selectedImage: string | undefined;
+  currentIndex: number = 0;
   brands: Brand[] = [];
   categories: Category[] = [];
 
@@ -47,8 +31,10 @@ export class ProductDetailsComponent implements OnInit {
     private apollo: Apollo,
     private router: Router,
     private getbrands: GetBrandsGQL,
-    private getcategories: GetCategoriesGQL
-  ) {}
+    private getcategories: GetCategoriesGQL,
+    private getProductByIdGQL: GetProductByIdGQL,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.getAllCategories();
@@ -98,44 +84,37 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   getProductById(id: number): void {
-    this.product$ = this.apollo
-      .watchQuery({
-        query: GET_PRODUCT_BY_ID,
-        variables: { id },
-      })
-      .valueChanges.pipe(
-        map((result: any) => {
-          const product = result.data.productById;
-          const baseUrl = 'http://localhost:5044/images';
+    this.product$ = this.getProductByIdGQL.fetch({ id }).pipe(
+      map((result: any) => {
+        const product = result.data.productById;
+        const baseUrl = 'http://localhost:5044/images';
 
-          if (product) {
-            console.log('Product fetched:', product);
+        if (product) {
+          console.log('Product fetched:', product);
+          this.images = (product.pictureUrls || []).map((url: string) => ({
+            src: `${baseUrl}/${product.id}/${encodeURIComponent(url)}`,
+            thumb: `${baseUrl}/${product.id}/${encodeURIComponent(url)}`,
+          }));
 
-            this.images = (product.pictureUrls || []).map((url: string) => ({
-              src: `${baseUrl}/${product.id}/${encodeURIComponent(url)}`,
-              thumb: `${baseUrl}/${product.id}/${encodeURIComponent(url)}`,
-            }));
+          console.log('Constructed image URLs:', this.images);
 
-            console.log('Constructed image URLs:', this.images);
-
-            if (this.images.length > 0) {
-              this.selectedImage = this.images[0].src;
-            } else {
-              console.warn('No images found for the product.');
-            }
+          if (this.images.length > 0) {
+            this.selectedImage = this.images[0].src;
           } else {
-            console.warn('No product found with the given ID.');
+            console.warn('No images found for the product.');
           }
+        } else {
+          console.warn('No product found with the given ID.');
+        }
 
-          return product;
-        }),
-        catchError((error) => {
-          console.error('Error fetching product with id:', error);
-          return of({});
-        })
-      );
+        return product;
+      }),
+      catchError((error) => {
+        console.error('Error fetching product with id:', error);
+        return of({});
+      })
+    );
   }
-
   getBrandName(brandId: number): string | undefined {
     const brand = this.brands.find((brand) => brand.id === brandId);
     return brand?.name!;
@@ -150,7 +129,36 @@ export class ProductDetailsComponent implements OnInit {
 
   selectImage(imageSrc: string): void {
     this.selectedImage = imageSrc;
+    this.currentIndex = this.images.findIndex(image => image.src === imageSrc);
   }
+
+  openModal(): void {
+    const modalElement = document.getElementById('imageModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  closeModal(): void {
+    const modalElement = document.getElementById('imageModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement);
+      modal?.hide();
+    }
+  }
+
+  nextImage(): void {
+    this.currentIndex = (this.currentIndex + 1) % this.images.length; // Loop to the start
+    this.selectedImage = this.images[this.currentIndex].src;
+  }
+
+  prevImage(): void {
+    this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length; // Loop to the end
+    this.selectedImage = this.images[this.currentIndex].src;
+  }
+
+
 
   goBack(): void {
     this.router.navigate(['/shop']);
@@ -159,50 +167,31 @@ export class ProductDetailsComponent implements OnInit {
   addToCart(productId: number): void {
     try {
       console.log('Adding to cart:', productId);
-
-      // Retrieve current cart from localStorage
       const cartJson = localStorage.getItem('cart') || '{}';
       const cart = JSON.parse(cartJson);
       const sessionId = localStorage.getItem('sessionId') || 'guest';
 
-      // Log retrieved cart and sessionId
-      console.log('Cart JSON:', cartJson);
-      console.log('Parsed Cart:', cart);
-      console.log('Session ID:', sessionId);
-
-      // Ensure the cart array exists for the current session
       if (!cart[sessionId]) {
         cart[sessionId] = [];
       }
 
-      // Find the product in the cart
       const existingProduct = cart[sessionId].find(
         (item: any) => item.id === productId
       );
 
       if (existingProduct) {
-        // If product exists, increment its quantity by 1
         existingProduct.quantity = (existingProduct.quantity || 0) + 1;
-        console.log(
-          'Product found in cart. Updated quantity:',
-          existingProduct.quantity
-        );
+        console.log('Product found in cart. Updated quantity:', existingProduct.quantity);
       } else {
-        // If product does not exist, add it with quantity 1
         cart[sessionId].push({ id: productId, quantity: 1 });
-        console.log(
-          'Product not found in cart. Added new product with quantity 1.'
-        );
+        console.log('Product not found in cart. Added new product with quantity 1.');
       }
 
-      // Save updated cart back to localStorage
       localStorage.setItem('cart', JSON.stringify(cart));
       console.log('Updated Cart:', cart);
-
-      // Update cart badge (assuming you have this method)
       this.updateCartBadge();
+      this.toastr.success('Produkti u shtua me sukses!');
     } catch (error) {
-      // Log any errors
       console.error('Error adding to cart:', error);
     }
   }
@@ -216,7 +205,6 @@ export class ProductDetailsComponent implements OnInit {
         const sessionId = localStorage.getItem('sessionId') || 'guest';
         const cartItems = cart[sessionId] || [];
 
-        // Calculate total items in the cart
         const totalItems = cartItems.reduce(
           (sum: number, item: any) => sum + (item.quantity || 0),
           0

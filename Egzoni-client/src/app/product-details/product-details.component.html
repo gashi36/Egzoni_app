@@ -1,63 +1,90 @@
-<div *ngIf="product$ | async as product;" class="product-details-container">
-  <div class="card">
+<div *ngIf="product$ | async as product" class="product-details-container">
+  <div class="card shadow-lg">
     <div class="card-body">
       <div class="row">
-
         <!-- Product Image and Gallery -->
-        <div class="col-lg-6">
+        <div class="col-lg-6 position-relative">
           <div class="main-image-container">
-            <img [src]="selectedImage" alt="Product Image" class="main-image" />
+            <img [src]="selectedImage" alt="Product Image" class="img-fluid rounded" (click)="openModal()" />
+            <div class="image-navigation">
+              <button (click)="prevImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+              <button (click)="nextImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </div>
           </div>
-
         </div>
 
         <!-- Product Details -->
         <div class="col-lg-6">
+          <h2 class="product-title text-dark font-weight-bold">{{ product.code }}</h2>
+          <h5 class="product-subtitle text-muted">{{ product.description }}</h5>
           <div class="table-responsive">
-            <table class="table table-product">
+            <table class="table table-borderless">
               <tbody>
                 <tr>
-                  <td><b>Brand</b></td>
+                  <td><strong>Brand:</strong></td>
                   <td>{{ getBrandName(product.brandId) }}</td>
                 </tr>
                 <tr>
-                  <td><b>Category</b></td>
-                  <td>{{ getCategoryName(product.brandId) }}</td>
+                  <td><strong>Category:</strong></td>
+                  <td>{{ getCategoryName(product.categoryId) }}</td>
                 </tr>
-
               </tbody>
             </table>
           </div>
-          <h2 class="product-title">{{ product.name }}</h2>
-          <h5 class="product-subtitle">{{ product.description }}</h5>
-
-
-          <ul class="details-list">
-            <li><i class="fa fa-check text-success"></i> Code: {{ product.code }}</li>
-            <li><i class="fa fa-check text-success"></i> Color: {{ product.color }}</li>
-            <li><i class="fa fa-check text-success"></i> Size: {{ product.size }}</li>
-            <li><i class="fa fa-check text-success"></i> Quantity: {{ product.quantity }}</li>
+          <ul class="details-list list-unstyled mt-3">
+            <li><i class="fa fa-check text-success"></i> <strong>Code:</strong> {{ product.code }}</li>
+            <li><i class="fa fa-check text-success"></i> <strong>Color:</strong> {{ product.color }}</li>
+            <li><i class="fa fa-check text-success"></i> <strong>Size:</strong> {{ product.size }}</li>
+            <li><i class="fa fa-check text-success"></i> <strong>Quantity:</strong> {{ product.quantity }}</li>
           </ul>
-          <div class="price-section mt-3  d-flex gap-1 text-center ">
-
-            <h3 class="product-price">{{ product.retailPrice | currency}}<small class="discount"></small></h3>
-
-
-            <button (click)="addToCart(product.id)" class="btn btn-outline-success">
-              <i class="bi bi-cart"></i>
+          <div class="price-section mt-3 d-flex align-items-center justify-content-between">
+            <h3 class="product-price text-success">{{ product.retailPrice | currency:'EUR' }}</h3>
+            <button (click)="addToCart(product.id)" class="btn btn-success">
+              <i class="bi bi-cart"></i> Add to Cart
             </button>
-
-
-
           </div>
-
-          <div class="thumbnail-gallery">
+          <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Product added to cart!
+              </div>
+            </div>
+          </div>
+          <div class="thumbnail-gallery mt-2">
             <div *ngFor="let image of images" class="thumbnail">
-              <img [src]="image.thumb" (click)="selectImage(image.src)"
-                [class.selected]="image.src === selectedImage" />
+              <img [src]="image.thumb" (click)="selectImage(image.src)" [class.selected]="image.src === selectedImage"
+                class="img-thumbnail" />
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Viewing Images -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body position-relative">
+          <img [src]="selectedImage" alt="Product Image" class="img-fluid rounded" />
+          <div class="image-navigation">
+            <button (click)="prevImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button (click)="nextImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

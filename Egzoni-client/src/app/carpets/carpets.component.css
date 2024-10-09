@@ -1,99 +1,83 @@
+/* Red Theme for Primary Elements */
 .text-primary {
   color: #ff0000 !important;
+  /* Bright red for titles */
+}
+
+/* Button Styles */
+.btn-outline-danger,
+.btn-outline-success,
+.btn-outline-info,
+.btn-outline-warning {
+  border-width: 1.5px;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  /* Softer button edges */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .btn-outline-danger {
-  border-color: #dc3545;
-  color: #dc3545;
+  border-color: #ff0000;
+  color: #ff0000;
 }
 
 .btn-outline-danger:hover {
-  background-color: #dc3545;
+  background-color: #ff0000;
   color: white;
 }
 
+/* Input Fields */
 .custom-input {
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
+  background-color: white;
+  border: 1px solid #ccc;
+  /* Subtle border */
   border-radius: 0.25rem;
+  padding: 0.625rem;
+  /* Slightly larger padding for modern look */
 }
 
+/* Tables */
 .custom-table thead {
-  background-color: #007bff;
+  background-color: #ff0000;
+  /* Red header */
   color: white;
+  border-radius: 0.25rem 0.25rem 0 0;
+  /* Rounded top */
 }
 
 .custom-table tbody tr {
-  background-color: #f8f9fa;
+  background-color: #fff;
+  /* White row background */
 }
 
 .custom-table tbody tr:nth-child(even) {
-  background-color: #e9ecef;
+  background-color: #f5f5f5;
+  /* Subtle alternating color */
 }
 
-.btn-outline-success {
-  border-color: #28a745;
-  color: #28a745;
+.custom-table tbody tr:hover {
+  background-color: #ffe5e5;
+  /* Light red hover effect */
 }
 
-.btn-outline-success:hover {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-outline-info {
-  border-color: #17a2b8;
-  color: #17a2b8;
-}
-
-.btn-outline-info:hover {
-  background-color: #17a2b8;
-  color: white;
-}
-
-.btn-outline-warning {
-  border-color: #ffc107;
-  color: #ffc107;
-}
-
-.btn-outline-warning:hover {
-  background-color: #ffc107;
-  color: white;
-}
-
+/* Miscellaneous */
 body {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
+  /* Clean white background */
 }
 
-.custom-input {
-  border-radius: 0.375rem;
-  border: 1px solid #ced4da;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-.btn-outline-danger,
-.btn-outline-info,
-.btn-outline-success,
-.btn-outline-warning {
-  border-width: 2px;
-}
-
-.table-primary {
-  background-color: #e9ecef;
+h1,
+h2,
+h4 {
+  color: #ff0000;
+  /* Bright red for headings */
+  font-family: 'Roboto', sans-serif;
+  /* Modern font */
 }
 
 .table {
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   overflow: hidden;
-}
-
-.table thead th {
-  border-bottom: 2px solid #dee2e6;
-}
-
-.table tbody tr:hover {
-  background-color: #f1f3f5;
 }
 
 .spinner-border {
@@ -101,12 +85,8 @@ body {
   height: 1.5rem;
 }
 
-.btn {
-  transition: background-color 0.3s ease;
-}
-
-h1,
-h2,
-h4 {
-  color: #343a40;
+/* Form Labels */
+.form-label {
+  font-weight: bold;
+  color: #333;
 }

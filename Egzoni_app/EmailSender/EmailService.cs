@@ -28,7 +28,10 @@ namespace Egzoni_app.EmailSender
         public async Task SendEmailAsync(string to, string subject, string body)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("egzonicenter@gmail.com", _fromAddress));
+            // Check if _fromAddress is not null and use it
+            var fromAddress = !string.IsNullOrEmpty(_fromAddress) ? _fromAddress : "egzonicenter@gmail.com";
+
+            message.From.Add(new MailboxAddress("egzonicenter", fromAddress));
             message.To.Add(new MailboxAddress("", to));
             message.Subject = subject;
 

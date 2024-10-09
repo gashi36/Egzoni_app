@@ -1,16 +1,18 @@
-<div class="container p-5">
+<div class="container py-5">
+  <!-- Header -->
   <div class="row justify-content-between align-items-center mb-4">
-    <h1 class="col-md-3 text-primary"><b>Egzoni</b></h1>
+    <h1 class="col-md-3 text-primary"><b>Egzoni Carpets</b></h1>
     <button class="btn btn-outline-danger col-md-2" (click)="logout()">Shkyqu</button>
   </div>
 
+  <!-- Add Brand Form -->
   <form [formGroup]="addBrandForm" (ngSubmit)="addBrandAsync()" class="mb-4">
     <div class="row">
       <div class="col-md-3">
         <input type="text" formControlName="addBrand" class="form-control custom-input" placeholder="Shto brand">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingBrand">
+        <button type="submit" class="btn btn-outline-danger btn-block" [disabled]="isAddingBrand">
           <span *ngIf="isAddingBrand" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Shto Brand
         </button>
@@ -18,13 +20,14 @@
     </div>
   </form>
 
+  <!-- Add Category Form -->
   <form [formGroup]="addCategoryForm" (ngSubmit)="addCategoryAsync()" class="mb-4">
     <div class="row">
       <div class="col-md-3">
         <input type="text" formControlName="addCategory" class="form-control custom-input" placeholder="Shto kategori">
       </div>
       <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-success btn-block" [disabled]="isAddingCategory">
+        <button type="submit" class="btn btn-outline-danger btn-block" [disabled]="isAddingCategory">
           <span *ngIf="isAddingCategory" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           Shto Kategori
@@ -33,6 +36,7 @@
     </div>
   </form>
 
+  <!-- Add/Edit Product Form -->
   <h2 class="mb-4">{{ isEdit ? 'Ndrysho' : 'Regjistro' }}</h2>
   <form [formGroup]="addProductForm" (ngSubmit)="addProductsAsync()">
     <div class="row mb-4">
@@ -57,47 +61,46 @@
       </div>
       <div class="col-md-6">
         <div class="form-group mb-3">
-          <label for="purchasePrice" class="form-label">ÇMIMI I BLERJES:</label>
+          <label for="purchasePrice" class="form-label">Çmimi i Blerjes:</label>
           <input type="text" id="purchasePrice" class="form-control custom-input" formControlName="purchasePrice"
             placeholder="Çmimi i Blerjes">
         </div>
         <div class="form-group mb-3">
-          <label for="retailPrice" class="form-label">ÇMIMI I SHITJES:</label>
+          <label for="retailPrice" class="form-label">Çmimi i Shitjes:</label>
           <input type="text" id="retailPrice" class="form-control custom-input" formControlName="retailPrice"
             placeholder="Çmimi i Shitjes">
         </div>
         <div class="form-group mb-3">
           <label for="brandId" class="form-label">Brendi:</label>
-          <select id="brandId" name="brandId" class="form-control custom-input" formControlName="brandId" required>
+          <select id="brandId" class="form-control custom-input" formControlName="brandId">
             <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
           </select>
         </div>
         <div class="form-group mb-3">
           <label for="categoryId" class="form-label">Kategoria:</label>
-          <select id="categoryId" name="categoryId" class="form-control custom-input" formControlName="categoryId"
-            required>
+          <select id="categoryId" class="form-control custom-input" formControlName="categoryId">
             <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
           </select>
         </div>
       </div>
-    </div>
-    <div class="form-group col-md-6 mb-4">
-      <label for="image">Images</label>
-      <input type="file" (change)="setFile($event)" multiple />
-
     </div>
     <div class="form-group mb-3 col-md-6">
       <label for="description" class="form-label">Përshkrimi:</label>
       <textarea id="description" class="form-control custom-input" formControlName="description" rows="3"
         placeholder="Përshkrimi"></textarea>
     </div>
-    <button type="submit" class="btn btn-outline-success mt-3" [disabled]="isAddingProduct">
+    <div class="form-group col-md-6 mb-4">
+      <label for="image">Images</label>
+      <input type="file" (change)="setFile($event)" multiple />
+    </div>
+    <button type="submit" class="btn btn-outline-danger mt-3" [disabled]="isAddingProduct">
       <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       {{ isEdit ? 'Ndrysho' : 'Regjistro' }}
     </button>
   </form>
 
-  <h4 class="col-md-3 p-2 mt-5">Kërko sipas kodit</h4>
+  <!-- Search Product by Code -->
+  <h4 class="col-md-3 p-2 mt-5 text-primary">Kërko sipas kodit</h4>
   <div class="searchbar row col-md-12 mb-4">
     <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.get('search')?.value ?? '')">
       <div class="col-md-8 mb-3">
@@ -114,15 +117,14 @@
         <button type="button" class="btn btn-outline-danger py-2 px-5" (click)="cancelSearch()">Anulo</button>
       </div>
     </form>
-
   </div>
 
+  <!-- Product Table -->
   <hr>
-  <h1>Stoku</h1>
+  <h1 class="text-primary">Stoku</h1>
   <hr>
-
   <div class="table-responsive mt-5">
-    <table class="table table-hover custom-table">`
+    <table class="table table-hover custom-table">
       <thead>
         <tr class="table-primary">
           <th scope="col">Kodi</th>
@@ -150,9 +152,7 @@
           <td>{{ getBrandName(pro.brandId) }}</td>
           <td>{{ getCategoryName(pro.categoryId) }}</td>
           <td>
-            <button class="btn btn-outline-warning" (click)="editProduct(pro.id)">
-              Ndrysho
-            </button>
+            <button class="btn btn-outline-warning" (click)="editProduct(pro.id)">Ndrysho</button>
           </td>
           <td>
             <button class="btn btn-outline-danger" (click)="deleteProduct(pro.id)" [disabled]="isDeletingProduct">
@@ -166,11 +166,8 @@
     </table>
   </div>
 
+  <!-- Load More Button -->
   <div class="row align-content-center justify-content-center">
-    <button (click)="loadMoreProducts()" class="btn btn-outline-info col-md-2" [disabled]="isLoadingMoreProducts">
-      <span *ngIf="isLoadingMoreProducts" class="spinner-border spinner-border-sm" role="status"
-        aria-hidden="true"></span>
-      Faqja Tjetër
-    </button>
+    <button (click)="loadMoreProducts()" class="btn btn-outline-info py-2 px-5 mt-5">Ngarko më shumë</button>
   </div>
 </div>

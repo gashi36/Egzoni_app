@@ -7,6 +7,7 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from '../app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   imports: [
     BrowserModule,
@@ -18,4 +19,4 @@ import { RouterModule } from '@angular/router';
   declarations: [ShopComponent],
   exports: [ShopComponent],
 })
-export class ShopModule {}
+export class ShopModule { }

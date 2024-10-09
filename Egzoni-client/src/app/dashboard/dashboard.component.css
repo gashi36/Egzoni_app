@@ -1,0 +1,83 @@
+/* ngx-charts-bar-vertical,
+ngx-charts-pie-chart {
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+
+  ngx-charts-bar-vertical,
+  ngx-charts-pie-chart {
+    height: 400px;
+  }
+}
+
+.legend {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+} */
+/* Target the custom legend */
+.custom-legend ngx-charts-legend {
+  width: 300px !important;
+  /* Increase this value to make the legend wider */
+}
+
+/* Adjust the container that holds the legend */
+.custom-legend ngx-charts-legend-entry {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.custom-legend .legend-label {
+  font-size: 14px;
+  /* Adjust font size if needed */
+  word-wrap: break-word;
+  max-width: 200px !important;
+  /* Set the width of the legend labels */
+}
+
+.chart-container {
+  margin: 0 auto;
+  /* Centering */
+  padding: 20px;
+  /* Adjust as necessary */
+  width: 100%;
+  /* Full width of parent */
+  max-width: 1000px;
+  /* Max width if desired */
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  /* Center the chart horizontally */
+  align-items: center;
+  /* Center the chart vertically if needed */
+  margin-top: 20px;
+  /* Space from other elements */
+  width: 100%;
+  /* Ensure it takes the full width */
+  max-width: 800px;
+  /* Optional: set a maximum width */
+  background: #f9f9f9;
+  /* Light background for better contrast */
+  border-radius: 8px;
+  /* Rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow for depth */
+  padding: 20px;
+  /* Padding inside the container */
+}
+
+/* Add this to your component's CSS file */
+/* Add this to your component's CSS file */
+::ng-deep .ngx-charts-bar-vertical-2d .bar {
+  stroke-width: 8;
+  /* Increase this value for thicker bars */
+  opacity: 1;
+  /* Ensure the bars are fully visible */
+  fill-opacity: 0.8;
+  /* Optional: Adjusts the transparency of the fill */
+}

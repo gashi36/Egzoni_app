@@ -1,1 +1,92 @@
-<p>dashboard works!</p>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-12 col-md-1 p-0 bg-white vh-100 d-none d-md-block">
+      <ul class="nav flex-column">
+        <!-- Dashboard Icon -->
+        <li class="nav-item">
+          <a class="nav-link text-dark py-3 d-flex align-items-center" routerLink="/dashboard">
+            <i class="bi bi-speedometer2 me-3 text-dark"></i> Paneli
+          </a>
+        </li>
+        <!-- Stock Icon -->
+        <li class="nav-item">
+          <a class="nav-link text-dark py-3 d-flex align-items-center" routerLink="/carpets">
+            <i class="bi bi-box-seam me-3 text-dark"></i> Stoku
+          </a>
+        </li>
+        <!-- Sales Icon -->
+        <li class="nav-item">
+          <a class="nav-link text-dark py-3 d-flex align-items-center" routerLink="/sales">
+            <i class="bi bi-graph-up me-3 text-dark"></i> Shitjet
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div class="col-12 d-md-none">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-layout-sidebar-inset"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" routerLink="/dashboard"><i class="bi bi-speedometer2 me-3"></i> Paneli</a></li>
+          <li><a class="dropdown-item" routerLink="/carpets"><i class="bi bi-box-seam me-3"></i> Stoku</a></li>
+          <li><a class="dropdown-item" routerLink="/sales"><i class="bi bi-graph-up me-3"></i> Shitjet</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-12 col-md-10 p-4">
+      <h2 class="mb-4">Paneli</h2>
+
+      <div class="col-sm-4 mb-4">
+        <form (ngSubmit)="onYearSubmit()">
+          <div class="input-group">
+            <input type="number" class="form-control" placeholder="Enter Year" [(ngModel)]="inputYear" name="year"
+              min="2000" required />
+            <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div *ngIf="isLoading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading data, please wait...</p>
+      </div>
+
+      <!-- Centered Charts -->
+      <div class="text-center my-5">
+        <div class="text-center my-5">
+          <div *ngIf="!isLoading && chartData.length > 0" class="chart-container">
+            <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="chartData" [gradient]="false"
+              [xAxis]="true" [yAxis]="true" [legend]="true" [showXAxisLabel]="true" [showYAxisLabel]="true"
+              [xAxisLabel]="'Muajt'" [yAxisLabel]="'Porositë'">
+            </ngx-charts-bar-vertical>
+          </div>
+          <div *ngIf="!isLoading && saleChartData.length > 0" class="my-5 chart-container">
+            <ngx-charts-bar-vertical-2d [view]="view" [scheme]="colorScheme" [results]="saleChartData" [legend]="true"
+              [xAxis]="true" [yAxis]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Muajt'"
+              [yAxisLabel]="'Hyrjet-Daljet'" [barPadding]="1" [scheme]="saleColorScheme"> <!-- Using the colorScheme -->
+            </ngx-charts-bar-vertical-2d>
+          </div>
+
+
+
+
+          <div *ngIf="!isLoading && pieChartData.length > 0" class="my-5 chart-container">
+            <ngx-charts-pie-chart [view]="pieView" [scheme]="pieColorScheme" [results]="pieChartData" [legend]="true"
+              [explodeSlices]="false" [labels]="true" (select)="onSelect($event)">
+            </ngx-charts-pie-chart>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,94 @@
+<div class="container">
+
+  <div class="mt-4"> <!-- Space above the form -->
+    <form [formGroup]="searchCostumerForm" (ngSubmit)="searchCostumerName()" class="row mb-4">
+      <div class="col-md-4">
+        <input class="form-control custom-input p-1" type="text" formControlName="search" placeholder="Kërko"
+          aria-label="Search Customer Name" style="height: 40px;">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-success w-100 py-1">
+          <i class="bi bi-search"></i> <!-- Magnifier Icon -->
+        </button>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-outline-danger w-100 py-1" (click)="cancelSearch()">
+          <i class="bi bi-x"></i> <!-- Cancel (X) Icon -->
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center">
+    <span class="spinner-border" role="status"></span>
+    <span>Duke ngarkuar</span>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length === 0" class="text-center mt-4">
+    <h4>Nuk u gjet asgjë</h4>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length > 0">
+    <h2 class="mb-4">Te gjitha shitjet</h2>
+
+    <!-- Orders Table -->
+    <table class="table table-striped table-bordered table-responsive">
+      <thead class="thead-dark">
+        <tr>
+          <th>Emri i klientit</th>
+          <th>Adresa</th>
+          <th>Emaili</th>
+          <th>Telefoni</th>
+          <th>Qmimi total</th>
+          <th>Data</th>
+          <th>Mesazh shteë</th>
+          <th>Produktet e blera</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders; let i = index">
+          <td>{{ order.costumerName }}</td>
+          <td>{{ order.deliveryAddress }}</td>
+          <td>{{ order.email }}</td>
+          <td>{{ order.phoneNumber }}</td>
+          <td>{{ order.totalPrice | currency }}</td>
+          <td>{{ order.orderDate | date }}</td>
+          <td>{{ order.additionalMessage }}</td>
+          <td>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Kodi i produktit</th>
+                  <th>Sasia</th>
+                  <th>Qmimi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of order.orderItems">
+                  <td>{{ item.code }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ item.price | currency }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-center my-3">
+      <div class="pagination-controls d-flex align-items-center">
+        <button class="btn btn-outline-primary mx-1" (click)="fetchPrevious()"
+          [disabled]="!hasPreviousPage || isLoading">
+          <i class="bi bi-arrow-left"></i> <!-- Left Arrow Icon -->
+        </button>
+
+        <span class="mx-2">{{ currentPage }}</span> <!-- Current Page Number Display -->
+
+        <button class="btn btn-outline-primary mx-1" (click)="fetchNext()" [disabled]="!hasNextPage || isLoading">
+          <i class="bi bi-arrow-right"></i> <!-- Right Arrow Icon -->
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

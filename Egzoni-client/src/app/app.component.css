@@ -1,7 +1,9 @@
 /* Header Styles */
+
+
 header {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
 }
 
 header .navbar {
@@ -65,6 +67,8 @@ header .navbar-nav .nav-link:hover {
 
 /* Footer Styles */
 footer {
+  display: flex;
+  justify-content: center;
   background-color: #f8f9fa;
   padding: 20px 0;
 }
@@ -102,38 +106,4 @@ footer .social-links a:hover {
 .main-image img {
   width: 100%;
   max-width: 500px;
-}
-
-/* Dropdown Menu Styles */
-.dropdown-menu {
-  display: none;
-}
-
-.dropdown-menu.show {
-  display: block;
-}
-
-/* Ensure the dropdown menu is hidden on large screens */
-@media (min-width: 992px) {
-  .dropdown-menu {
-    display: none !important;
-  }
-}
-
-/* Ensure the dropdown menu is displayed on small screens */
-@media (max-width: 991px) {
-  .dropdown-menu.show {
-    display: block;
-  }
-}
-
-/* Make sure basket and user icons are visible on small screens */
-@media (max-width: 991px) {
-  .d-lg-flex {
-    display: none;
-  }
-
-  .d-lg-none {
-    display: block;
-  }
 }

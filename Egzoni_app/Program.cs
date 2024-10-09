@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")).EnableDetailedErrors(); ;
 
 });
 
@@ -44,6 +44,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddGraphQL();
 builder.Services.AddCors();
+
 builder.Services.AddTransient<IEmailService>(provider =>
     new EmailService(
         "smtp.gmail.com", // Gmail's SMTP server
@@ -52,6 +53,7 @@ builder.Services.AddTransient<IEmailService>(provider =>
         "egzonicenter@gmail.com", // Your Gmail username (usually the same as the email address)
         "rtfjoggabfzmxivz" // Your Gmail app-specific password (generate one in your Google account settings)
     ));
+
 
 builder.Services
     .AddGraphQLServer()
@@ -62,6 +64,7 @@ builder.Services
     .AddSorting()
     .AddUploadType()
     .AddTypes();
+
 
 
 var app = builder.Build();

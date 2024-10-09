@@ -57,7 +57,7 @@ export class AdminComponent {
           if (token) {
             console.log('Login successful. Token:', token);
             localStorage.setItem(this.authSecretKey, token);
-            this.router.navigateByUrl('carpets');
+            this.router.navigateByUrl('dashboard');
           } else {
             console.log('Login failed. No token received.');
             this.errorMessage = 'Invalid username or password.';

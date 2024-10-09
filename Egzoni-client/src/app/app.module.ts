@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,12 +13,24 @@ import { ShopModule } from './shop/shop.module';
 import { ProductDetailsModule } from './product-details/product-details.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { AuthGuard } from './auth.guard';
-import { SalePointsModule } from './sale-points/sale-points.module';
+import { CheckoutModule } from './checkout/checkout.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import for toastr animations
+import { OverlayModule } from '@angular/cdk/overlay';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SalesModule } from './sales/sales.module';
+import { ToastrModule } from 'ngx-toastr';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { HomeModule } from './home/home.module'; // Import HomeModule
+import { ChunkPipe } from './chunk.pipe';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,],
   imports: [
+    HomeModule,
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
@@ -30,10 +42,15 @@ import { SalePointsModule } from './sale-points/sale-points.module';
     ShopModule,
     ProductDetailsModule,
     CarpetsModule,
-    SalePointsModule,
+    CheckoutModule,
+    MatSnackBarModule,
+    OverlayModule,
+    DashboardModule,
+    NgxChartsModule,
+    SalesModule,
+    ToastrModule,
   ],
-  providers: [AuthGuard],
+  providers: [AuthGuard, provideAnimationsAsync()],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule {}
+export class AppModule { }

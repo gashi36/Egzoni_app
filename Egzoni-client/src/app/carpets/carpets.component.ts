@@ -75,7 +75,7 @@ export class CarpetsComponent implements OnInit {
     private getbrands: GetBrandsGQL,
     private getcategories: GetCategoriesGQL,
     private authGuard: AuthGuard
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getAllProducts();
