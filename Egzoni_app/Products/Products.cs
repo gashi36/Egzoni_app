@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Egzoni_app.OnSale;
 using Microsoft.EntityFrameworkCore;
 
 namespace Egzoni_app.Products
@@ -40,5 +41,25 @@ namespace Egzoni_app.Products
         [Required]
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }
+
+        public bool IsDeleted { get; set; } // Soft delete flag
+        public ICollection<Sales> Sales { get; set; } = new List<Sales>();
+
+        // Computed property for getting the discounted price from the Sales entity
+        public decimal? DiscountedPrice
+        {
+            get
+            {
+                // Get the first valid sale if exists
+                var validSale = Sales.FirstOrDefault(sale => sale.IsValidSalePeriod());
+                // If there's a valid sale, calculate the discounted price
+                if (validSale != null)
+                {
+                    return validSale.DiscountedPrice;
+                }
+                return RetailPrice; // If no valid sale, return retail price
+            }
+        }
     }
+
 }

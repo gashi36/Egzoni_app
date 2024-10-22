@@ -46,7 +46,7 @@ export class ShopComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getAllProducts();
+    this.getAllProductss();
     this.getAllBrands();
     this.getAllCategories();
   }
@@ -95,7 +95,8 @@ export class ShopComponent implements OnInit {
       });
   }
 
-  getAllProducts(first: number = 15): void {
+  // Ensure correct import statements and structure as per your application's design
+  getAllProductss(first: number = 15): void {
     const { brand, category, minPrice, maxPrice } = this.filterForm.value;
 
     this.getProductsGQL
@@ -107,13 +108,25 @@ export class ShopComponent implements OnInit {
         minPrice: minPrice ? parseFloat(minPrice) : null,
         maxPrice: maxPrice ? parseFloat(maxPrice) : null,
       })
-      .valueChanges.pipe(
+      .valueChanges
+      .pipe(
         map((result: ApolloQueryResult<any>) => result.data.productsAsync)
       )
       .subscribe({
         next: (data) => {
-          if (data && data.nodes) {
-            this.allProducts = [...this.allProducts, ...data.nodes];
+          if (data?.nodes) {
+            this.allProducts = data.nodes.map((product: any) => {
+              // Check if there is a valid sale period for the product
+              const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
+
+              return {
+                ...product,
+                discountedPrice: validSale ? validSale.discountedPrice : null,
+                discountPercentage: validSale ? validSale.discountPercentage : null,
+                saleId: validSale ? validSale.id : null, // Add additional sale info if needed
+              };
+            });
+
             this.filteredProducts = this.applyFilters(this.allProducts);
 
             if (data.pageInfo) {
@@ -127,6 +140,8 @@ export class ShopComponent implements OnInit {
         },
       });
   }
+
+
 
   applyFilters(products: Product[]): Product[] {
     const { brand, category, minPrice, maxPrice } = this.filterForm.value;
@@ -148,7 +163,7 @@ export class ShopComponent implements OnInit {
 
   loadMoreProducts(): void {
     if (this.hasNextPage) {
-      this.getAllProducts(15);
+      this.getAllProductss(15);
     } else {
       console.log('No more products to load.');
     }

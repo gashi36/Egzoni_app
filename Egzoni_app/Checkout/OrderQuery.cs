@@ -137,11 +137,19 @@ namespace Egzoni_app.Checkouts
             var startDate = new DateTime(year, 1, 1);
             var endDate = new DateTime(year, 12, 31);
 
-            // Retrieve order items with the relevant details
+            // Retrieve order items with the relevant details including DiscountedPrice
             var monthlyOrders = await context.Orders
                 .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
-                .SelectMany(o => o.OrderItems, (o, oi) => new { o.OrderDate, oi.Quantity, oi.Code })
-                .Join(context.Products, oi => oi.Code, p => p.Code, (oi, p) => new { oi.OrderDate, oi.Quantity, p.PurchasePrice, p.RetailPrice, oi.Code })
+                .SelectMany(o => o.OrderItems, (o, oi) => new
+                {
+                    o.OrderDate,
+                    oi.Quantity,
+                    oi.Code,
+                    oi.DiscountedPrice,  // Add DiscountedPrice
+                    oi.Price,            // Original price
+                    oi.Product.PurchasePrice,
+                    oi.Product.RetailPrice
+                })
                 .GroupBy(x => new { x.OrderDate.Year, x.OrderDate.Month, x.Code })
                 .Select(g => new
                 {
@@ -150,8 +158,10 @@ namespace Egzoni_app.Checkouts
                     ProductCode = g.Key.Code,
                     TotalOrders = g.Count(),
                     QuantitySold = g.Sum(x => x.Quantity),
-                    TotalRetailPrice = g.Sum(x => x.Quantity * x.RetailPrice),  // Sum the retail prices for sold products
-                    TotalPurchasePrice = g.Sum(x => x.Quantity * x.PurchasePrice) // Use the purchase price from the time they were added
+                    // If DiscountedPrice is available, use it, otherwise use RetailPrice
+                    TotalRetailPrice = g.Sum(x => x.Quantity * (x.DiscountedPrice ?? x.RetailPrice)),
+                    // Sum the purchase prices based on original price (since purchase prices don't have discounts)
+                    TotalPurchasePrice = g.Sum(x => x.Quantity * x.PurchasePrice)
                 })
                 .ToListAsync(cancellationToken);
 
@@ -178,6 +188,7 @@ namespace Egzoni_app.Checkouts
 
             return orderPriceStatsList; // Return only the stats for the specified year
         }
+
 
     }
     public class OrderPriceStats

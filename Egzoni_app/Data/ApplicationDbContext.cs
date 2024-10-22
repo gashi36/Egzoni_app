@@ -6,6 +6,7 @@ using Egzoni_app.Products;
 using Egzoni_app.Admin;
 using Microsoft.EntityFrameworkCore;
 using Egzoni_app.Checkout;
+using Egzoni_app.OnSale;
 
 namespace Egzoni_app.Database
 {
@@ -21,7 +22,7 @@ namespace Egzoni_app.Database
         public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-
+        public DbSet<Sales> Sales { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,6 +37,8 @@ namespace Egzoni_app.Database
             {
                 entity.Property(e => e.Price)
                     .HasPrecision(18, 2); // Specify precision and scale for the Price property
+                entity.Property(e => e.DiscountedPrice)
+                    .HasPrecision(18, 2);
             });
 
             // Add additional configurations for other entities if needed

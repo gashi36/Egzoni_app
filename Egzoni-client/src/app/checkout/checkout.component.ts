@@ -61,25 +61,41 @@ export class CheckoutComponent implements OnInit {
 
   async fetchProducts(productIds: number[]): Promise<Product[]> {
     const products: Product[] = [];
-    for (const id of productIds) {
+
+    const fetchPromises = productIds.map(async (id) => {
       try {
         const result = await this.getProductById.fetch({ id }).toPromise();
-        if (result?.data?.productById) {
-          const product = result.data.productById;
-          products.push({
+        const product = result?.data?.productById;
+
+        if (product) {
+          const sale = product.sales.length > 0 ? product.sales[0] : null;
+
+          const fullProduct = {
             ...product,
             thumbnailUrl: product.thumbnailUrl || 'default-thumbnail.jpg',
-          });
+            retailPrice: product.retailPrice, // Ensure retailPrice is always set
+            discountedPrice: sale ? sale.discountedPrice : product.retailPrice,
+            discountPercentage: sale ? sale.discountPercentage : 0,
+            endDate: sale ? sale.endDate : null,
+          };
+
+          return fullProduct;
         } else {
           console.warn(`Product with ID ${id} not found.`);
+          return null;
         }
       } catch (error) {
         console.error(`Error fetching product with ID ${id}:`, error);
         this.errorMessage = `Dështoi të ngarkonte produktin me ID ${id}.`;
+        return null;
       }
-    }
-    return products;
+    });
+
+    // Wait for all promises to resolve and filter out any null results
+    const results = await Promise.all(fetchPromises);
+    return results.filter(product => product !== null) as Product[];
   }
+
 
   getProductCode(productId: number): any {
     const product = this.products.find((p) => p.id === productId);
@@ -87,9 +103,18 @@ export class CheckoutComponent implements OnInit {
   }
 
   getProductPrice(productId: number): number {
-    const product = this.products.find((p) => p.id === productId);
+    const product = this.products.find(p => p.id === productId);
     return product ? product.retailPrice : 0;
   }
+
+  getDiscountedPrice(productId: number): number {
+    const product = this.products.find(p => p.id === productId);
+    if (product && product.sales && product.sales.length > 0) {
+      return product.sales[0].discountedPrice;
+    }
+    return this.getProductPrice(productId);
+  }
+
 
   getProductThumbnailUrl(productId: number): string {
     const product = this.products.find((p) => p.id === productId);
@@ -98,6 +123,7 @@ export class CheckoutComponent implements OnInit {
     }
     return `${this.baseImageUrl}default-thumbnail.jpg`;
   }
+
   incrementQuantity(itemId: number): void {
     const item = this.cartItems.find((i) => i.id === itemId);
     if (item) {
@@ -138,21 +164,24 @@ export class CheckoutComponent implements OnInit {
   calculateTotalPrice(): void {
     this.totalPrice = this.cartItems.reduce((total, item) => {
       const product = this.products.find((p) => p.id === item.id);
-      return product ? total + product.retailPrice * item.quantity : total;
+
+      // Use discounted price if available, otherwise use retail price
+      const priceToUse = product && product.discountedPrice ? product.discountedPrice : product?.retailPrice;
+
+      return priceToUse ? total + priceToUse * item.quantity : total;
     }, 0);
   }
 
   async submitOrder(): Promise<void> {
     if (this.orderForm.valid) {
-      this.loading = true; // Show loading state
+      this.loading = true;
 
-      // Disable the submit button and add a delay
       const submitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement;
       if (submitButton) {
         submitButton.disabled = true;
         setTimeout(() => {
           submitButton.disabled = false;
-        }, 2000); // 2-second delay
+        }, 2000);
       }
 
       const orderInputs = this.cartItems.map((item) => ({
@@ -176,7 +205,6 @@ export class CheckoutComponent implements OnInit {
         this.clearCart();
         this.loading = false;
 
-        // Use SweetAlert here
         Swal.fire({
           position: 'center',
           icon: 'success',
@@ -190,7 +218,6 @@ export class CheckoutComponent implements OnInit {
         this.errorMessage = 'Dështoi të vendoste porosinë. Ju lutem provoni përsëri.';
         this.loading = false;
 
-        // Use SweetAlert for error message
         Swal.fire({
           icon: 'error',
           title: 'Dështoi',
@@ -201,7 +228,6 @@ export class CheckoutComponent implements OnInit {
       console.error('Order form is invalid');
       this.errorMessage = 'Ju lutem plotësoni të gjitha fushat e kërkuara.';
 
-      // Use SweetAlert for validation message
       Swal.fire({
         icon: 'warning',
         title: 'Kujdes',

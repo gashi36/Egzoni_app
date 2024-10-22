@@ -28,7 +28,22 @@
                 style="width: 50px; height: 50px;" />
             </td>
             <td class="py-4">{{ getProductCode(item.id) }}</td>
-            <td class="py-4">{{ getProductPrice(item.id) | currency:'EUR' }}</td>
+            <td class="py-4">
+              <ng-container *ngIf="getDiscountedPrice(item.id) < getProductPrice(item.id); else originalPrice">
+                <span style="text-decoration: line-through; color: red;">
+                  {{ getProductPrice(item.id) | currency:'EUR' }}
+                </span>
+                <span class="ms-2" style="color: green;">
+                  {{ getDiscountedPrice(item.id) | currency:'EUR' }}
+                </span>
+              </ng-container>
+              <ng-template #originalPrice>
+                <span style="color: black;">
+                  {{ getProductPrice(item.id) | currency:'EUR' }}
+                </span>
+              </ng-template>
+            </td>
+
             <td>
               <div class="d-flex align-items-center py-2">
                 <button (click)="incrementQuantity(item.id)" class="btn btn-outline-success btn-group-sm">+</button>
@@ -41,6 +56,7 @@
             </td>
           </tr>
         </tbody>
+
       </table>
       <h3 class="total-price text-success">Çmimi Total: {{ totalPrice | currency:'EUR' }}</h3>
     </div>

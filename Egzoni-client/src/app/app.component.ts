@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Product, SearchProductsGQL } from '../generated/graphql';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -7,11 +9,43 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   isDropdownOpen: boolean = false; // State to manage dropdown visibility
+  isSearchingProduct: boolean = false;
+  products: Product[] = [];
+
+
+  searchProductForm = new FormGroup({
+    search: new FormControl(''),
+  });
+
+  constructor(
+    private searchprod: SearchProductsGQL,
+  ) { }
 
   ngOnInit(): void {
     this.updateCartBadge();
   }
 
+
+  searchProduct(code: string): void {
+    this.isSearchingProduct = true;
+    setTimeout(() => {
+      this.searchprod.fetch({ code }).subscribe({
+        next: ({ data }) => {
+          console.log(data?.productsAsync);
+          this.isSearchingProduct = false;
+          if (data?.productsAsync) {
+            this.products = data.productsAsync.edges?.map(
+              (x) => x.node
+            ) as Product[];
+          }
+        },
+        error: (error) => {
+          this.isSearchingProduct = false;
+          console.error('Error searching products:', error);
+        },
+      });
+    }, 500);
+  }
   updateCartBadge(): void {
     try {
       const badgeElement = document.querySelector('.cart-badge');

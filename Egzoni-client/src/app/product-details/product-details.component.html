@@ -42,11 +42,29 @@
             <li><i class="fa fa-check text-success"></i> <strong>Quantity:</strong> {{ product.quantity }}</li>
           </ul>
           <div class="price-section mt-3 d-flex align-items-center justify-content-between">
-            <h3 class="product-price text-success">{{ product.retailPrice | currency:'EUR' }}</h3>
+            <span *ngIf="product.discountedPrice; else regularPrice" class="product-price">
+              <span class="original-price text-muted text-decoration-line-through">
+                {{ product.retailPrice | currency:'EUR' }}
+              </span>
+              <span class="discounted-price text-danger fw-bold ms-2">
+                {{ product.discountedPrice | currency:'EUR' }}
+              </span>
+              <span *ngIf="product.sales && product.sales[0].discountPercentage"
+                class="discount-percentage text-success ms-2">
+                (-{{ product.sales[0].discountPercentage }}%)
+              </span>
+
+            </span>
+            <ng-template #regularPrice>
+              <h3 class="product-price text-success">{{ product.retailPrice | currency:'EUR' }}</h3>
+            </ng-template>
+
             <button (click)="addToCart(product.id)" class="btn btn-success">
               <i class="bi bi-cart"></i> Add to Cart
             </button>
+
           </div>
+
           <div class="toast-container position-fixed top-0 end-0 p-3">
             <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
               <div class="toast-header">
@@ -64,6 +82,9 @@
                 class="img-thumbnail" />
             </div>
           </div>
+          <span *ngIf="product.endDate" class="end-date text-danger ms-2">
+            (Zbritja perfundon më: {{ product.endDate | date: 'shortDate' }})
+          </span>
         </div>
       </div>
     </div>

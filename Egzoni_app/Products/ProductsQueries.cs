@@ -24,14 +24,18 @@ namespace Egzoni_app.Products
         [UseFiltering(typeof(ProductFilterInputType))]
         [UseSorting]
         public IQueryable<Product> GetProductsAsync(
-            [Service] ApplicationDbContext context,
-            int? brandId = null,
-            int? categoryId = null,
-            decimal? minPrice = null,
-            decimal? maxPrice = null)
+    [Service] ApplicationDbContext context,
+    int? brandId = null,
+    int? categoryId = null,
+    decimal? minPrice = null,
+    decimal? maxPrice = null)
         {
-            var query = context.Products.AsQueryable();
+            var query = context.Products
+                .Include(p => p.Sales) // Include the Sales entity to access discount details
+                .Where(p => !p.IsDeleted)
+                .AsQueryable();
 
+            // Apply brand, category, and price range filters
             if (brandId.HasValue)
             {
                 query = query.Where(p => p.BrandId == brandId.Value);
@@ -52,22 +56,31 @@ namespace Egzoni_app.Products
                 query = query.Where(p => p.RetailPrice <= maxPrice.Value);
             }
 
+            // Return the query with sales included
             return query;
         }
 
+
+
         public async Task<Product> GetProductByIdAsync(
-            int id,
-            [Service] ApplicationDbContext context,
-            CancellationToken cancellationToken,
-            [Service] IProductDataLoader productDataLoader)
+       int id,
+       [Service] ApplicationDbContext context,
+       CancellationToken cancellationToken,
+       [Service] IProductDataLoader productDataLoader)
         {
-            var product = await productDataLoader.LoadAsync(id, cancellationToken);
+            // Fetch the product and include the Sales entity for discount details
+            var product = await context.Products
+                .Include(p => p.Sales) // Ensure Sales is included
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+
             if (product == null)
             {
                 throw new GraphQLException(new Error($"Product with ID {id} not found.", code: "PRODUCT_NOT_FOUND"));
             }
+
             return product;
         }
+
 
         [DataLoader]
         internal static async Task<IReadOnlyDictionary<int, Product>> GetProductAsync(
@@ -77,6 +90,7 @@ namespace Egzoni_app.Products
         {
             return await context.Products
                 .Where(s => ids.Contains(s.Id))
+                .Include(s => s.Sales)
                 .ToDictionaryAsync(t => t.Id, cancellationToken);
         }
 
@@ -111,6 +125,9 @@ namespace Egzoni_app.Products
 
             return monthlyProductStats;
         }
+        // Example query to retrieve products with their discount percentage
+
+
 
         public class MonthlyProductStats
         {

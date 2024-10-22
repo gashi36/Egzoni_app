@@ -119,14 +119,25 @@
     </form>
   </div>
 
+
+
+  <!-- Product Table -->
   <!-- Product Table -->
   <hr>
-  <h1 class="text-primary">Stoku</h1>
+  <div class="flex-row d-flex justify-content-between">
+    <h1 class="text-primary">Stoku</h1>
+    <!-- Button to open the sale form modal -->
+    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#addSaleModal">Shto Zbritjet%</button>
+  </div>
   <hr>
   <div class="table-responsive mt-5">
     <table class="table table-hover custom-table">
       <thead>
         <tr class="table-primary">
+          <th scope="col">
+            <input type="checkbox" (change)="toggleAllProducts()"
+              [checked]="selectedProducts.length === products.length && products.length > 0" />
+          </th>
           <th scope="col">Kodi</th>
           <th scope="col">Masa</th>
           <th scope="col">Sasia</th>
@@ -136,12 +147,17 @@
           <th scope="col">Profiti</th>
           <th scope="col">Brendi</th>
           <th scope="col">Kategoria</th>
-          <th scope="col">Ndrysho Sasinë</th>
           <th scope="col"></th>
+          <th scope="col"></th>
+
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let pro of products">
+          <td>
+            <input type="checkbox" (change)="toggleProductSelection(pro.id)"
+              [checked]="selectedProducts.includes(pro.id)" />
+          </td>
           <td>{{ pro.code }}</td>
           <td>{{ pro.size }}</td>
           <td>{{ pro.quantity }}</td>
@@ -165,6 +181,54 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Sale Form Modal -->
+  <div class="modal fade" id="addSaleModal" tabindex="-1" aria-labelledby="addSaleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSaleModalLabel">Shto Zbritjet për Produktet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="addSaleForm" (ngSubmit)="confirmAddProductsOnSale()">
+            <div class="mb-3">
+              <label for="discountPercentage" class="form-label">Përqindja e Zbritjes (%)</label>
+              <input type="number" class="form-control" id="discountPercentage" formControlName="discountPercentage"
+                min="0" max="100" placeholder="Vendosni përqindjen e zbritjes">
+              <div
+                *ngIf="addSaleForm.controls['discountPercentage'].invalid && addSaleForm.controls['discountPercentage'].touched"
+                class="text-danger">
+                Ju lutem vendosni një përqindje midis 0 dhe 100.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="startDate" class="form-label">Data e Fillimit</label>
+              <input type="date" class="form-control" id="startDate" formControlName="startDate">
+              <div *ngIf="addSaleForm.controls['startDate'].invalid && addSaleForm.controls['startDate'].touched"
+                class="text-danger">
+                Data e fillimit është e nevojshme.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="endDate" class="form-label">Data e Përfundimit</label>
+              <input type="date" class="form-control" id="endDate" formControlName="endDate">
+              <div *ngIf="addSaleForm.controls['endDate'].invalid && addSaleForm.controls['endDate'].touched"
+                class="text-danger">
+                Data e përfundimit është e nevojshme.
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mbyll</button>
+          <button type="submit" class="btn btn-danger" (click)="confirmAddProductsOnSale()"
+            [disabled]="addSaleForm.invalid || selectedProducts.length === 0">Konfirmo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Load More Button -->
   <div class="row align-content-center justify-content-center">

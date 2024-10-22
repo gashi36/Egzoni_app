@@ -14,11 +14,13 @@ import {
   Brand,
   EditProductGQL,
   SearchProductsQuery,
+  AddOnSaleProductsGQL,
 } from '../../generated/graphql';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthGuard } from '../auth.guard';
 import { map } from 'rxjs/operators';
+import bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-carpets',
@@ -27,6 +29,7 @@ import { map } from 'rxjs/operators';
 })
 export class CarpetsComponent implements OnInit {
   products: Product[] = [];
+  selectedProducts: number[] = [];
   categories: Category[] = [];
   brands: Brand[] = [];
   imagePathLogo: string = 'assets/egzoni.png';
@@ -62,6 +65,16 @@ export class CarpetsComponent implements OnInit {
 
   addBrandForm = new FormGroup({ addBrand: new FormControl('') });
   addCategoryForm = new FormGroup({ addCategory: new FormControl('') });
+  addSaleForm = new FormGroup({
+    discountPercentage: new FormControl<number | undefined>(undefined, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(100),
+    ]),
+    startDate: new FormControl<Date | null>(null, [Validators.required]),
+    endDate: new FormControl<Date | null>(null, [Validators.required]),
+  });
+
 
   constructor(
     private router: Router,
@@ -74,7 +87,8 @@ export class CarpetsComponent implements OnInit {
     private addCategory: AddCategoryAsyncGQL,
     private getbrands: GetBrandsGQL,
     private getcategories: GetCategoriesGQL,
-    private authGuard: AuthGuard
+    private authGuard: AuthGuard,
+    private addOnSaleProducts: AddOnSaleProductsGQL
   ) { }
 
   ngOnInit(): void {
@@ -82,6 +96,93 @@ export class CarpetsComponent implements OnInit {
     this.getAllBrands();
     this.getAllCategories();
   }
+
+  toggleAllProducts(): void {
+    if (this.selectedProducts.length === this.products.length) {
+      this.selectedProducts = []; // Clear all selections
+    } else {
+      this.selectedProducts = this.products.map(p => p.id); // Select all products
+    }
+    console.log(this.selectedProducts);
+
+  }
+  toggleProductSelection(productId: number): void {
+    const index = this.selectedProducts.indexOf(productId);
+    if (index > -1) {
+      this.selectedProducts.splice(index, 1); // Remove product if already selected
+    } else {
+      this.selectedProducts.push(productId); // Add product if not selected
+    }
+    console.log(this.selectedProducts);
+
+
+  }
+
+  addProductsOnSale(): void {
+    // Check if no products are selected or if the form is invalid
+    if (this.selectedProducts.length === 0 || this.addSaleForm.invalid) {
+      window.alert('Please select products and fill out the sale form.');
+      return;
+    }
+
+    // Extract the form values
+    const saleFormValues = this.addSaleForm.value;
+
+    // Execute the mutation to add products to sale
+    this.addOnSaleProducts.mutate({
+      discountPercentage: saleFormValues.discountPercentage!,
+      productIds: this.selectedProducts,
+      startDate: saleFormValues.startDate!,
+      endDate: saleFormValues.endDate!,
+    }).subscribe({
+      next: (response) => {
+        console.log('Products added on sale:', response);
+        window.alert('Products successfully added on sale.');
+        this.selectedProducts = [];
+        this.addSaleForm.reset();
+      },
+      error: (error) => {
+        console.error('Error adding products to sale:', error);
+        window.alert(`Error adding products to sale: ${error.message || error}`);
+      },
+    });
+
+  }
+  confirmAddProductsOnSale(): void {
+    // Validate the selection and form before proceeding
+    if (!this.areProductsSelected() || this.isFormInvalid()) {
+      this.showAlert('Please select products and fill out the sale form.');
+      return;
+    }
+
+    // Gather the form values
+    const saleFormValues = this.getSaleFormValues();
+
+    // Add products to sale
+    this.executeAddProductsOnSale(saleFormValues);
+  }
+
+  private areProductsSelected(): boolean {
+    return this.selectedProducts.length > 0;
+  }
+
+  private isFormInvalid(): boolean {
+    return this.addSaleForm.invalid;
+  }
+
+  private showAlert(message: string): void {
+    window.alert(message);
+  }
+
+  private getSaleFormValues(): any {
+    return this.addSaleForm.value;
+  }
+
+  private executeAddProductsOnSale(saleFormValues: any): void {
+    // Execute the mutation to add products to sale
+    this.addProductsOnSale();
+  }
+
 
   getAllCategories(): void {
     this.getcategories
@@ -145,7 +246,34 @@ export class CarpetsComponent implements OnInit {
         next: (data) => {
           this.isLoadingProducts = false;
           if (data?.nodes) {
-            this.products = data.nodes;
+            this.products = data.nodes.map((product: any) => {
+              // Check if there are sales and assign values if they exist
+              if (product.sales) {
+                const sale = product.sales; // sales is not an array, it's an object
+
+                // Log the sales information
+                console.log(`Product ID: ${product.id}`);
+                console.log(`Discounted Price: ${sale.discountedPrice}`);
+                console.log(`Discount Percentage: ${sale.discountPercentage}%`);
+                console.log(`Sale End Date: ${sale.endDate}`);
+
+                return {
+                  ...product,
+                  discountedPrice: sale.discountedPrice,
+                  discountPercentage: sale.discountPercentage,
+                  endDate: sale.endDate,
+                };
+              } else {
+                // If no sales, just return the original product
+                return {
+                  ...product,
+                  discountedPrice: null, // or keep undefined
+                  discountPercentage: null, // or keep undefined
+                  endDate: null, // or keep undefined
+                };
+              }
+            });
+
             this.cursor = data.pageInfo.endCursor ?? null;
             this.hasNextPage = data.pageInfo.hasNextPage;
           } else {
@@ -158,6 +286,7 @@ export class CarpetsComponent implements OnInit {
         },
       });
   }
+
 
   loadMoreProducts(): void {
     if (this.hasNextPage) {

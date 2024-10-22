@@ -14,8 +14,11 @@
 
 
       <!-- Search Bar always visible -->
-      <form class="d-flex flex-grow-1 ms-3">
-        <input class="form-control me-2" type="search" placeholder="Kërkoni..." aria-label="Search">
+      <form class="d-flex flex-grow-1 ms-3" form [formGroup]="searchProductForm"
+        (ngSubmit)="searchProduct(searchProductForm.get('search')?.value ?? '')">
+
+        <input class="form-control me-2" type="text" placeholder="Kërkoni..." formControlName="search"
+          aria-label="Search">
         <button class="btn" type="submit"><i class="bi bi-search"></i></button>
       </form>
 

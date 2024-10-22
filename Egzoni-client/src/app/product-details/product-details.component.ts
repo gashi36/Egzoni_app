@@ -82,7 +82,6 @@ export class ProductDetailsComponent implements OnInit {
         },
       });
   }
-
   getProductById(id: number): void {
     this.product$ = this.getProductByIdGQL.fetch({ id }).pipe(
       map((result: any) => {
@@ -106,8 +105,16 @@ export class ProductDetailsComponent implements OnInit {
         } else {
           console.warn('No product found with the given ID.');
         }
+        const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
 
-        return product;
+        return {
+          ...product,
+          discountedPrice: product.sales?.[0]?.discountedPrice || null,
+          discountPercentage: product.sales?.[0]?.discountPercentage || null,
+          endDate: product.sales?.[0]?.endDate || null,
+          saleId: validSale ? validSale.id : null,
+        };
+
       }),
       catchError((error) => {
         console.error('Error fetching product with id:', error);
@@ -115,6 +122,7 @@ export class ProductDetailsComponent implements OnInit {
       })
     );
   }
+
   getBrandName(brandId: number): string | undefined {
     const brand = this.brands.find((brand) => brand.id === brandId);
     return brand?.name!;

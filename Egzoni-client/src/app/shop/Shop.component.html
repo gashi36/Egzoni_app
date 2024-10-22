@@ -1,14 +1,20 @@
 <!-- Hero Section -->
-<section class="hero">
-  <div class="hero-overlay">
-    <div class="hero-content">
-      <h2>Zbuloni Luksin e Tepihëve të Jashtme</h2>
-      <p>Ngrini hapësirën tuaj me përzgjedhjen tonë të kuratorëve të tepave dhe qilimëve të lartë.</p>
-      <a class="btn-primary" href="shop">Eksploroni Koleksionin Tonë</a>
-    </div>
-  </div>
-</section>
+<div class="container ">
 
+  <section class="hero">
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <h2>Zbuloni Luksin e Tepihëve të Jashtme</h2>
+        <p>Ngrini hapësirën tuaj me përzgjedhjen tonë të kuratorëve të tepave dhe qilimëve të lartë.</p>
+        <a class="btn-primary" href="shop">Eksploroni Koleksionin Tonë</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+
+<!-- Filter and Product Display Section -->
 <div class="container-fluid gradient-background py-4">
   <div class="row">
     <div class="col-md-12">
@@ -42,31 +48,52 @@
           <button type="submit" class="btn btn-primary-filters ms-2">Apliko Filtrat</button>
         </form>
       </div>
-
-
     </div>
 
+    <!-- Products Grid -->
     <div class="col-md-9 mx-auto">
       <div class="row row-cols-1 row-cols-md-5 g-2 justify-content-center">
         <div *ngFor="let product of filteredProducts" class="col mb-4 card-width">
           <div class="card h-100 custom-card border-0 product-card" (click)="navigateToProduct(product.id)">
             <!-- Image Section -->
-            <div class="card-img-container">
+            <div class="card-img-container position-relative">
               <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="">
+              <!-- Discount Ribbon (display only if discountPercentage is present) -->
+              <div *ngIf="product.sales && product.sales[0] && product.sales[0].discountPercentage" class="ribbon">
+                {{ product.sales[0].discountPercentage }}% OFF
+              </div>
             </div>
+
             <!-- Details Section -->
-            <div class="card-body ">
-              <h5 class="card-title pb-3 pt-3">{{ product.code }}</h5>
+            <div class="card-body">
+              <h5 class="card-title pt-3">{{ product.code }}</h5>
               <p class="card-text">
-                <span class="product-size">Masa: {{ product.size }}</span>
-                <span class="product-price">Çmimi: {{ product.retailPrice }} €</span>
+                <span class="product-size">Size: {{ product.size }}</span><br>
+
+                <!-- Display discounted price if a valid sale is present -->
+                <span *ngIf="product.discountedPrice; else regularPrice" class="product-price">
+                  <span class="original-price text-muted text-decoration-line-through">
+                    {{ product.retailPrice }} €
+                  </span>
+                  <span class="discounted-price text-danger fw-bold">
+                    {{ product.discountedPrice }} €
+                  </span>
+                  <span *ngIf="product.sales && product.sales[0].discountPercentage"
+                    class="discount-percentage text-success">
+                    (-{{ product.sales[0].discountPercentage }}%)
+                  </span>
+                </span>
+
+                <ng-template #regularPrice>
+                  <span class="product-price">
+                    {{ product.retailPrice }} €
+                  </span>
+                </ng-template>
               </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
   </div>
 </div>

@@ -104,18 +104,21 @@ namespace Egzoni_app.Products
             return new UpdateProductPayload(product);
         }
 
-        public async Task<bool> RemoveProductsById(int id, ApplicationDbContext context)
+        public async Task<bool> RemoveProductsById(
+       int productId,
+       [Service] ApplicationDbContext context)
         {
-            var product = await context.Products.FindAsync(id);
+            var product = await context.Products.FindAsync(productId);
             if (product == null)
             {
-                return false;
+                return false; // Product not found
             }
 
-            context.Products.Remove(product);
-            await context.SaveChangesAsync();
+            // Soft delete the product
+            product.IsDeleted = true;
 
-            return true;
+            await context.SaveChangesAsync();
+            return true; // Deletion successful
         }
     }
 }

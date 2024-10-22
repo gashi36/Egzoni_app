@@ -1,6 +1,6 @@
 query getProducts(
   $cursor: String
-  $last:Int
+  $last: Int
   $first: Int
   $brandId: Int
   $categoryId: Int
@@ -8,7 +8,7 @@ query getProducts(
   $maxPrice: Decimal
 ) {
   productsAsync(
-    last:$last
+    last: $last
     first: $first
     after: $cursor
     order: { id: DESC }
@@ -31,6 +31,15 @@ query getProducts(
       brandId
       categoryId
       thumbnailUrl
+      sales {
+       discountedPrice
+        discountPercentage
+        endDate
+        id
+        isValidSalePeriod
+        productId
+        startDate
+      }
     }
     pageInfo {
       endCursor
@@ -40,6 +49,7 @@ query getProducts(
     }
   }
 }
+
 query getAllOrders($before: String, $after: String) {
   allOrders(before: $before, after: $after, order: { id: DESC }) {
     nodes {
@@ -71,6 +81,21 @@ query getAllOrders($before: String, $after: String) {
     }
   }
 }
+
+mutation AddOnSaleProducts($discountPercentage: Float!, $productIds: [Int!]!, $startDate: DateTime!, $endDate: DateTime!) {
+  addProductOnSale(
+    input: { discountPercentage: $discountPercentage, productIds: $productIds, startDate: $startDate, endDate: $endDate }
+  ) {
+    discountedPrice
+    discountPercentage
+    endDate
+    id
+    isValidSalePeriod
+    startDate
+  }
+}
+
+
 query searchByCostumerName($customerNameSearch: String) {
   allOrders(where: { costumerName: { startsWith: $customerNameSearch } }) {
     edges {
@@ -289,5 +314,14 @@ query GetProductById($id: Int!) {
     retailPrice
     size
     thumbnailUrl
+    sales {
+      discountedPrice
+        discountPercentage
+        endDate
+        id
+        isValidSalePeriod
+        productId
+        startDate
+    }
   }
 }

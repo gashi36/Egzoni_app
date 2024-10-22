@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using Egzoni_app.Database;
 using Microsoft.EntityFrameworkCore;
 using HotChocolate;
@@ -24,7 +24,6 @@ namespace Egzoni_app.Checkouts
             _emailService = emailService;
             _adminEmail = adminEmail;
         }
-
         public async Task<Order> PlaceOrderAsync(OrderInput input, CancellationToken cancellationToken)
         {
             if (input.Items == null || !input.Items.Any())
@@ -46,13 +45,12 @@ namespace Egzoni_app.Checkouts
                     OrderItems = new List<OrderItem>()
                 };
 
-                decimal totalPrice = 0;
-
                 // Loop through items and add them to the order
                 foreach (var itemInput in input.Items)
                 {
+                    // Fetch product while checking for soft deletion
                     var product = await context.Products
-                        .Where(p => p.Id == itemInput.ProductId)
+                        .Where(p => p.Id == itemInput.ProductId && !p.IsDeleted) // Check for IsDeleted
                         .Select(p => new
                         {
                             p.Id,
@@ -64,13 +62,24 @@ namespace Egzoni_app.Checkouts
 
                     if (product == null)
                     {
-                        throw new GraphQLException($"Product with ID {itemInput.ProductId} not found.");
+                        throw new GraphQLException($"Product with ID {itemInput.ProductId} not found or deleted.");
                     }
 
                     if (product.Quantity < itemInput.Quantity)
                     {
                         throw new GraphQLException($"Insufficient quantity for product with ID {itemInput.ProductId}.");
                     }
+
+                    // Check for active sale
+                    var sale = await context.Sales
+                        .Where(s => s.ProductId == product.Id && s.StartDate <= DateTime.UtcNow && s.EndDate >= DateTime.UtcNow)
+                        .FirstOrDefaultAsync(cancellationToken);
+
+                    // Calculate the discounted price if there is an active sale
+                    decimal price = product.RetailPrice ?? 0;
+                    decimal discountedPrice = sale != null
+                        ? price - (price * (decimal)(sale.DiscountPercentage / 100))
+                        : price;
 
                     // Deduct product quantity
                     var productEntity = await context.Products.FindAsync(product.Id);
@@ -81,15 +90,15 @@ namespace Egzoni_app.Checkouts
                         ProductId = product.Id,
                         Code = product.Code, // Set ProductCode
                         Quantity = itemInput.Quantity,
-                        Price = product.RetailPrice ?? 0 // Assuming RetailPrice is nullable
+                        Price = price, // Original price
+                        DiscountedPrice = discountedPrice // Discounted price if available
                     };
 
                     order.OrderItems.Add(orderItem);
-                    totalPrice += orderItem.Price * orderItem.Quantity;
                 }
 
-                // Set the total price of the order
-                order.TotalPrice = totalPrice;
+                // Calculate the total price of the order after all items have been added
+                order.CalculateTotalPrice();
 
                 // Save the order to the database
                 context.Orders.Add(order);
@@ -102,15 +111,9 @@ namespace Egzoni_app.Checkouts
                 // Send email to the customer
                 await _emailService.SendEmailAsync(order.Email, subject, body);
 
-                // // Send email to the admin
-                // var adminSubject = "Njoftim i Ri për Porosi";
-                // var adminBody = GenerateEmailBodyForAdmin(order);
-                // await _emailService.SendEmailAsync(_adminEmail, adminSubject, adminBody);
-
                 return order;
             }
         }
-
 
 
         private string GenerateEmailBody(Order order)
@@ -191,7 +194,7 @@ namespace Egzoni_app.Checkouts
         <body>
             <div class='container'>
                 <div class='header'>
-                    <img src='https://scontent.fprn9-1.fna.fbcdn.net/v/t1.6435-9/158629143_117592383709173_9199318107638377155_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=WODKBOJZ9uoQ7kNvgF7a_hE&_nc_ht=scontent.fprn9-1.fna&_nc_gid=AyIuMqO-npR6rVemyWlS7Wn&oh=00_AYD5sOl4e6M8DmoPdKy94uV9kqQVR3Rkxz4c0uxqsSIkng&oe=6707867B' alt='Your Company Logo' />
+                    <img src='your-logo-url' alt='Your Company Logo' />
                     <h1>Konfirmimi i Porosisë</h1>
                 </div>
                 <div class='content'>
@@ -208,7 +211,10 @@ namespace Egzoni_app.Checkouts
             {
                 body += $@"
             <li class='item'>
-                <strong>Kodi i Produktit:</strong> {item.Code} - <strong>Sasia:</strong> {item.Quantity} - <strong>Çmimi:</strong> ${item.Price}
+                <strong>Kodi i Produktit:</strong> {item.Code} 
+                 </br><strong>Sasia:</strong> {item.Quantity} 
+                 </br> <strong>Çmimi:</strong> ${item.Price}
+                </br><strong>Çmimi me zbritje:</strong> ${item.DiscountedPrice}
             </li>";
             }
 
@@ -217,7 +223,7 @@ namespace Egzoni_app.Checkouts
                 <p class='total'><strong>Çmimi Total:</strong> ${order.TotalPrice}</p>
             </div>
             <div class='footer'>
-                <p>Faleminderit që blejti me ne!</p>
+                <p>Faleminderit na besuat!</p>
             </div>
         </div>
     </body>
@@ -225,40 +231,5 @@ namespace Egzoni_app.Checkouts
 
             return body;
         }
-
-
-        // private string GenerateEmailBodyForAdmin(Order order)
-        // {
-        //     var body = $@"
-        //         <html>
-        //         <body>
-        //             <h1>Njoftim i Ri për Porosi</h1>
-        //             <p>Ka ardhur një porosi e re nga {order.CostumerName}.</p>
-        //             <p>Numri i Porosisë: {order.Id}</p>
-        //             <p>Data e Porosisë: {order.OrderDate}</p>
-        //             <p>Adresa e Dërgesës: {order.DeliveryAddress}</p>
-        //             <p>Numri i Telefonit: {order.PhoneNumber}</p>
-        //             <p>Mesazhi Shtesë: {order.AdditionalMessage}</p>
-        //             <h2>Artikujt e Porosisë</h2>
-        //             <ul>";
-
-        //     foreach (var item in order.OrderItems)
-        //     {
-        //         body += $@"
-        //             <li>
-        //                 Kodi i Produktit: {item.Code} - Sasia: {item.Quantity} - Çmimi: ${item.Price}
-        //             </li>";
-        //     }
-
-        //     body += $@"
-        //             </ul>
-        //             <p>Çmimi Total: ${order.TotalPrice}</p>
-        //             <p>Ju lutem, kontrolloni porosinë në sistemin tuaj.</p>
-        //         </body>
-        //         </html>";
-
-        //     return body;
-        // }
     }
-
 }
