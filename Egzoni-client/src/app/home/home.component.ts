@@ -47,6 +47,27 @@ export class HomeComponent implements OnInit {
     this.getAllBrands();
   }
 
+  getLastThreeBrands(): Brand[] {
+    return this.brands.slice(-4); // Adjust as needed
+  }
+  navigateToShopWithFilters(type: string, id: number): void {
+    const queryParams: any = {};
+
+    if (type === 'brand') {
+      queryParams.brand = id;
+    } else if (type === 'category') {
+      queryParams.category = id;
+    }
+
+    // Navigate to shop with query parameters
+    this.router.navigate(['/shop'], { queryParams });
+  }
+
+  getProductsForBrand(brandId: number): Product[] {
+    return this.products
+      .filter(product => product.brandId === brandId)
+      .slice(0, 4); // Return only the first four products
+  }
   getLatestProducts(first: number = 10): void {
     this.getProductsGQL
       .watch({ first })
@@ -158,20 +179,32 @@ export class HomeComponent implements OnInit {
         },
       });
   }
-
   getAllBrands(): void {
     this.getBrandsGQL
       .watch()
       .valueChanges.pipe(map((result: any) => result.data.brands))
       .subscribe({
         next: (data) => {
-          this.brands = data || [];
+          this.brands = data.map((brand: any) => ({
+            id: brand.id,
+            name: brand.name,
+            logoUrl: `http://localhost:5044/logos/${brand.id}/${brand.logoUrl}`,
+            products: brand.products || [], // Ensure products are included
+          })) || [];
+
+          console.log('Fetched Brands:', this.brands);
         },
         error: (error) => {
           console.error('Error fetching brands:', error);
         },
       });
   }
+
+  removeImage(event: Event) {
+    // If the image cannot be loaded, hide the image element
+    (event.target as HTMLImageElement).style.display = 'none';
+  }
+
 
   getBrandName(brandId: number): string | undefined {
     const brand = this.brands.find((brand) => brand.id === brandId);

@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApolloQueryResult } from '@apollo/client/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   GetProductsGQL,
   Product,
@@ -39,6 +39,7 @@ export class ShopComponent implements OnInit {
   });
 
   constructor(
+    private activatedRoute: ActivatedRoute, // ActivatedRoute to read query params
     private router: Router,
     private getProductsGQL: GetProductsGQL,
     private getBrandsGQL: GetBrandsGQL,
@@ -46,6 +47,27 @@ export class ShopComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      const brandId = params['brand'];
+      const categoryId = params['category'];
+
+      // Patch the form with undefined instead of null for empty values
+      this.filterForm.patchValue({
+        brand: brandId ? brandId : undefined,   // Keep as string or undefined if empty
+        category: categoryId ? categoryId : undefined,  // Keep as string or undefined if empty
+      });
+
+
+
+      // If there's a brand or category filter, apply it
+      if (brandId || categoryId) {
+        this.filterProducts(); // Apply filters based on query params
+      } else {
+        this.getAllProductss(); // Load all products if no filters
+      }
+    });
+
+
     this.getAllProductss();
     this.getAllBrands();
     this.getAllCategories();
@@ -116,19 +138,20 @@ export class ShopComponent implements OnInit {
         next: (data) => {
           if (data?.nodes) {
             this.allProducts = data.nodes.map((product: any) => {
-              // Check if there is a valid sale period for the product
+              // Check for a valid sale period
               const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
 
               return {
                 ...product,
-                discountedPrice: validSale ? validSale.discountedPrice : null,
-                discountPercentage: validSale ? validSale.discountPercentage : null,
-                saleId: validSale ? validSale.id : null, // Add additional sale info if needed
+                discountedPrice: validSale?.discountedPrice ?? null, // Assign discountedPrice or null
+                discountPercentage: validSale?.discountPercentage ?? 0, // Default to 0 if not found
+                saleId: validSale?.id ?? null, // Add additional sale info if needed
               };
             });
 
             this.filteredProducts = this.applyFilters(this.allProducts);
 
+            // Update pagination information
             if (data.pageInfo) {
               this.cursor = data.pageInfo.endCursor ?? null;
               this.hasNextPage = data.pageInfo.hasNextPage;
@@ -140,7 +163,6 @@ export class ShopComponent implements OnInit {
         },
       });
   }
-
 
 
   applyFilters(products: Product[]): Product[] {

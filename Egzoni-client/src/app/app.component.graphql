@@ -156,6 +156,7 @@ query getBrands {
   brands {
     id
     name
+    logoUrl
   }
 }
 
@@ -251,12 +252,14 @@ mutation PlaceOrder($input: OrderInput!) {
   }
 }
 
-mutation AddBrandAsync($name: String!) {
-  addBrand(brandInput: { name: $name }) {
+mutation AddBrandAsync($name: String!, $logo:Upload!) {
+  addBrand(brandInput: { name: $name, logo: $logo }) {
     id
     name
+    logoUrl
   }
 }
+
 
 mutation AddCategoryAsync($name: String!) {
   addCategory(categoryInput: { name: $name }) {
@@ -283,9 +286,10 @@ mutation editProduct($quantity: Decimal!, $id: Int) {
   }
 }
 
-mutation deleteProduct($id: Int!) {
-  removeProductsById(id: $id)
+mutation deleteProduct($productId: Int!) {
+  removeProductsById(productId: $productId)
 }
+
 
 mutation Login($username: String!, $password: String!) {
   login(loginInput: { username: $username, password: $password }) {

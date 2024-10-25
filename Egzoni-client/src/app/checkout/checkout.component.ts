@@ -93,7 +93,7 @@ export class CheckoutComponent implements OnInit {
 
     // Wait for all promises to resolve and filter out any null results
     const results = await Promise.all(fetchPromises);
-    return results.filter(product => product !== null) as Product[];
+    return results.filter(product => product !== null) as unknown as Product[];
   }
 
 

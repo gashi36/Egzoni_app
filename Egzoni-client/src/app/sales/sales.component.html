@@ -67,7 +67,11 @@
                 <tr *ngFor="let item of order.orderItems">
                   <td>{{ item.code }}</td>
                   <td>{{ item.quantity }}</td>
-                  <td>{{ item.price | currency }}</td>
+                  <td>
+                    <!-- Display discounted price if available, else show regular price -->
+                    <span *ngIf="item.discountedPrice; else normalPrice">{{ item.discountedPrice | currency }}</span>
+                    <ng-template #normalPrice>{{ item.price | currency }}</ng-template>
+                  </td>
                 </tr>
               </tbody>
             </table>

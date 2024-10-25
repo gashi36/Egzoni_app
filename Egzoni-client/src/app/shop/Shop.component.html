@@ -50,46 +50,33 @@
       </div>
     </div>
 
-    <!-- Products Grid -->
     <div class="col-md-9 mx-auto">
-      <div class="row row-cols-1 row-cols-md-5 g-2 justify-content-center">
-        <div *ngFor="let product of filteredProducts" class="col mb-4 card-width">
-          <div class="card h-100 custom-card border-0 product-card" (click)="navigateToProduct(product.id)">
+      <div class="row row-cols-1 row-cols-md-5 g-4 justify-content-center">
+        <div *ngFor="let product of filteredProducts" class="col">
+          <div class="card product-card" (click)="navigateToProduct(product.id)">
             <!-- Image Section -->
-            <div class="card-img-container position-relative">
+            <div class="card-image-wrapper">
               <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="">
-              <!-- Discount Ribbon (display only if discountPercentage is present) -->
-              <div *ngIf="product.sales && product.sales[0] && product.sales[0].discountPercentage" class="ribbon">
-                {{ product.sales[0].discountPercentage }}% OFF
+              <div *ngIf="product.discountedPrice" class="discount-badge">
+                -{{ product.sales[0].discountPercentage }}%
               </div>
             </div>
 
-            <!-- Details Section -->
+            <!-- Product Info Section -->
             <div class="card-body">
-              <h5 class="card-title pt-3">{{ product.code }}</h5>
-              <p class="card-text">
-                <span class="product-size">Size: {{ product.size }}</span><br>
-
-                <!-- Display discounted price if a valid sale is present -->
-                <span *ngIf="product.discountedPrice; else regularPrice" class="product-price">
-                  <span class="original-price text-muted text-decoration-line-through">
-                    {{ product.retailPrice }} €
-                  </span>
-                  <span class="discounted-price text-danger fw-bold">
-                    {{ product.discountedPrice }} €
-                  </span>
-                  <span *ngIf="product.sales && product.sales[0].discountPercentage"
-                    class="discount-percentage text-success">
-                    (-{{ product.sales[0].discountPercentage }}%)
-                  </span>
+              <h5 class="card-title">{{ getBrandName(product.brandId) }} - {{ product.code }}</h5>
+              <p class="card-text product-size">Size: {{ product.size }}</p>
+              <div class="price-section">
+                <!-- Display original and discounted prices -->
+                <span *ngIf="product.discountedPrice; else regularPrice" class="price">
+                  <span class="original-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
+                  <span class="discounted-price">{{ product.discountedPrice | number: '1.2-2' }} €</span>
                 </span>
-
+                <!-- Regular Price -->
                 <ng-template #regularPrice>
-                  <span class="product-price">
-                    {{ product.retailPrice }} €
-                  </span>
+                  <span class="regular-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
                 </ng-template>
-              </p>
+              </div>
             </div>
           </div>
         </div>

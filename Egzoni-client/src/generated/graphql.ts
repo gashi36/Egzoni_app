@@ -24,6 +24,7 @@ export type Scalars = {
 };
 
 export type AddBrandInput = {
+  logo?: InputMaybe<Scalars['Upload']['input']>;
   name: Scalars['String']['input'];
 };
 
@@ -116,9 +117,15 @@ export enum ApplyPolicy {
   Validation = 'VALIDATION'
 }
 
+export type BooleanOperationFilterInput = {
+  eq?: InputMaybe<Scalars['Boolean']['input']>;
+  neq?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type Brand = {
   __typename?: 'Brand';
   id: Scalars['Int']['output'];
+  logoUrl?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   products: Array<Product>;
 };
@@ -126,6 +133,7 @@ export type Brand = {
 export type BrandFilterInput = {
   and?: InputMaybe<Array<BrandFilterInput>>;
   id?: InputMaybe<IntOperationFilterInput>;
+  logoUrl?: InputMaybe<StringOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<BrandFilterInput>>;
   products?: InputMaybe<ListFilterInputTypeOfProductFilterInput>;
@@ -133,6 +141,7 @@ export type BrandFilterInput = {
 
 export type BrandSortInput = {
   id?: InputMaybe<SortEnumType>;
+  logoUrl?: InputMaybe<SortEnumType>;
   name?: InputMaybe<SortEnumType>;
 };
 
@@ -325,7 +334,7 @@ export type MutationRemoveProductFromSaleArgs = {
 
 
 export type MutationRemoveProductsByIdArgs = {
-  id: Scalars['Int']['input'];
+  productId: Scalars['Int']['input'];
 };
 
 
@@ -469,6 +478,7 @@ export type Product = {
   description?: Maybe<Scalars['String']['output']>;
   discountedPrice?: Maybe<Scalars['Decimal']['output']>;
   id: Scalars['Int']['output'];
+  isDeleted: Scalars['Boolean']['output'];
   pictureUrls: Array<Scalars['String']['output']>;
   profit?: Maybe<Scalars['Decimal']['output']>;
   purchasePrice?: Maybe<Scalars['Decimal']['output']>;
@@ -490,6 +500,7 @@ export type ProductFilterInput = {
   description?: InputMaybe<StringOperationFilterInput>;
   discountedPrice?: InputMaybe<DecimalOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
+  isDeleted?: InputMaybe<BooleanOperationFilterInput>;
   or?: InputMaybe<Array<ProductFilterInput>>;
   pictureUrls?: InputMaybe<ListStringOperationFilterInput>;
   purchasePrice?: InputMaybe<DecimalOperationFilterInput>;
@@ -510,6 +521,7 @@ export type ProductSortInput = {
   description?: InputMaybe<SortEnumType>;
   discountedPrice?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
+  isDeleted?: InputMaybe<SortEnumType>;
   purchasePrice?: InputMaybe<SortEnumType>;
   quantity?: InputMaybe<SortEnumType>;
   retailPrice?: InputMaybe<SortEnumType>;
@@ -742,7 +754,7 @@ export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __t
 export type GetBrandsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBrandsQuery = { __typename?: 'Query', brands: Array<{ __typename?: 'Brand', id: number, name?: string | null }> };
+export type GetBrandsQuery = { __typename?: 'Query', brands: Array<{ __typename?: 'Brand', id: number, name?: string | null, logoUrl?: string | null }> };
 
 export type SearchProductsQueryVariables = Exact<{
   code?: InputMaybe<Scalars['String']['input']>;
@@ -776,10 +788,11 @@ export type PlaceOrderMutation = { __typename?: 'Mutation', placeOrder: { __type
 
 export type AddBrandAsyncMutationVariables = Exact<{
   name: Scalars['String']['input'];
+  logo: Scalars['Upload']['input'];
 }>;
 
 
-export type AddBrandAsyncMutation = { __typename?: 'Mutation', addBrand: { __typename?: 'Brand', id: number, name?: string | null } };
+export type AddBrandAsyncMutation = { __typename?: 'Mutation', addBrand: { __typename?: 'Brand', id: number, name?: string | null, logoUrl?: string | null } };
 
 export type AddCategoryAsyncMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -797,7 +810,7 @@ export type EditProductMutationVariables = Exact<{
 export type EditProductMutation = { __typename?: 'Mutation', update: { __typename?: 'UpdateProductPayload', products: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrls: Array<string> } } };
 
 export type DeleteProductMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
+  productId: Scalars['Int']['input'];
 }>;
 
 
@@ -1065,6 +1078,7 @@ export const GetBrandsDocument = gql`
   brands {
     id
     name
+    logoUrl
   }
 }
     `;
@@ -1168,10 +1182,11 @@ export const PlaceOrderDocument = gql`
     }
   }
 export const AddBrandAsyncDocument = gql`
-    mutation AddBrandAsync($name: String!) {
-  addBrand(brandInput: {name: $name}) {
+    mutation AddBrandAsync($name: String!, $logo: Upload!) {
+  addBrand(brandInput: {name: $name, logo: $logo}) {
     id
     name
+    logoUrl
   }
 }
     `;
@@ -1236,8 +1251,8 @@ export const EditProductDocument = gql`
     }
   }
 export const DeleteProductDocument = gql`
-    mutation deleteProduct($id: Int!) {
-  removeProductsById(id: $id)
+    mutation deleteProduct($productId: Int!) {
+  removeProductsById(productId: $productId)
 }
     `;
 

@@ -105,20 +105,30 @@ namespace Egzoni_app.Products
         }
 
         public async Task<bool> RemoveProductsById(
-       int productId,
-       [Service] ApplicationDbContext context)
+         int productId,
+         [Service] ApplicationDbContext context)
         {
+            // Check if the product exists
             var product = await context.Products.FindAsync(productId);
+
             if (product == null)
             {
-                return false; // Product not found
+                throw new GraphQLException($"Product with ID {productId} not found.");
             }
 
-            // Soft delete the product
+            // Check if the product is already marked as deleted
+            if (product.IsDeleted)
+            {
+                throw new GraphQLException($"Product with ID {productId} is already deleted.");
+            }
+
+            // Mark the product as deleted (soft delete)
             product.IsDeleted = true;
 
+            // Save the changes
             await context.SaveChangesAsync();
-            return true; // Deletion successful
+            return true; // Indicate successful deletion
         }
+
     }
 }

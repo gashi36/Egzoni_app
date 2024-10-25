@@ -39,7 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  });
 
 builder.Services.AddAuthorization();
-
+builder.Services.AddHostedService<ExpiredSalesCleanupService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddGraphQL();

@@ -25,9 +25,18 @@ namespace Egzoni_app.Checkouts
         public async Task<List<Order>> GetAllOrdersAsync(CancellationToken cancellationToken)
         {
             await using var context = _dbContextFactory.CreateDbContext();
-            return await context.Orders
+
+            var orders = await context.Orders
                 .Include(o => o.OrderItems)
                 .ToListAsync(cancellationToken);
+
+            // Recalculate the total price based on the discounted prices
+            foreach (var order in orders)
+            {
+                order.TotalPrice = (decimal)order.OrderItems.Sum(item => item.DiscountedPrice * item.Quantity);
+            }
+
+            return orders;
         }
 
         // Query to get a specific order by ID

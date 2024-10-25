@@ -55,7 +55,7 @@
 </div>
 <div class="container">
   <div *ngIf="products.length > 0">
-    <p-carousel [value]="products" [numVisible]="4" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
+    <p-carousel [value]="products" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
       [responsiveOptions]="responsiveOptions" [showNavigators]="true" [showIndicators]="false">
       <ng-template let-product pTemplate="item">
         <div class="product-card">
@@ -81,18 +81,68 @@
   </div>
 </div>
 <br>
+<section class="container last-brands-section mt-5">
+  <h2 class="text-center">Koleksioni ynë i Fundit i Brendeve</h2>
 
-<!-- Curtain Banner Section -->
-<section class="container curtain-banner">
-  <div class="curtain-banner-content">
-    <h2>Transformoni Hapësirën Tuaj me Perde Elegante</h2>
-    <p>Eksploroni koleksionin tonë luksoz të perdeve për të përfunduar ambientet tuaja.</p>
-    <a class="btn-outline-danger" [routerLink]="['/shop']" routerLinkActive="active">Shiko më shumë</a>
+  <div *ngFor="let brand of getLastThreeBrands()" class="brand-section mb-5">
+    <!-- Brand Banner -->
+    <div class="brand-banner d-flex align-items-center">
+      <div class="brand-content">
+        <a [routerLink]="['/shop']" [queryParams]="{ brand: brand.id }"
+          (click)="navigateToShopWithFilters('brand', brand.id)"> <img *ngIf="brand.logoUrl" [src]="brand.logoUrl"
+            alt="{{ brand.name }} Logo" class="brand-logo" (error)="removeImage($event)" />
+        </a>
+      </div>
+    </div>
+
+    <div class="brand-products mt-4">
+      <h6 class="text-center">Produkte nga {{ brand.name }}</h6>
+      <div class="col-md-9 mx-auto">
+        <div class="row row-cols-1 row-cols-md-5 g-4 justify-content-center">
+          <div *ngFor="let product of getProductsForBrand(brand.id)" class="col">
+            <div class="card product-card" (click)="navigateToProduct(product.id)">
+              <!-- Image Section -->
+              <div class="card-image-wrapper">
+                <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="{{ product.code }}" />
+                <div *ngIf="product.discountedPrice" class="discount-badge">
+                  -{{ product.sales[0].discountPercentage }}%
+                </div>
+              </div>
+
+              <!-- Product Info Section -->
+              <div class="card-body">
+                <h5 class="card-title">{{ getBrandName(product.brandId) }} - {{ product.code }}</h5>
+                <p class="card-text product-size">Size: {{ product.size }}</p>
+                <div class="price-section">
+                  <span *ngIf="product.discountedPrice; else regularPrice" class="price">
+                    <span class="original-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
+                    <span class="discounted-price">{{ product.discountedPrice | number: '1.2-2' }} €</span>
+                  </span>
+                  <ng-template #regularPrice>
+                    <span class="regular-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
+
+
+
+
+
+<!-- Last Three Categories Section -->
+
+
+
 <!-- Featured Curtains Section -->
-<section class="featured-curtains-section">
+<!-- <section class="featured-curtains-section">
   <h2>Zgjedhja Jonë e Perdeve Elegante</h2>
   <div class="featured-curtains-container">
     <div class="featured-curtain-card">
@@ -120,4 +170,4 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->

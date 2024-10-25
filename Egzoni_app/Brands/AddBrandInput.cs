@@ -7,6 +7,7 @@ namespace Egzoni_app.Brands
 {
     public record AddBrandInput
 (
-    string Name
+    string Name,
+    [GraphQLType(typeof(NonNullType<UploadType>))] IFile? Logo
 );
 }

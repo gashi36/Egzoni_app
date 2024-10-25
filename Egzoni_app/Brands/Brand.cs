@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Egzoni_app.Products
 {
@@ -9,6 +6,7 @@ namespace Egzoni_app.Products
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public ICollection<Product>? Products { get; set; } = [];
+        public string? LogoUrl { get; set; } // Changed to store a single logo URL
+        public ICollection<Product>? Products { get; set; } = new List<Product>();
     }
 }

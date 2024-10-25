@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import { AuthGuard } from '../auth.guard';
 import { map } from 'rxjs/operators';
 import bootstrap from 'bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-carpets',
@@ -44,6 +45,8 @@ export class CarpetsComponent implements OnInit {
   isSearchingProduct: boolean = false;
   isAddingBrand: boolean = false;
   isAddingCategory: boolean = false;
+  selectedLogo: File | null = null;
+
 
   searchProductForm = new FormGroup({
     search: new FormControl(''),
@@ -63,8 +66,15 @@ export class CarpetsComponent implements OnInit {
     image: new FormControl<File[]>([], [Validators.required]),
   });
 
-  addBrandForm = new FormGroup({ addBrand: new FormControl('') });
+  addBrandForm = new FormGroup({
+    addBrand: new FormControl(''), // Brand name input
+    addLogo: new FormControl(null), // Logo upload input (can be null)
+  });
+
+
   addCategoryForm = new FormGroup({ addCategory: new FormControl('') });
+
+
   addSaleForm = new FormGroup({
     discountPercentage: new FormControl<number | undefined>(undefined, [
       Validators.required,
@@ -209,30 +219,99 @@ export class CarpetsComponent implements OnInit {
         error: (error) => console.error('Error fetching brands:', error),
       });
   }
-
   addBrandAsync(): void {
     const brandName = this.addBrandForm.controls.addBrand.value?.trim();
+    const logo = this.selectedLogo; // Get the selected logo file
+
     if (brandName) {
-      this.addBrand.mutate({ name: brandName }).subscribe({
+      const brandInput: any = {
+        name: brandName,
+      };
+
+      // Add logo only if it exists
+      if (logo) {
+        brandInput.logo = logo; // Include logo in the input if available
+      }
+
+      this.addBrand.mutate(brandInput, {
+        context: {
+          useMultipart: true,
+        }
+      }).subscribe({
         next: (data) => {
           console.log('Brand added:', data);
           this.getAllBrands(); // Refresh the brands list
+
+          // Show success message with Swal
+          Swal.fire({
+            icon: 'success',
+            title: 'Brendi u shtua',
+            text: `${brandName} eshte shtuar me sukses`,
+            confirmButtonColor: '#3085d6',
+          });
+
+          // Reset the form after successful submission
+          this.addBrandForm.reset();
+          this.selectedLogo = null; // Clear the selected file
         },
-        error: (error) => console.log('Error adding brand:', error),
+        error: (error) => {
+          console.log('Error adding brand:', error);
+
+          // Show error message with Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'Gabim',
+            text: 'Gabim ne shtimin e brendit!',
+            confirmButtonColor: '#d33',
+          });
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Kërkohet informacion',
+        text: 'Ju lutem plotësoni emrin e brendit!',
+        confirmButtonColor: '#3085d6',
       });
     }
   }
 
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedLogo = input.files[0]; // Get the first selected file
+    } else {
+      this.selectedLogo = null; // Reset if no file is selected
+    }
+  }
   addCategoryAsync(): void {
-    const categoryName =
-      this.addCategoryForm.controls.addCategory.value?.trim();
+    const categoryName = this.addCategoryForm.controls.addCategory.value?.trim();
     if (categoryName) {
       this.addCategory.mutate({ name: categoryName }).subscribe({
         next: (data) => {
           console.log('Category added:', data);
           this.getAllCategories(); // Refresh the categories list
+
+          // Show success message with Swal
+          Swal.fire({
+            icon: 'success',
+            title: 'Kategoria u shtua',
+            text: `${categoryName} eshte shtuar me sukses`,
+            confirmButtonColor: '#3085d6',
+          });
         },
-        error: (error) => console.log('Error adding category:', error),
+        error: (error) => {
+          console.log('Error adding category:', error);
+
+          // Show error message with Swal
+          Swal.fire({
+            icon: 'error',
+            title: 'Gabim',
+            text: 'Gabim ne shtimin e kategorise',
+            confirmButtonColor: '#d33',
+          });
+        },
       });
     }
   }
@@ -309,7 +388,12 @@ export class CarpetsComponent implements OnInit {
   editProduct(id: number): void {
     const product = this.products.find((p) => p.id === id);
     if (!product) {
-      window.alert('Product not found');
+      Swal.fire({
+        icon: 'error',
+        title: 'Product Not Found',
+        text: `The product with ID ${id} was not found.`,
+        confirmButtonColor: '#d33',
+      });
       return;
     }
 
@@ -362,7 +446,12 @@ export class CarpetsComponent implements OnInit {
               quantity: parseFloat(formValues.quantity ?? '') || 0,
             })
             .toPromise();
-          console.log('Product edited successfully');
+          Swal.fire({
+            icon: 'success',
+            title: 'Produkti eshte ndryshuar',
+            text: 'Produkti eshte ndryshuar me sukses!',
+            confirmButtonColor: '#3085d6',
+          });
         } else {
           await this.addpro
             .mutate(
@@ -385,7 +474,12 @@ export class CarpetsComponent implements OnInit {
               }
             )
             .toPromise();
-          console.log('Product added successfully');
+          Swal.fire({
+            icon: 'success',
+            title: 'Produkti eshte regjistruar',
+            text: 'Produkti eshte regjistruar me sukses',
+            confirmButtonColor: '#3085d6',
+          });
         }
 
         // Check and add brand or category if needed
@@ -406,6 +500,7 @@ export class CarpetsComponent implements OnInit {
         console.error('Error during product operation:', error);
       } finally {
         this.isAddingProduct = false;
+        this.addProductForm.reset(); // Reset form after adding
       }
     };
 
@@ -425,19 +520,56 @@ export class CarpetsComponent implements OnInit {
   }
 
   deleteProduct(id: number): void {
-    this.isDeletingProduct = true;
-    this.deleteprod.mutate({ id }).subscribe({
-      next: () => {
-        console.log('Product removed successfully');
-        this.isDeletingProduct = false;
-        this.getAllProducts(); // Refresh products list
-      },
-      error: (error) => {
-        this.isDeletingProduct = false;
-        console.error('Error deleting product:', error);
-      },
+    // Show SweetAlert confirmation
+    Swal.fire({
+      title: 'A jeni të sigurt?',
+      text: 'Ky veprim nuk mund të anulohet. A dëshironi të fshini këtë produkt?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Po, fshi!',
+      cancelButtonText: 'Anulo',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Set deleting state
+        this.isDeletingProduct = true;
+
+        // Optionally remove the product from the local list immediately (optimistic UI)
+        const previousProducts = [...this.products]; // Backup for rollback in case of failure
+        this.products = this.products.filter((p) => p.id !== id);
+
+        // Call GraphQL mutation to delete the product
+        this.deleteprod.mutate({ productId: id }).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Fshirë!',
+              text: 'Produkti është fshirë me sukses.',
+              confirmButtonColor: '#3085d6',
+            });
+            this.isDeletingProduct = false;
+            this.getAllProducts(); // Refresh the product list from server
+          },
+          error: (error) => {
+            this.isDeletingProduct = false;
+            console.error('Gabim gjatë fshirjes së produktit:', error);
+
+            // Rollback optimistic update in case of failure
+            this.products = previousProducts;
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Gabim!',
+              text: 'Ka ndodhur një gabim gjatë fshirjes së produktit. Ju lutem provoni përsëri.',
+              confirmButtonColor: '#d33',
+            });
+          },
+        });
+      }
     });
   }
+
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;

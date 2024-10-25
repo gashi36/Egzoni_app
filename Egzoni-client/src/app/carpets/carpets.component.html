@@ -11,6 +11,10 @@
       <div class="col-md-3">
         <input type="text" formControlName="addBrand" class="form-control custom-input" placeholder="Shto brand">
       </div>
+      <div class="col-md-3">
+        <input type="file" (change)="onFileSelected($event)" class="form-control custom-input" accept="image/*">
+        <small class="form-text text-muted">Zgjidhni logon (opcional)</small>
+      </div>
       <div class="col-md-2">
         <button type="submit" class="btn btn-outline-danger btn-block" [disabled]="isAddingBrand">
           <span *ngIf="isAddingBrand" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -19,6 +23,7 @@
       </div>
     </div>
   </form>
+
 
   <!-- Add Category Form -->
   <form [formGroup]="addCategoryForm" (ngSubmit)="addCategoryAsync()" class="mb-4">

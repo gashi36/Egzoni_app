@@ -1,3 +1,19 @@
+/* General Styles */
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  height: 100%;
+  max-width: 280px;
+  /* Leaner look */
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
 /* Hero Section */
 .hero {
   position: relative;
@@ -13,15 +29,12 @@
   padding: 1.5rem;
   box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
   opacity: 0;
-  /* Start hidden for fade-in effect */
   animation: fadeIn 1s forwards;
-  /* Fade-in animation */
 }
 
 @keyframes fadeIn {
   to {
     opacity: 1;
-    /* Fully visible after the animation */
   }
 }
 
@@ -42,7 +55,6 @@
 
 .btn-primary {
   background-color: red;
-  /* Gold color */
   color: #fff;
   border: none;
   padding: 0.75rem 2rem;
@@ -52,19 +64,88 @@
   text-decoration: none;
   display: inline-block;
   transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  /* Added box-shadow transition */
 }
 
 .btn-primary:hover {
   background-color: darkred;
-  /* Darker gold */
   transform: scale(1.05);
-  /* Added slight rotation */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  /* Added shadow effect */
 }
 
-/* Filter Container */
+/* Card Image */
+.card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card-img-top:hover {
+  transform: scale(1.1);
+}
+
+/* Discount Badge */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Card Body */
+.card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.product-size {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.price-section {
+  margin-top: 10px;
+}
+
+.original-price {
+  font-size: 1rem;
+  color: black;
+  text-decoration: line-through;
+  margin-right: 10px;
+}
+
+.discounted-price {
+  font-size: 1.2rem;
+  color: red;
+  font-weight: bold;
+}
+
+.regular-price {
+  font-size: 1.2rem;
+  color: black;
+}
+
+/* Filter Section */
 .filter-container {
   background-color: #f8f9fa;
   padding: 20px;
@@ -81,18 +162,12 @@
   padding-right: 10px;
 }
 
-/* Form Elements */
 .form-select,
 .form-control {
   border-radius: 0.5rem;
   width: 100%;
 }
 
-.form-select-lg {
-  padding: 10px;
-}
-
-/* Buttons */
 .btn-primary-filters {
   background-color: red;
   color: #fff;
@@ -100,17 +175,13 @@
   font-size: 1rem;
   font-weight: 600;
   border-radius: 0.5rem;
-  height: auto;
   transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  /* Added box-shadow transition */
 }
 
 .btn-primary-filters:hover {
   background-color: darkred;
   transform: scale(1.05);
-  /* Added slight rotation */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  /* Added shadow effect */
 }
 
 /* Price Range */
@@ -128,108 +199,18 @@
   margin-right: 0;
 }
 
-/* Cards */
-.card-img-container {
-  height: 300px;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.card-width {
-  border: 1px rgb(221, 219, 219) solid;
-  border-radius: 10px;
-}
-
-.card-img-top {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.custom-card {
-  border: 1px solid red;
-  /* Gold border */
-  border-radius: 10px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* Transition for transform and box-shadow */
-}
-
-.custom-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  /* Added scaling */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  /* Shadow effect */
-}
-
-/* Card Body */
-.card-body {
-  padding: 5px;
-}
-
-.card-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-
-.product-size {
-  margin-right: 15px;
-  font-size: 0.9rem;
-}
-
-.product-price {
-  font-size: 0.9rem;
-}
-
-.text-dark {
-  color: #333;
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-.filter-group {
-  margin-bottom: 0;
-}
-
-/* Last filter group should not have margin */
-.filter-group:last-child {
-  margin-right: 0;
-}
-
-.ribbon {
-  position: absolute;
-  top: 10px;
-  right: 0px;
-  z-index: 1;
-  background-color: red;
-  color: white;
-  padding: 10px 10px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.original-price {
-  font-size: 16px;
-  text-decoration: line-through;
-  color: red;
-}
-
-.discounted-price {
-  font-size: 20px;
-  color: green;
-  font-weight: bold;
-}
-
-.discount-percentage {
-  font-size: 14px;
-  margin-left: 5px;
-  color: red;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .filter-container {
     margin-bottom: 20px;
+  }
+
+  .card {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .card-image-wrapper {
+    height: 200px;
   }
 }

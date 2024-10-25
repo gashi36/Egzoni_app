@@ -1,5 +1,125 @@
 /* Global Styles */
 
+.brand-card,
+.category-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  /* Light background */
+  transition: transform 0.2s;
+}
+
+.brand-card:hover,
+.category-card:hover {
+  transform: scale(1.05);
+  /* Slightly enlarge on hover */
+}
+
+.brand-name,
+.category-name {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+/* Shared Card Styles */
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+  height: 100%;
+  max-width: 280px;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Image */
+.card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card-img-top:hover {
+  transform: scale(1.1);
+}
+
+/* Discount Badge */
+.discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Card Body */
+.card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.product-size {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.price-section {
+  margin-top: 10px;
+}
+
+.original-price {
+  font-size: 1rem;
+  color: black;
+  text-decoration: line-through;
+  margin-right: 10px;
+}
+
+.discounted-price {
+  font-size: 1.2rem;
+  color: red;
+  font-weight: bold;
+}
+
+.regular-price {
+  font-size: 1.2rem;
+  color: black;
+}
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
 
 .btn-primary,
 .btn-secondary {
@@ -179,6 +299,8 @@
 /* Card Styles with Spacing */
 .product-card {
   background: #fff;
+  height: 100%;
+  width: 350px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -408,4 +530,30 @@ small {
   background-color: red !important;
   color: white !important;
   cursor: pointer !important;
+}
+
+
+
+.brand-banner .brand-content {
+  display: flex;
+  flex-direction: column;
+  /* Align logo, text, and button vertically */
+  align-items: flex-start;
+  /* Align items to the left */
+}
+
+.brand-logo {
+  max-width: 120px;
+  /* Adjust logo size */
+}
+
+
+.brand-products {
+  /* Optional: add a border for separation */
+  padding-top: 15px;
+}
+
+.product-item {
+  margin-bottom: 15px;
+  /* Space between products */
 }
