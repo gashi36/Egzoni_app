@@ -32,7 +32,7 @@ query getProducts(
       categoryId
       thumbnailUrl
       sales {
-       discountedPrice
+        discountedPrice
         discountPercentage
         endDate
         id
@@ -82,9 +82,19 @@ query getAllOrders($before: String, $after: String) {
   }
 }
 
-mutation AddOnSaleProducts($discountPercentage: Float!, $productIds: [Int!]!, $startDate: DateTime!, $endDate: DateTime!) {
+mutation AddOnSaleProducts(
+  $discountPercentage: Float!
+  $productIds: [Int!]!
+  $startDate: DateTime!
+  $endDate: DateTime!
+) {
   addProductOnSale(
-    input: { discountPercentage: $discountPercentage, productIds: $productIds, startDate: $startDate, endDate: $endDate }
+    input: {
+      discountPercentage: $discountPercentage
+      productIds: $productIds
+      startDate: $startDate
+      endDate: $endDate
+    }
   ) {
     discountedPrice
     discountPercentage
@@ -94,7 +104,6 @@ mutation AddOnSaleProducts($discountPercentage: Float!, $productIds: [Int!]!, $s
     startDate
   }
 }
-
 
 query searchByCostumerName($customerNameSearch: String) {
   allOrders(where: { costumerName: { startsWith: $customerNameSearch } }) {
@@ -113,9 +122,8 @@ query searchByCostumerName($customerNameSearch: String) {
     }
   }
 }
-query getSalesForYear ($year: Int!) {
-  monthlyPricesAndStatsForYear(year:$year
-  ) {
+query getSalesForYear($year: Int!) {
+  monthlyPricesAndStatsForYear(year: $year) {
     month
     monthName
     mostSoldProductCode
@@ -176,6 +184,36 @@ query searchProducts($code: String) {
   }
 }
 
+query searchProductsByBrand($brandName: String, $categoryName: String) {
+  productsAsync(
+    where: {
+      or: [
+        { brand: { name: { startsWith: $brandName } } }
+        { category: { name: { startsWith: $categoryName } } }
+      ]
+    }
+  ) {
+    edges {
+      node {
+        brandId
+        categoryId
+        code
+        color
+        description
+        discountedPrice
+        id
+        isDeleted
+        pictureUrls
+        profit
+        purchasePrice
+        quantity
+        retailPrice
+        size
+        thumbnailUrl
+      }
+    }
+  }
+}
 
 mutation addProductss(
   $code: String!
@@ -252,14 +290,13 @@ mutation PlaceOrder($input: OrderInput!) {
   }
 }
 
-mutation AddBrandAsync($name: String!, $logo:Upload!) {
+mutation AddBrandAsync($name: String!, $logo: Upload!) {
   addBrand(brandInput: { name: $name, logo: $logo }) {
     id
     name
     logoUrl
   }
 }
-
 
 mutation AddCategoryAsync($name: String!) {
   addCategory(categoryInput: { name: $name }) {
@@ -290,7 +327,6 @@ mutation deleteProduct($productId: Int!) {
   removeProductsById(productId: $productId)
 }
 
-
 mutation Login($username: String!, $password: String!) {
   login(loginInput: { username: $username, password: $password }) {
     administrator {
@@ -320,12 +356,12 @@ query GetProductById($id: Int!) {
     thumbnailUrl
     sales {
       discountedPrice
-        discountPercentage
-        endDate
-        id
-        isValidSalePeriod
-        productId
-        startDate
+      discountPercentage
+      endDate
+      id
+      isValidSalePeriod
+      productId
+      startDate
     }
   }
 }

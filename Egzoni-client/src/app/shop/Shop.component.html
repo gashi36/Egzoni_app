@@ -1,6 +1,5 @@
 <!-- Hero Section -->
-<div class="container ">
-
+<div class="container">
   <section class="hero">
     <div class="hero-overlay">
       <div class="hero-content">
@@ -11,76 +10,121 @@
     </div>
   </section>
 
-</div>
+  <!-- Filter and Product Display Section -->
+  <div class="py-4">
+    <div class="row">
+      <!-- Filters for Larger Screens -->
+      <div class="col-md-3 mb-4 d-none d-md-block ">
+        <mat-card class=" filter-card">
+          <mat-card-title>Filtro</mat-card-title>
+          <mat-card-content>
+            <form [formGroup]="filterForm" (ngSubmit)="filterProducts()">
+              <mat-form-field appearance="fill" color="warn" class="w-100 mb-3">
+                <mat-label>Brendi</mat-label>
+                <mat-select formControlName="brand">
+                  <mat-option value="">Të gjitha</mat-option>
+                  <mat-option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
 
+              <mat-form-field appearance="fill" class="w-100 mb-3" color="warn">
+                <mat-label>Kategoria</mat-label>
+                <mat-select formControlName="category">
+                  <mat-option value="">Të gjitha</mat-option>
+                  <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
 
-<!-- Filter and Product Display Section -->
-<div class="container-fluid gradient-background py-4">
-  <div class="row">
-    <div class="col-md-12">
-      <!-- Filters -->
-      <div class="mb-4 filter-container text-center">
-        <h4 class="filter-title">Filtro:</h4>
-        <form [formGroup]="filterForm" (ngSubmit)="filterProducts()"
-          class="d-flex justify-content-center align-items-end flex-wrap">
-          <div class="filter-group me-2">
-            <label for="brand" class="form-label">Brendi:</label>
-            <select formControlName="brand" id="brand" class="form-select">
-              <option value="">Të gjitha</option>
-              <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
-            </select>
-          </div>
-          <div class="filter-group me-2">
-            <label for="category" class="form-label">Kategoria:</label>
-            <select formControlName="category" id="category" class="form-select">
-              <option value="">Të gjitha</option>
-              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-            </select>
-          </div>
-          <div class="filter-group me-2">
-            <label for="minPrice" class="form-label">Çmimi min:</label>
-            <input type="number" formControlName="minPrice" id="minPrice" class="form-control" placeholder="10">
-          </div>
-          <div class="filter-group me-2">
-            <label for="maxPrice" class="form-label">Çmimi max:</label>
-            <input type="number" formControlName="maxPrice" id="maxPrice" class="form-control" placeholder="299">
-          </div>
-          <button type="submit" class="btn btn-primary-filters ms-2">Apliko Filtrat</button>
-        </form>
+              <mat-form-field appearance="fill" class="w-100 mb-3" color="warn">
+                <mat-label>Çmimi min</mat-label>
+                <input matInput type="number" formControlName="minPrice" placeholder="10">
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="w-100 mb-3" color="warn">
+                <mat-label>Çmimi max</mat-label>
+                <input matInput type="number" formControlName="maxPrice" placeholder="299">
+              </mat-form-field>
+
+              <button mat-raised-button color="warn" type="submit" class="w-100 custom-radius">
+                Apliko Filtrat
+              </button>
+            </form>
+          </mat-card-content>
+        </mat-card>
       </div>
-    </div>
 
-    <div class="col-md-9 mx-auto">
-      <div class="row row-cols-1 row-cols-md-5 g-4 justify-content-center">
-        <div *ngFor="let product of filteredProducts" class="col">
-          <div class="card product-card" (click)="navigateToProduct(product.id)">
-            <!-- Image Section -->
-            <div class="card-image-wrapper">
-              <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="">
-              <div *ngIf="product.discountedPrice" class="discount-badge">
-                -{{ product.sales[0].discountPercentage }}%
-              </div>
-            </div>
+      <!-- Toggleable Filters for Small Screens -->
+      <div class="d-md-none text-center mb-4">
+        <button mat-button (click)="toggleFilterVisibility()" class="filter-toggle-rect-btn">
+          <mat-icon class="mr-2">filter_alt</mat-icon>
+          <span *ngIf="!isFilterVisible">Shfaq Filtrat</span>
+          <span *ngIf="isFilterVisible">Mbyll Filtrat</span>
+        </button>
+      </div>
 
-            <!-- Product Info Section -->
-            <div class="card-body">
-              <h5 class="card-title">{{ getBrandName(product.brandId) }} - {{ product.code }}</h5>
-              <p class="card-text product-size">Size: {{ product.size }}</p>
-              <div class="price-section">
-                <!-- Display original and discounted prices -->
-                <span *ngIf="product.discountedPrice; else regularPrice" class="price">
-                  <span class="original-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
-                  <span class="discounted-price">{{ product.discountedPrice | number: '1.2-2' }} €</span>
-                </span>
-                <!-- Regular Price -->
-                <ng-template #regularPrice>
-                  <span class="regular-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
-                </ng-template>
-              </div>
-            </div>
+      <!-- Filters for Small Screens -->
+      <div class="col-12 d-md-none" [ngClass]="{ 'd-none': !isFilterVisible }">
+        <mat-card class="filter-card">
+          <mat-card-content>
+            <form [formGroup]="filterForm" (ngSubmit)="filterProducts()">
+              <mat-form-field appearance="fill" color="warn" class="w-100 mb-3">
+                <mat-label>Brendi</mat-label>
+                <mat-select formControlName="brand">
+                  <mat-option value="">Të gjitha</mat-option>
+                  <mat-option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="w-100 mb-3" color="warn">
+                <mat-label>Kategoria</mat-label>
+                <mat-select formControlName="category">
+                  <mat-option value="">Të gjitha</mat-option>
+                  <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="w-100 mb-3" color="warn">
+                <mat-label>Çmimi min</mat-label>
+                <input matInput type="number" formControlName="minPrice" placeholder="10">
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="w-100 mb-3" color="warn">
+                <mat-label>Çmimi max</mat-label>
+                <input matInput type="number" formControlName="maxPrice" placeholder="299">
+              </mat-form-field>
+
+              <button mat-raised-button color="warn" type="submit" class="w-100 custom-radius">
+                Apliko Filtrat
+              </button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-9 mx-auto">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3 justify-content-center">
+          <div *ngFor="let product of filteredProducts" class="col d-flex">
+            <mat-card class="product-card w-100" (click)="navigateToProduct(product.id)">
+              <img mat-card-image [src]="getProductThumbnailUrl(product)" alt="Product image">
+              <mat-card-content>
+                <mat-card-header>
+                  <mat-card-title>{{ getBrandName(product.brandId) }} - {{ product.code }}</mat-card-title>
+                </mat-card-header>
+                <p class="product-size">Size: {{ product.size }}</p>
+                <div class="price-section">
+                  <span *ngIf="product.discountedPrice; else regularPrice">
+                    <span class="original-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
+                    <span class="discounted-price">{{ product.discountedPrice | number: '1.2-2' }} €</span>
+                  </span>
+                  <ng-template #regularPrice>
+                    <span class="regular-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
+                  </ng-template>
+                </div>
+              </mat-card-content>
+            </mat-card>
           </div>
         </div>
       </div>
+
     </div>
   </div>
-</div>

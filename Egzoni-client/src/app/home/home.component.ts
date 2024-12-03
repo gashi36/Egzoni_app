@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
   }
 
   getLastThreeBrands(): Brand[] {
-    return this.brands.slice(-4); // Adjust as needed
+    return this.brands.slice(-3); // Adjust as needed
   }
   navigateToShopWithFilters(type: string, id: number): void {
     const queryParams: any = {};

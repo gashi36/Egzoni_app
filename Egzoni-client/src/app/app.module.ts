@@ -24,10 +24,15 @@ import { ToastrModule } from 'ngx-toastr';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HomeModule } from './home/home.module'; // Import HomeModule
 import { ChunkPipe } from './chunk.pipe';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [AppComponent,],
   imports: [
+    MatAutocompleteModule,
+    MatInputModule,
     HomeModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -49,6 +54,8 @@ import { ChunkPipe } from './chunk.pipe';
     NgxChartsModule,
     SalesModule,
     ToastrModule,
+    CurrencyPipe,
+    DatePipe
   ],
   providers: [AuthGuard, provideAnimationsAsync()],
   bootstrap: [AppComponent],

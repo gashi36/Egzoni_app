@@ -763,6 +763,14 @@ export type SearchProductsQueryVariables = Exact<{
 
 export type SearchProductsQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', edges?: Array<{ __typename?: 'ProductsAsyncEdge', node: { __typename?: 'Product', code?: string | null, size?: string | null, color?: string | null, quantity?: any | null, retailPrice?: any | null, purchasePrice?: any | null, profit?: any | null } }> | null } | null };
 
+export type SearchProductsByBrandQueryVariables = Exact<{
+  brandName?: InputMaybe<Scalars['String']['input']>;
+  categoryName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SearchProductsByBrandQuery = { __typename?: 'Query', productsAsync?: { __typename?: 'ProductsAsyncConnection', edges?: Array<{ __typename?: 'ProductsAsyncEdge', node: { __typename?: 'Product', brandId: number, categoryId: number, code?: string | null, color?: string | null, description?: string | null, discountedPrice?: any | null, id: number, isDeleted: boolean, pictureUrls: Array<string>, profit?: any | null, purchasePrice?: any | null, quantity?: any | null, retailPrice?: any | null, size?: string | null, thumbnailUrl?: string | null } }> | null } | null };
+
 export type AddProductssMutationVariables = Exact<{
   code: Scalars['String']['input'];
   size: Scalars['String']['input'];
@@ -1116,6 +1124,44 @@ export const SearchProductsDocument = gql`
   })
   export class SearchProductsGQL extends Apollo.Query<SearchProductsQuery, SearchProductsQueryVariables> {
     document = SearchProductsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SearchProductsByBrandDocument = gql`
+    query searchProductsByBrand($brandName: String, $categoryName: String) {
+  productsAsync(
+    where: {or: [{brand: {name: {startsWith: $brandName}}}, {category: {name: {startsWith: $categoryName}}}]}
+  ) {
+    edges {
+      node {
+        brandId
+        categoryId
+        code
+        color
+        description
+        discountedPrice
+        id
+        isDeleted
+        pictureUrls
+        profit
+        purchasePrice
+        quantity
+        retailPrice
+        size
+        thumbnailUrl
+      }
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SearchProductsByBrandGQL extends Apollo.Query<SearchProductsByBrandQuery, SearchProductsByBrandQueryVariables> {
+    document = SearchProductsByBrandDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

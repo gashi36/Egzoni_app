@@ -1,6 +1,58 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\10\\Image_4d6d2acd-dab1-4873-a5c6-f7be86962b0c.jpg",
+      "PackagePath": "staticwebassets\\Images\\10\\Image_4d6d2acd-dab1-4873-a5c6-f7be86962b0c.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\10\\Image_7dd6545a-8d14-4bef-8e85-1dafea40251e.jpg",
+      "PackagePath": "staticwebassets\\Images\\10\\Image_7dd6545a-8d14-4bef-8e85-1dafea40251e.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\10\\Image_c3d8b0f7-7883-4fee-b364-757950ef3bd2.jpg",
+      "PackagePath": "staticwebassets\\Images\\10\\Image_c3d8b0f7-7883-4fee-b364-757950ef3bd2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\11\\Image_06d11d63-9a2c-4243-8920-f80300da2d9f.jpg",
+      "PackagePath": "staticwebassets\\Images\\11\\Image_06d11d63-9a2c-4243-8920-f80300da2d9f.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\11\\Image_ba873341-2d88-45ac-a311-22d505fdd1c2.jpg",
+      "PackagePath": "staticwebassets\\Images\\11\\Image_ba873341-2d88-45ac-a311-22d505fdd1c2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\11\\Image_ba979fa1-7267-4f1e-8d8c-c9e6e9d0f384.jpg",
+      "PackagePath": "staticwebassets\\Images\\11\\Image_ba979fa1-7267-4f1e-8d8c-c9e6e9d0f384.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\11\\Image_c075f4e3-d954-4d61-b5e2-542a86d8e23f.jpg",
+      "PackagePath": "staticwebassets\\Images\\11\\Image_c075f4e3-d954-4d61-b5e2-542a86d8e23f.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\12\\Image_4bc7e806-67f0-4a94-a902-9e6b7aa2b2ec.jpg",
+      "PackagePath": "staticwebassets\\Images\\12\\Image_4bc7e806-67f0-4a94-a902-9e6b7aa2b2ec.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\12\\Image_50dd5e87-bee4-4fb5-a4f3-abf57f015dca.jpg",
+      "PackagePath": "staticwebassets\\Images\\12\\Image_50dd5e87-bee4-4fb5-a4f3-abf57f015dca.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\12\\Image_90d92e86-b494-481f-982b-198da1152663.jpg",
+      "PackagePath": "staticwebassets\\Images\\12\\Image_90d92e86-b494-481f-982b-198da1152663.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\12\\Image_9497f11d-ab82-418c-a49b-ebfae9321f89.jpg",
+      "PackagePath": "staticwebassets\\Images\\12\\Image_9497f11d-ab82-418c-a49b-ebfae9321f89.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\12\\Image_dba46c72-a220-48f1-97f4-16dd82b8d731.jpg",
+      "PackagePath": "staticwebassets\\Images\\12\\Image_dba46c72-a220-48f1-97f4-16dd82b8d731.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\12\\Image_ec38a347-9079-46da-9596-fe59b0ca2ca2.jpg",
+      "PackagePath": "staticwebassets\\Images\\12\\Image_ec38a347-9079-46da-9596-fe59b0ca2ca2.jpg"
+    },
+    {
       "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\1\\Image_80d51c1e-5f73-455b-9282-0d499119fbb9.jpg",
       "PackagePath": "staticwebassets\\Images\\1\\Image_80d51c1e-5f73-455b-9282-0d499119fbb9.jpg"
     },
@@ -85,8 +137,40 @@
       "PackagePath": "staticwebassets\\Images\\7\\Image_e64104e1-8bb6-4147-831d-0be76cbe67b7.jpg"
     },
     {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\8\\Image_1fe6e089-f204-4e54-99a1-2907485596bc.jpg",
+      "PackagePath": "staticwebassets\\Images\\8\\Image_1fe6e089-f204-4e54-99a1-2907485596bc.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\8\\Image_84ff312a-1777-4d07-8e5a-e539dcebfc42.jpg",
+      "PackagePath": "staticwebassets\\Images\\8\\Image_84ff312a-1777-4d07-8e5a-e539dcebfc42.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\8\\Image_ff05981e-6c86-4785-9095-85c89a4bb611.jpg",
+      "PackagePath": "staticwebassets\\Images\\8\\Image_ff05981e-6c86-4785-9095-85c89a4bb611.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\9\\Image_394bfef7-7cfc-4dec-9aa0-bbee70d89781.jpg",
+      "PackagePath": "staticwebassets\\Images\\9\\Image_394bfef7-7cfc-4dec-9aa0-bbee70d89781.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\9\\Image_887620e2-c579-4e0a-b703-5ec4f6879455.jpg",
+      "PackagePath": "staticwebassets\\Images\\9\\Image_887620e2-c579-4e0a-b703-5ec4f6879455.jpg"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\Images\\9\\Image_97727641-95ea-4cf0-8bf5-8e6371b4a74f.jpg",
+      "PackagePath": "staticwebassets\\Images\\9\\Image_97727641-95ea-4cf0-8bf5-8e6371b4a74f.jpg"
+    },
+    {
       "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\logos\\10\\Logo_d3d3cbba-4d50-42ed-bb46-b1eb4b3133ff.png",
       "PackagePath": "staticwebassets\\logos\\10\\Logo_d3d3cbba-4d50-42ed-bb46-b1eb4b3133ff.png"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\logos\\11\\Logo_a0cf15e3-a4b3-4b69-8633-b28d8df54556.png",
+      "PackagePath": "staticwebassets\\logos\\11\\Logo_a0cf15e3-a4b3-4b69-8633-b28d8df54556.png"
+    },
+    {
+      "Id": "C:\\Users\\asus\\Desktop\\Egzoni_app\\Egzoni_app\\wwwroot\\logos\\12\\Logo_6e16ec38-3a38-476b-9c82-83778b79402b.png",
+      "PackagePath": "staticwebassets\\logos\\12\\Logo_6e16ec38-3a38-476b-9c82-83778b79402b.png"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Egzoni_app.Microsoft.AspNetCore.StaticWebAssets.props",

@@ -119,108 +119,110 @@ namespace Egzoni_app.Checkouts
         private string GenerateEmailBody(Order order)
         {
             var body = $@"
-        <html>
-        <head>
-            <style>
-                body {{
-                    font-family: 'Arial', sans-serif;
-                    background-color: #f4f4f4; /* Light grey background */
-                    margin: 0;
-                    padding: 0;
-                }}
-                .container {{
-                    width: 600px;
-                    margin: 20px auto;
-                    background-color: #fff; /* White background */
-                    color: #333; /* Dark text */
-                    border: 1px solid #d4af37; /* Gold border */
-                    border-radius: 8px; /* Rounded corners */
-                    padding: 20px;
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-                }}
-                .header {{
-                    background-color: #d4af37; /* Gold background */
-                    color: #fff; /* White text */
-                    padding: 20px;
-                    border-radius: 8px 8px 0 0; /* Rounded top corners */
-                    text-align: center;
-                }}
-                .header img {{
-                    max-width: 150px; /* Adjust the width as needed */
-                    height: auto;
-                }}
-                .header h1 {{
-                    margin: 0;
-                    font-size: 24px;
-                }}
-                .content {{
-                    padding: 20px;
-                }}
-                .footer {{
-                    background-color: #f9f9f9; /* Light grey background */
-                    padding: 15px;
-                    text-align: center;
-                    border-radius: 0 0 8px 8px; /* Rounded bottom corners */
-                    border-top: 1px solid #d4af37; /* Gold border */
-                }}
-                .item {{
-                    border-bottom: 1px solid #d4af37; /* Gold border */
-                    padding: 10px 0;
-                }}
-                .total {{
-                    font-weight: bold;
-                    font-size: 1.2em;
-                    margin-top: 20px;
-                }}
-                h2 {{
-                    border-bottom: 2px solid #d4af37; /* Gold underline */
-                    padding-bottom: 5px;
-                    font-size: 20px;
-                    margin-top: 0;
-                }}
-                p {{
-                    margin: 10px 0;
-                }}
-                ul {{
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                }}
-                li {{
-                    padding: 5px 0;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class='container'>
-                <div class='header'>
-                    <img src='your-logo-url' alt='Your Company Logo' />
-                    <h1>Konfirmimi i Porosisë</h1>
-                </div>
-                <div class='content'>
-                    <p>Faleminderit për porosinë tuaj, <strong>{order.CostumerName}</strong>!</p>
-                    <p><strong>Numri i Porosisë:</strong> {order.Id}</p>
-                    <p><strong>Data e Porosisë:</strong> {order.OrderDate}</p>
-                    <p><strong>Adresa e Dërgesës:</strong> {order.DeliveryAddress}</p>
-                    <p><strong>Numri i Telefonit:</strong> {order.PhoneNumber}</p>
-                    <p><strong>Mesazhi Shtesë:</strong> {order.AdditionalMessage}</p>
-                    <h2>Artikujt e Porosisë</h2>
-                    <ul>";
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: 'Arial', sans-serif;
+                background-color: #1e1e1e;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                width: 600px;
+                margin: 20px auto;
+                background-color: #2c2c2c;
+                color: #f4f4f4;
+                border: 1px solid #d32f2f;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }}
+            .header {{
+                text-align: center;
+                padding-bottom: 20px;
+            }}
+            .header img {{
+                max-width: 150px;
+                height: auto;
+                border-radius: 8px;
+            }}
+            .header h1 {{
+                margin: 10px 0;
+                font-size: 24px;
+                color: #d32f2f;
+            }}
+            .content {{
+                padding: 20px;
+            }}
+            .footer {{
+                background-color: #333;
+                padding: 15px;
+                text-align: center;
+                border-radius: 0 0 8px 8px;
+                border-top: 1px solid #d32f2f;
+            }}
+            .item {{
+                border-bottom: 1px solid #444;
+                padding: 10px 0;
+            }}
+            .total {{
+                font-weight: bold;
+                font-size: 1.2em;
+                margin-top: 20px;
+                color: #d32f2f;
+            }}
+            h2 {{
+                border-bottom: 2px solid #d32f2f;
+                padding-bottom: 5px;
+                font-size: 20px;
+                color: #d32f2f;
+                margin-top: 0;
+            }}
+            p {{
+                margin: 10px 0;
+                color:white;
+            }}
+            ul {{
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }}
+            li {{
+                padding: 5px 0;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <img src='https://i.imgur.com/xBaYlBN.png' alt='Company Logo' />
+                <h1>Konfirmimi i Porosisë</h1>
+            </div>
+            <div class='content'>
+                <p>Faleminderit për porosinë tuaj, <strong>{order.CostumerName}</strong>!</p>
+                <p><strong>Numri i Porosisë:</strong> 001{order.Id}</p>
+                <p><strong>Data e Porosisë:</strong> {order.OrderDate}</p>
+                <p><strong>Adresa e Dërgesës:</strong> {order.DeliveryAddress}</p>
+                <p><strong>Numri i Telefonit:</strong> {order.PhoneNumber}</p>
+                <p><strong>Mesazhi Shtesë:</strong> {order.AdditionalMessage}</p>
+                <h2>Artikujt e Porosisë</h2>
+                <ul>";
 
             foreach (var item in order.OrderItems)
             {
                 body += $@"
             <li class='item'>
-                <strong>Kodi i Produktit:</strong> {item.Code} 
-                 </br><strong>Sasia:</strong> {item.Quantity} 
-                 </br> <strong>Çmimi:</strong> ${item.Price}
-                </br><strong>Çmimi me zbritje:</strong> ${item.DiscountedPrice}
+                <strong>Produkti:</strong> {item.Code} <br />
+                <strong>Sasia:</strong> {item.Quantity} <br />
+                <strong>Çmimi:</strong> €{item.Price} <br />
+                <strong>Çmimi me zbritje:</strong> €{item.DiscountedPrice}
             </li>";
             }
 
             body += $@"
                 </ul>
-                <p class='total'><strong>Çmimi Total:</strong> ${order.TotalPrice}</p>
+                <p class='total'><strong>Çmimi Total:</strong> €{order.TotalPrice}</p>
             </div>
             <div class='footer'>
                 <p>Faleminderit na besuat!</p>
@@ -231,5 +233,6 @@ namespace Egzoni_app.Checkouts
 
             return body;
         }
+
     }
 }

@@ -30,6 +30,9 @@ export class ShopComponent implements OnInit {
     search: new FormControl(''),
   });
   baseImageUrl: string = 'http://localhost:5044/images/';
+  isFilterVisible = false;
+  screenSmall = window.innerWidth < 768;
+
 
   filterForm = new FormGroup({
     brand: new FormControl(null),
@@ -251,6 +254,9 @@ export class ShopComponent implements OnInit {
     // Implement search product functionality if needed
   }
 
+  toggleFilterVisibility() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
   navigateToProduct(productId: number): void {
     console.log(`Navigating to product with ID: ${productId}`);
     this.router.navigate(['/product', productId]);

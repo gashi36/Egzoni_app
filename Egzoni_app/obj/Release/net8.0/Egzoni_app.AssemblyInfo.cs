@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Egzoni_app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5174d197ec397d2e8b42bcccbdf99eb03c7e153")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60117666ecedb4caec30b03a487e20167204ff3a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Egzoni_app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Egzoni_app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

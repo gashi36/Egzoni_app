@@ -11,7 +11,7 @@ import {
   GetCategoriesGQL,
 } from '../../generated/graphql';
 import { ToastrService } from 'ngx-toastr';
-import { Modal } from 'bootstrap'; // Import Modal from bootstrap
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-product-details',
@@ -45,6 +45,44 @@ export class ProductDetailsComponent implements OnInit {
         this.getProductById(id);
       }
     });
+  }
+  buyNow(productId: number): void {
+    try {
+      console.log('Buying now with productId:', productId);
+
+      // Fetch the cart from localStorage
+      const cartJson = localStorage.getItem('cart') || '{}';
+      const cart = JSON.parse(cartJson);
+      const sessionId = localStorage.getItem('sessionId') || 'guest';
+
+      if (!cart[sessionId]) {
+        cart[sessionId] = [];
+      }
+
+      // Check if the product already exists in the cart
+      const existingProduct = cart[sessionId].find(
+        (item: any) => item.id === productId
+      );
+
+      if (existingProduct) {
+        // Update quantity if the product is already in the cart
+        existingProduct.quantity = (existingProduct.quantity || 0) + 1;
+        console.log('Product found in cart. Updated quantity:', existingProduct.quantity);
+      } else {
+        // Add the product to the cart
+        cart[sessionId].push({ id: productId, quantity: 1 });
+        console.log('Product not found in cart. Added new product with quantity 1.');
+      }
+
+      // Save the updated cart to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
+      console.log('Updated Cart:', cart);
+
+      // Navigate to the checkout component
+      this.router.navigate(['/checkout'], { queryParams: { productId } });
+    } catch (error) {
+      console.error('Error in buyNow:', error);
+    }
   }
 
   getAllCategories(): void {
@@ -217,7 +255,6 @@ export class ProductDetailsComponent implements OnInit {
           (sum: number, item: any) => sum + (item.quantity || 0),
           0
         );
-
         badgeElement.textContent = totalItems.toString();
         console.log('Badge updated with total items:', totalItems);
       } else {
@@ -227,4 +264,5 @@ export class ProductDetailsComponent implements OnInit {
       console.error('Error updating cart badge:', error);
     }
   }
+
 }

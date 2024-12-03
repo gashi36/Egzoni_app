@@ -7,9 +7,10 @@ import { CarouselModule } from 'primeng/carousel';
 import { TagModule } from 'primeng/tag';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [HomeComponent, ChunkPipe],
-  imports: [CommonModule, RouterModule, CarouselModule, TagModule, BrowserAnimationsModule, ToastrModule.forRoot(),],
+  imports: [CommonModule, RouterModule, CarouselModule, TagModule, BrowserAnimationsModule, ToastrModule.forRoot(), MatCardModule],
 })
 export class HomeModule { }

@@ -57,80 +57,87 @@
   <div *ngIf="products.length > 0">
     <p-carousel [value]="products" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
       [responsiveOptions]="responsiveOptions" [showNavigators]="true" [showIndicators]="false">
+
       <ng-template let-product pTemplate="item">
-        <div class="product-card">
-          <img [src]="getProductThumbnailUrl(product)" [alt]="product.code" class="product-image"
-            (click)="navigateToProduct(product.id)" />
-          <div class="product-info">
-            <!-- Emri i Produktit -->
-            <h4 class="product-name">{{ product.code }}</h4>
+        <div class="card h-100 border-0 shadow-sm text-center" style="width: 90%;">
+          <!-- Product Image -->
+          <img [src]="getProductThumbnailUrl(product)" [alt]="product.code" class="card-img-top p-3"
+            style="max-height: 450px; object-fit: cover; cursor: pointer;" (click)="navigateToProduct(product.id)" />
 
-            <!-- Çmimi i Produktit -->
-            <div class="product-price-row">
-              <span>{{ product.retailPrice | currency: 'EUR' }}</span>
-            </div>
+          <!-- Product Info -->
+          <div class="card-body">
+            <h5 class="card-title mb-2">{{ product.code }}</h5>
+            <p class="card-text product-size text-muted">Size: {{ product.size }}</p>
+            <p class="card-text fw-bold">{{ product.retailPrice | currency: 'EUR' }}</p>
+          </div>
 
-            <!-- Butoni ZGJEDH -->
-            <button class="btn btn-outline-success" (click)="addToCart(product.id)">
-              <i class="bi bi-cart-check"></i>
+          <!-- Add to Cart Button -->
+          <div class="card-footer bg-white border-0">
+            <button class="btn bg-danger text-white w-100" (click)="addToCart(product.id)">
+              Shto në shportë
             </button>
           </div>
         </div>
       </ng-template>
+
     </p-carousel>
   </div>
 </div>
-<br>
+
+
 <section class="container last-brands-section mt-5">
-  <h2 class="text-center">Koleksioni ynë i Fundit i Brendeve</h2>
+  <h2 class="text-center mb-4">Koleksionet e Fundit</h2>
 
   <div *ngFor="let brand of getLastThreeBrands()" class="brand-section mb-5">
     <!-- Brand Banner -->
-    <div class="brand-banner d-flex align-items-center">
-      <div class="brand-content">
+    <div class="brand-banner d-flex align-items-center mb-3 ">
+      <div class="brand-content me-3">
         <a [routerLink]="['/shop']" [queryParams]="{ brand: brand.id }"
-          (click)="navigateToShopWithFilters('brand', brand.id)"> <img *ngIf="brand.logoUrl" [src]="brand.logoUrl"
-            alt="{{ brand.name }} Logo" class="brand-logo" (error)="removeImage($event)" />
+          (click)="navigateToShopWithFilters('brand', brand.id)">
+          <img *ngIf="brand.logoUrl" [src]="brand.logoUrl" alt="{{ brand.name }} Logo" class="brand-logo img-fluid "
+            (error)="removeImage($event)" style="max-height: 100px; width: 150px;" />
         </a>
       </div>
+      <h4 class="text-muted mt-3">{{ brand.name }}</h4>
     </div>
-
-    <div class="brand-products mt-4">
-      <h6 class="text-center">Produkte nga {{ brand.name }}</h6>
-      <div class="col-md-9 mx-auto">
-        <div class="row row-cols-1 row-cols-md-5 g-4 justify-content-center">
-          <div *ngFor="let product of getProductsForBrand(brand.id)" class="col">
-            <div class="card product-card" (click)="navigateToProduct(product.id)">
-              <!-- Image Section -->
-              <div class="card-image-wrapper">
-                <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="{{ product.code }}" />
-                <div *ngIf="product.discountedPrice" class="discount-badge">
-                  -{{ product.sales[0].discountPercentage }}%
-                </div>
+    <br><br>
+    <div class="col-md-10 mx-auto">
+      <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+        <div *ngFor="let product of getProductsForBrand(brand.id)" class="col">
+          <div class="card product-card h-100 shadow-sm border-light">
+            <!-- Image Section -->
+            <div class="card-image-wrapper position-relative">
+              <img [src]="getProductThumbnailUrl(product)" class="card-img-top" alt="{{ product.code }}"
+                (click)="navigateToProduct(product.id)" />
+              <div *ngIf="product.discountedPrice"
+                class="discount-badge position-absolute top-0 start-0 m-2 bg-danger text-white rounded-pill p-1">
+                -{{ product.sales[0].discountPercentage }}%
               </div>
+            </div>
 
-              <!-- Product Info Section -->
-              <div class="card-body">
-                <h5 class="card-title">{{ getBrandName(product.brandId) }} - {{ product.code }}</h5>
-                <p class="card-text product-size">Size: {{ product.size }}</p>
-                <div class="price-section">
-                  <span *ngIf="product.discountedPrice; else regularPrice" class="price">
-                    <span class="original-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
-                    <span class="discounted-price">{{ product.discountedPrice | number: '1.2-2' }} €</span>
-                  </span>
-                  <ng-template #regularPrice>
-                    <span class="regular-price">{{ product.retailPrice | number: '1.2-2' }} €</span>
-                  </ng-template>
-                </div>
+            <!-- Product Info Section -->
+            <div class="card-body text-center">
+              <h5 class="card-title">{{ getBrandName(product.brandId) }} - {{ product.code }}</h5>
+              <p class="card-text product-size text-muted">Size: {{ product.size }}</p>
+              <div class="price-section">
+                <span *ngIf="product.discountedPrice; else regularPrice" class="price">
+                  <span class="original-price text-decoration-line-through">{{ product.retailPrice | number: '1.2-2' }}
+                    €</span>
+                  <span class="discounted-price fw-bold text-danger">{{ product.discountedPrice | number: '1.2-2' }}
+                    €</span>
+                </span>
+                <ng-template #regularPrice>
+                  <span class="regular-price fw-bold">{{ product.retailPrice | number: '1.2-2' }} €</span>
+                </ng-template>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </section>
+
 
 
 

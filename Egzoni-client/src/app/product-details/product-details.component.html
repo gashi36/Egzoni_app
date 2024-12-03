@@ -41,29 +41,37 @@
             <li><i class="fa fa-check text-success"></i> <strong>Size:</strong> {{ product.size }}</li>
             <li><i class="fa fa-check text-success"></i> <strong>Quantity:</strong> {{ product.quantity }}</li>
           </ul>
-          <div class="price-section mt-3 d-flex align-items-center justify-content-between">
-            <span *ngIf="product.discountedPrice; else regularPrice" class="product-price">
-              <span class="original-price text-muted text-decoration-line-through">
-                {{ product.retailPrice | currency:'EUR' }}
+          <div class="price-section mt-3">
+            <!-- Price Details -->
+            <div class="price-details">
+              <span *ngIf="product.discountedPrice; else regularPrice">
+                <span class="original-price text-muted text-decoration-line-through me-2">
+                  {{ product.retailPrice | currency:'EUR' }}
+                </span>
+                <span class="discounted-price text-danger fw-bold">
+                  {{ product.discountedPrice | currency:'EUR' }}
+                </span>
+                <span *ngIf="product.sales && product.sales[0].discountPercentage"
+                  class="discount-percentage text-success">
+                  (-{{ product.sales[0].discountPercentage }}%)
+                </span>
               </span>
-              <span class="discounted-price text-danger fw-bold ms-2">
-                {{ product.discountedPrice | currency:'EUR' }}
-              </span>
-              <span *ngIf="product.sales && product.sales[0].discountPercentage"
-                class="discount-percentage text-success ms-2">
-                (-{{ product.sales[0].discountPercentage }}%)
-              </span>
+              <ng-template #regularPrice>
+                <h3 class="product-price text-success">{{ product.retailPrice | currency :'EUR' }}</h3>
+              </ng-template>
+            </div>
 
-            </span>
-            <ng-template #regularPrice>
-              <h3 class="product-price text-success">{{ product.retailPrice | currency:'EUR' }}</h3>
-            </ng-template>
-
-            <button (click)="addToCart(product.id)" class="btn btn-success">
-              <i class="bi bi-cart"></i> Add to Cart
-            </button>
-
+            <!-- Button Group -->
+            <div class="button-group mt-2">
+              <button (click)="addToCart(product.id)" class="btn custom-btn">
+                <i class="bi bi-cart"></i> Shto në shportë
+              </button>
+              <button (click)="buyNow(product?.id)" class="btn custom-btn-buy">
+                <i class="bi bi-lightning-fill"></i> Bleje menjëherë
+              </button>
+            </div>
           </div>
+
 
           <div class="toast-container position-fixed top-0 end-0 p-3">
             <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -72,7 +80,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
               </div>
               <div class="toast-body">
-                Product added to cart!
+                Produkti u shtua!
               </div>
             </div>
           </div>

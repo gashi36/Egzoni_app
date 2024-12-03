@@ -54,7 +54,6 @@ builder.Services.AddTransient<IEmailService>(provider =>
         "rtfjoggabfzmxivz" // Your Gmail app-specific password (generate one in your Google account settings)
     ));
 
-
 builder.Services
     .AddGraphQLServer()
 
@@ -87,6 +86,7 @@ app.UseCors(options =>
     options.AllowAnyHeader();
     options.AllowAnyOrigin();
     options.AllowAnyMethod();
+
 
 });
 

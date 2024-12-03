@@ -107,3 +107,33 @@ footer .social-links a:hover {
   width: 100%;
   max-width: 500px;
 }
+
+a[data-bs-toggle="modal"] {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a[data-bs-toggle="modal"]:hover {
+  text-decoration: underline;
+  color: #007bff;
+}
+
+/* Ensure the autocomplete dropdown is aligned properly */
+.mat-autocomplete-panel {
+  max-height: 300px;
+  /* Prevent long lists from overflowing */
+  overflow-y: auto;
+  /* Make dropdown scrollable */
+}
+
+mat-autocomplete {
+  width: 80%;
+  /* Ensure the autocomplete dropdown takes up full width */
+}
+
+mat-option {
+  padding: 10px;
+  /* Add padding for better spacing */
+}
+
+/* Override all mat-form-field focus styles */

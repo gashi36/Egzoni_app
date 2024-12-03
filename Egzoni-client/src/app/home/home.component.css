@@ -23,6 +23,7 @@
 }
 
 /* Shared Card Styles */
+/* Global Styles */
 .card {
   border: none;
   border-radius: 15px;
@@ -37,7 +38,6 @@
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Card Image */
 .card-image-wrapper {
   position: relative;
   overflow: hidden;
@@ -52,10 +52,6 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
-}
-
-.card-img-top:hover {
-  transform: scale(1.1);
 }
 
 /* Discount Badge */
@@ -109,6 +105,63 @@
   font-size: 1.2rem;
   color: black;
 }
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-primary,
+.btn-secondary {
+  background-color: green;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 30px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  background-color: green;
+  transform: scale(1.05);
+}
+
+.hero-banner {
+  background-image: url('https://media.istockphoto.com/id/1659313537/photo/young-woman-vacuuming-her-apartment.webp?a=1&b=1&s=612x612&w=0&k=20&c=zHA_RHyW2Cw2fKzTQdszFXpyamoEvj86drjaFNd3DgU=');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  color: #fff;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  height: 500px;
+}
+
+.hero-banner h1 {
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+/* Adjusted for carousel navigation buttons */
+:host ::ng-deep .p-carousel-prev,
+:host ::ng-deep .p-carousel-next {
+  background-color: red !important;
+  border-radius: 50%;
+}
+
 
 .btn-outline-danger {
   border-color: #dc3545;
@@ -200,7 +253,7 @@
 }
 
 .hero-banner {
-  background-image: url('https://karmenhali.com/app/Images/karmen-banner7-ok_1709103016.webp');
+  background-image: url('https://media.istockphoto.com/id/1659313537/photo/young-woman-vacuuming-her-apartment.webp?a=1&b=1&s=612x612&w=0&k=20&c=zHA_RHyW2Cw2fKzTQdszFXpyamoEvj86drjaFNd3DgU=');
   background-size: cover;
   background-position: center;
   border-radius: 10px;
@@ -420,7 +473,7 @@ small {
 }
 
 .carpet-banner {
-  background-image: url('https://karmenhali.com/app/Images/karmen-banner8ok_1709103021.webp');
+  background-image: url('https://media.istockphoto.com/id/1685138093/photo/happy-woman-moving-house-and-unrolling-a-carpet-while-unpacking.webp?a=1&b=1&s=612x612&w=0&k=20&c=1XZlbFmkcb2pdpA4fnvJsM_B7-ufYH_daTc_sqFtaY0=');
   background-size: cover;
   background-position: center;
   padding: 4rem 2rem;
@@ -556,4 +609,101 @@ small {
 .product-item {
   margin-bottom: 15px;
   /* Space between products */
+}
+
+/* Carousel Styles */
+.featured-products-carousel .p-carousel {
+  margin-top: 40px;
+}
+
+.featured-products-carousel .product-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+.featured-products-carousel .product-card:hover {
+  transform: translateY(-5px);
+}
+
+.featured-products-carousel .p-carousel .p-carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured-products-carousel .card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+}
+
+.featured-products-carousel .card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-products-carousel .discount-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.featured-products-carousel .card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.featured-products-carousel .card-title {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.featured-products-carousel .product-size {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.featured-products-carousel .price-section {
+  margin-top: 10px;
+}
+
+.featured-products-carousel .original-price {
+  font-size: 1rem;
+  color: black;
+  text-decoration: line-through;
+  margin-right: 10px;
+}
+
+.featured-products-carousel .discounted-price {
+  font-size: 1.2rem;
+  color: red;
+  font-weight: bold;
+}
+
+.featured-products-carousel .regular-price {
+  font-size: 1.2rem;
+  color: black;
+}
+
+.p-carousel-prev,
+.p-carousel-next {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.p-carousel-prev:hover,
+.p-carousel-next:hover {
+  background-color: darkred;
 }

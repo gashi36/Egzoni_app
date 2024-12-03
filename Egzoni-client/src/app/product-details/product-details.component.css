@@ -1,9 +1,11 @@
+/* Main Product Details Container */
 .product-details-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
+/* Card Styling */
 .card {
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -13,58 +15,45 @@
   padding: 20px;
 }
 
+/* Main Image Container */
 .main-image-container {
   position: relative;
   width: 100%;
-  /* Set a fixed width */
   height: 600px;
-  /* Set a fixed height for the image area */
   overflow: hidden;
-  /* Hide overflow to maintain image area size */
 }
 
 .main-image-container img {
   width: 100%;
-  /* Make the image responsive */
   height: auto;
-  /* Maintain aspect ratio */
   position: absolute;
-  /* Position absolutely for alignment */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* Center the image */
 }
 
+/* Image Navigation Arrows */
 .image-navigation {
   position: absolute;
   top: 50%;
-  /* Position arrows in the center vertically */
   left: 0;
-  /* Align the left arrow to the left */
   right: 0;
-  /* Align the right arrow to the right */
   display: flex;
-  /* Use flexbox for alignment */
   justify-content: space-between;
-  /* Space the arrows apart */
   transform: translateY(-50%);
-
-  /* Center the arrows vertically */
 }
 
 .image-navigation button {
   z-index: 10;
-  /* Ensure buttons are above the image */
 }
 
+/* Modal Image Styling */
 .modal-body {
   position: relative;
 }
 
 .modal-body .image-navigation {
   position: absolute;
-  /* Position arrows in modal */
   top: 50%;
   left: 0;
   right: 0;
@@ -74,23 +63,18 @@
 }
 
 .modal-body img {
-  position: relative;
   width: 100%;
-  /* Set a fixed width */
   height: 750px;
-  /* Set a fixed height for the image area */
   overflow: hidden;
-  /* Hide overflow to maintain image area size */
 }
 
-
+/* Thumbnail Gallery */
 .thumbnail-gallery {
   display: flex;
   flex-direction: row;
   overflow-x: auto;
   margin-top: 10px;
   gap: 10px;
-  /* Space between thumbnails */
 }
 
 .thumbnail {
@@ -99,7 +83,6 @@
 
 .thumbnail img {
   width: 80px;
-  /* Thumbnail size */
   height: auto;
   border: 2px solid transparent;
   border-radius: 5px;
@@ -108,9 +91,9 @@
 
 .thumbnail img.selected {
   border-color: red;
-  /* Border color for selected thumbnail */
 }
 
+/* Product Title and Subtitle */
 .product-title {
   font-size: 2.4em;
   margin: 0;
@@ -122,18 +105,67 @@
   color: #666;
 }
 
+/* Price Section Styling */
 .price-section {
   margin-top: 20px;
   display: flex;
+  flex-direction: column;
+}
+
+.price-details {
+  font-size: 1.5rem;
+  display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .product-price {
-  font-size: 2.2em;
+  font-size: 1.6em;
   color: #333;
+  margin-bottom: 10px;
 }
 
+.original-price {
+  color: #6c757d;
+  text-decoration: line-through;
+  margin-right: 8px;
+  font-size: 1.6em;
+  margin-bottom: 25px;
+}
+
+.discounted-price {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.discount-percentage {
+  color: #28a745;
+  margin-left: 8px;
+}
+
+/* Button Group Styling */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.custom-btn {
+  background-color: #6c757d;
+  color: white;
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 1.1em;
+}
+
+.custom-btn-buy {
+  background-color: #dc3545;
+  color: white;
+  border-radius: 25px;
+  padding: 12px 25px;
+  font-size: 1.1em;
+}
+
+/* Details List */
 .details-list {
   list-style-type: none;
   padding: 0;
@@ -144,17 +176,10 @@
   font-size: 1.1em;
 }
 
-.btn {
-  border-radius: 25px;
-  padding: 12px 25px;
-  font-size: 1.1em;
-}
-
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-  .main-image {
+  .main-image-container {
     height: 300px;
-    /* Smaller height for mobile */
   }
 
   .thumbnail-gallery {
@@ -164,7 +189,6 @@
 
   .thumbnail img {
     width: 60px;
-    /* Smaller thumbnail size for mobile */
   }
 
   .product-title {
@@ -173,5 +197,25 @@
 
   .product-price {
     font-size: 1.5em;
+  }
+}
+
+/* Responsive Styling for Mobile Devices */
+@media (max-width: 576px) {
+  .price-details {
+    font-size: 1rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .custom-btn,
+  .custom-btn-buy {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem;
+    font-size: 0.85rem;
   }
 }

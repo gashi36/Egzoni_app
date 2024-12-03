@@ -96,7 +96,7 @@
     </div>
     <div class="form-group col-md-6 mb-4">
       <label for="image">Images</label>
-      <input type="file" (change)="setFile($event)" multiple />
+      <input type="file" class="form-control custom-input" (change)="setFile($event)" multiple />
     </div>
     <button type="submit" class="btn btn-outline-danger mt-3" [disabled]="isAddingProduct">
       <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -106,27 +106,27 @@
 
   <!-- Search Product by Code -->
   <h4 class="col-md-3 p-2 mt-5 text-primary">Kërko sipas kodit</h4>
-  <div class="searchbar row col-md-12 mb-4">
-    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.get('search')?.value ?? '')">
-      <div class="col-md-8 mb-3">
+  <div class="searchbar row col-md-12 mb-4 align-items-center">
+    <form [formGroup]="searchProductForm" (ngSubmit)="searchProduct(searchProductForm.get('search')?.value ?? '')"
+      class="d-flex w-100 gap-3 align-items-center">
+      <div class="col-md-8">
         <input class="form-control custom-input p-2" type="text" formControlName="search" placeholder="Kërko">
       </div>
-      <div class="col-md-2 mb-3">
-        <button type="submit" class="btn btn-outline-info py-2 px-5" [disabled]="isSearchingProduct">
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-info w-100 py-2" [disabled]="isSearchingProduct">
           <span *ngIf="isSearchingProduct" class="spinner-border spinner-border-sm" role="status"
             aria-hidden="true"></span>
           Kërko
         </button>
       </div>
-      <div class="col-md-2 mb-3">
-        <button type="button" class="btn btn-outline-danger py-2 px-5" (click)="cancelSearch()">Anulo</button>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-outline-danger w-100 py-2" (click)="cancelSearch()">Anulo</button>
       </div>
     </form>
   </div>
 
 
 
-  <!-- Product Table -->
   <!-- Product Table -->
   <hr>
   <div class="flex-row d-flex justify-content-between">

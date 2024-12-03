@@ -6,33 +6,63 @@
         <img src="../../assets/EGZONI2.png" alt="Your Logo" style="object-fit: cover;">
       </a>
 
+
+      <div class="d-flex flex-grow-1 justify-content-center col-md-7">
+        <div style="max-width: 800px; width: 100%;">
+          <mat-form-field appearance="fill" color="warn" class="w-100">
+            <mat-label>Kerko produktet</mat-label>
+            <input matInput [formControl]="productControl" [matAutocomplete]="auto" placeholder="">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+              <!-- Display options if products are found -->
+              <mat-option *ngFor="let product of filteredProducts" [value]="product.description">
+                <div class="d-flex align-items-center">
+                  <img *ngIf="product.imageUrl" [src]="getProductThumbnailUrl(product.id)" alt="Product Image"
+                    class="img-fluid me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                  <div class="ms-2">
+                    <span *ngIf="product.brandId" [innerHTML]="highlightText(getBrandName(product.brandId))"
+                      class="me-2"></span>
+                    <span *ngIf="product.categoryId" [innerHTML]="highlightText(getCategoryName(product.categoryId))"
+                      class="me-2"></span>
+                  </div>
+                  <span class="ms-auto text-muted">{{ product.code }}</span>
+                  <span class="ms-auto text-muted">{{ product.size }}</span>
+                </div>
+              </mat-option>
+
+              <!-- Display fallback message if no results and input is not empty -->
+              <ng-container *ngIf="productControl.value && filteredProducts.length === 0">
+                <mat-option disabled>
+                  <div class="d-flex align-items-center">
+                    <span class="text-danger me-2">Asnjë produkt i gjetur</span>
+                  </div>
+                </mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+
       <!-- Toggler for mobile view -->
-      <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="bi bi-list text-dark font"></i> <!-- List icon for the toggler -->
+        <i class="bi bi-menu-app text-dark">
+        </i>
       </button>
 
 
-      <!-- Search Bar always visible -->
-      <form class="d-flex flex-grow-1 ms-3" form [formGroup]="searchProductForm"
-        (ngSubmit)="searchProduct(searchProductForm.get('search')?.value ?? '')">
 
-        <input class="form-control me-2" type="text" placeholder="Kërkoni..." formControlName="search"
-          aria-label="Search">
-        <button class="btn" type="submit"><i class="bi bi-search"></i></button>
-      </form>
 
       <!-- Collapsible Navbar -->
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse col-md-4" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a routerLink="admin" routerLinkActive="active" class="nav-link text-dark">
-              <i class="bi bi-person"></i> Hyrja e anëtarit
+            <a class="nav-link text-dark" routerLink="/shop" routerLinkActive="active">
+              <i class="bi bi-tags me-1"></i> Produktet
             </a>
           </li>
           <li class="nav-item position-relative">
             <a routerLink="checkout" class="nav-link text-dark position-relative">
-              <i class="bi bi-bag"></i> Shporta ime
+              <i class="bi bi-bag"></i> Shporta
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
                 0
                 <span class="visually-hidden">unread messages</span>
@@ -40,8 +70,8 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" routerLink="/shop" routerLinkActive="active">
-              <i class="bi bi-tags me-1"></i> Produktet
+            <a routerLink="admin" routerLinkActive="active" class="nav-link text-dark">
+              <i class="bi bi-person"></i>Llogaria
             </a>
           </li>
         </ul>
@@ -52,23 +82,28 @@
 
 <router-outlet></router-outlet>
 
-<footer class="bg-white text-dark py-4">
+<footer class="bg-white text-dark py-4 align-content-around ">
   <div class="container  justify-content-center">
     <div class="row">
       <!-- Quick Links -->
       <div class="col-md-3">
-        <h5>Quick Links</h5>
+        <h5>Linqet</h5>
         <ul class="list-unstyled">
-          <li><a routerLink="/home" class="text-dark">Home</a></li>
-          <li><a routerLink="/shop" class="text-dark">Products</a></li>
-          <li><a routerLink="/about-us" class="text-dark">About Us</a></li>
-          <li><a routerLink="/contact" class="text-dark">Contact</a></li>
+          <li><a routerLink="/home" class="text-dark">Kryefaqja</a></li>
+          <li><a routerLink="/shop" class="text-dark">Produktet</a></li>
+          <li><a routerLink="/checkout" class="text-dark">Shporta</a></li>
+          <li>
+            <a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#contactModal">
+              Kontakti
+            </a>
+          </li>
         </ul>
       </div>
 
+
       <!-- Contact Information -->
       <div class="col-md-4">
-        <h5>Contact Us</h5>
+        <h5>Kontakti</h5>
         <ul class="list-unstyled">
           <li><i class="bi bi-geo-alt-fill"></i> Rruga Hamzë Jashari Nr.24</li>
           <li><i class="bi bi-envelope-fill"></i> Email: <a href="mailto:egzonicenter@gmail.com"
@@ -79,11 +114,44 @@
 
       <!-- Social Media Links -->
       <div class="col-md-5">
-        <h5>Follow Us</h5>
+        <h5>Na ndiqni</h5>
         <div class="social-links d-flex gap-3">
           <a href="https://www.facebook.com/egzonicenter/" class="text-dark"><i class="bi bi-facebook"></i></a>
           <a href="https://www.instagram.com/egzonicenter/" class="text-dark"><i class="bi bi-instagram"></i></a>
           <a href="tel:+38344382404" class="text-dark"><i class="bi bi-whatsapp me-2"></i></a>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white  text-center">
+            <h5 class="modal-title " id="contactModalLabel">Kontakti</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <h6><i class="bi bi-geo-alt-fill"></i> Lokacioni</h6>
+            <p>Rruga Hamzë Jashari Nr.24 - Lipjan</p>
+
+            <h6><i class="bi bi-envelope-fill"></i> Emaili</h6>
+            <p>
+              <a href="mailto:egzonicenter@gmail.com" class="text-primary">egzonicenter&#64;gmail.com</a>
+            </p>
+
+            <h6><i class="bi bi-phone-fill"></i> Telefoni</h6>
+            <p>
+              <a href="tel:+38344382404" class="text-primary">+383 44 382 404</a>
+            </p>
+
+            <div class="d-flex justify-content-center gap-3 mt-3">
+              <a href="https://www.facebook.com/egzonicenter/" class="text-dark fs-5"><i class="bi bi-facebook"></i></a>
+              <a href="https://www.instagram.com/egzonicenter/" class="text-dark fs-5"><i
+                  class="bi bi-instagram"></i></a>
+              <a href="https://wa.me/+38344382404" class="text-dark fs-5"><i class="bi bi-whatsapp"></i></a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
