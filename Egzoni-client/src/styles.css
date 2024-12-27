@@ -26,5 +26,46 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.product-card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.favorite-btn,
+.cart-btn {
+  border: none;
+  background: transparent;
+}
+
+.favorite-btn i,
+.cart-btn i {
+  font-size: 1.2rem;
+}
+
+.card-footer {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+}

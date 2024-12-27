@@ -1,20 +1,22 @@
-<header class="py-3">
+<header class="py-0 px-0  bg-dark">
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark">
       <!-- Brand Logo -->
       <a class="navbar-brand" href="#">
-        <img src="../../assets/EGZONI2.png" alt="Your Logo" style="object-fit: cover;">
+        <img src="../../assets/EGZONI_SMALL_COLOR.png" alt="Your Logo"
+          style="max-width: 100px; height: auto; object-fit: contain; border: none; outline: none;">
       </a>
 
 
+      <!-- Search Bar with Angular Material -->
       <div class="d-flex flex-grow-1 justify-content-center col-md-7">
-        <div style="max-width: 800px; width: 100%;">
-          <mat-form-field appearance="fill" color="warn" class="w-100">
+        <div class="d-flex align-items-center" style="max-width: 800px; width: 100%;">
+          <mat-form-field appearance="fill" color="warn" class="flex-grow-1">
             <mat-label>Kerko produktet</mat-label>
-            <input matInput [formControl]="productControl" [matAutocomplete]="auto" placeholder="">
+            <input matInput [formControl]="productControl" [matAutocomplete]="auto" placeholder="Search">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
               <!-- Display options if products are found -->
-              <mat-option *ngFor="let product of filteredProducts" [value]="product.description">
+              <mat-option *ngFor="let product of filteredProducts" [value]="product">
                 <div class="d-flex align-items-center">
                   <img *ngIf="product.imageUrl" [src]="getProductThumbnailUrl(product.id)" alt="Product Image"
                     class="img-fluid me-2" style="width: 40px; height: 40px; object-fit: cover;">
@@ -42,36 +44,34 @@
         </div>
       </div>
 
-      <!-- Toggler for mobile view -->
+      <!-- Navbar Toggler -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="bi bi-menu-app text-dark">
-        </i>
+        <i class="bi bi-menu-app"></i>
       </button>
-
-
-
-
-      <!-- Collapsible Navbar -->
-      <div class="collapse navbar-collapse col-md-4" id="navbarNav">
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link text-dark" routerLink="/shop" routerLinkActive="active">
-              <i class="bi bi-tags me-1"></i> Produktet
+            <a class="nav-link text-white position-relative" href="/shop">
+              <i class="bi bi-tags me-2"></i> Produktet
+              <span class="hover-line"></span>
             </a>
           </li>
           <li class="nav-item position-relative">
-            <a routerLink="checkout" class="nav-link text-dark position-relative">
+            <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              0
+            </span>
+            <a class="nav-link text-white position-relative" href="checkout">
+
               <i class="bi bi-bag"></i> Shporta
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
-                0
-                <span class="visually-hidden">unread messages</span>
-              </span>
+              <span class="hover-line"></span>
             </a>
           </li>
           <li class="nav-item">
-            <a routerLink="admin" routerLinkActive="active" class="nav-link text-dark">
-              <i class="bi bi-person"></i>Llogaria
+            <a class="nav-link text-white position-relative" href="admin">
+              <i class="bi bi-person"></i> Llogaria
+              <span class="hover-line"></span>
             </a>
           </li>
         </ul>
@@ -82,74 +82,75 @@
 
 <router-outlet></router-outlet>
 
-<footer class="bg-white text-dark py-4 align-content-around ">
-  <div class="container  justify-content-center">
+<footer class="bg-dark text-white py-4">
+  <div class="container">
     <div class="row">
       <!-- Quick Links -->
-      <div class="col-md-3">
+      <div class="col-md-3 d-flex flex-column align-items-center text-center">
         <h5>Linqet</h5>
         <ul class="list-unstyled">
-          <li><a routerLink="/home" class="text-dark">Kryefaqja</a></li>
-          <li><a routerLink="/shop" class="text-dark">Produktet</a></li>
-          <li><a routerLink="/checkout" class="text-dark">Shporta</a></li>
+          <li><a routerLink="/home" class="text-white text-decoration-none">Kryefaqja</a></li>
+          <li><a routerLink="/shop" class="text-white text-decoration-none">Produktet</a></li>
+          <li><a routerLink="/checkout" class="text-white text-decoration-none">Shporta</a></li>
           <li>
-            <a href="#" class="text-dark" data-bs-toggle="modal" data-bs-target="#contactModal">
+            <a href="#" class="text-white text-decoration-none" data-bs-toggle="modal" data-bs-target="#contactModal">
               Kontakti
             </a>
           </li>
         </ul>
       </div>
 
-
       <!-- Contact Information -->
-      <div class="col-md-4">
+      <div class="col-md-4 d-flex flex-column align-items-center text-center">
         <h5>Kontakti</h5>
         <ul class="list-unstyled">
           <li><i class="bi bi-geo-alt-fill"></i> Rruga Hamzë Jashari Nr.24</li>
           <li><i class="bi bi-envelope-fill"></i> Email: <a href="mailto:egzonicenter@gmail.com"
-              class="text-dark">egzonicenter&#64;gmail.com</a></li>
+              class="text-white text-decoration-none">egzonicenter&#64;gmail.com</a></li>
           <li><i class="bi bi-phone-fill"></i> Phone: +38344382404</li>
         </ul>
       </div>
 
       <!-- Social Media Links -->
-      <div class="col-md-5">
+      <div class="col-md-5 d-flex flex-column align-items-center text-center">
         <h5>Na ndiqni</h5>
-        <div class="social-links d-flex gap-3">
-          <a href="https://www.facebook.com/egzonicenter/" class="text-dark"><i class="bi bi-facebook"></i></a>
-          <a href="https://www.instagram.com/egzonicenter/" class="text-dark"><i class="bi bi-instagram"></i></a>
-          <a href="tel:+38344382404" class="text-dark"><i class="bi bi-whatsapp me-2"></i></a>
+        <div class="social-links d-flex gap-3 justify-content-center">
+          <a href="https://www.facebook.com/egzonicenter/" class="text-white text-decoration-none"><i
+              class="bi bi-facebook"></i></a>
+          <a href="https://www.instagram.com/egzonicenter/" class="text-white text-decoration-none"><i
+              class="bi bi-instagram"></i></a>
+          <a href="tel:+38344382404" class="text-white text-decoration-none"><i class="bi bi-whatsapp me-2"></i></a>
         </div>
       </div>
     </div>
     <!-- Modal -->
-    <!-- Modal -->
     <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header bg-danger text-white  text-center">
-            <h5 class="modal-title " id="contactModalLabel">Kontakti</h5>
+          <div class="modal-header bg-danger text-white text-center">
+            <h5 class="modal-title" id="contactModalLabel">Kontakti</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body text-center">
-            <h6><i class="bi bi-geo-alt-fill"></i> Lokacioni</h6>
-            <p>Rruga Hamzë Jashari Nr.24 - Lipjan</p>
+            <h6 class="text-dark"><i class="bi bi-geo-alt-fill"></i> Lokacioni</h6>
+            <p class="text-danger">Egzoni Center, RR, nr.24 Hamez Jashari, Lipjan 14000</p>
+            <p><a href="https://www.google.com/maps/search/?api=1&query=42.521780,21.122321" target="_blank"
+                class="text-danger text-decoration-none"><i class="bi bi-map"></i> Get Directions</a></p>
 
-            <h6><i class="bi bi-envelope-fill"></i> Emaili</h6>
-            <p>
-              <a href="mailto:egzonicenter@gmail.com" class="text-primary">egzonicenter&#64;gmail.com</a>
-            </p>
+            <h6 class="text-dark"><i class="bi bi-envelope-fill"></i> Emaili</h6>
+            <p><a href="mailto:egzonicenter@gmail.com"
+                class="text-danger text-decoration-none">egzonicenter&#64;gmail.com</a></p>
 
-            <h6><i class="bi bi-phone-fill"></i> Telefoni</h6>
-            <p>
-              <a href="tel:+38344382404" class="text-primary">+383 44 382 404</a>
-            </p>
+            <h6 class="text-dark"><i class="bi bi-phone-fill"></i> Telefoni</h6>
+            <p><a href="tel:+38344382404" class="text-danger text-decoration-none">+383 44 382 404</a></p>
 
             <div class="d-flex justify-content-center gap-3 mt-3">
-              <a href="https://www.facebook.com/egzonicenter/" class="text-dark fs-5"><i class="bi bi-facebook"></i></a>
-              <a href="https://www.instagram.com/egzonicenter/" class="text-dark fs-5"><i
+              <a href="https://www.facebook.com/egzonicenter/" class="text-dark fs-5 text-decoration-none"><i
+                  class="bi bi-facebook"></i></a>
+              <a href="https://www.instagram.com/egzonicenter/" class="text-dark fs-5 text-decoration-none"><i
                   class="bi bi-instagram"></i></a>
-              <a href="https://wa.me/+38344382404" class="text-dark fs-5"><i class="bi bi-whatsapp"></i></a>
+              <a href="https://wa.me/+38344382404" class="text-dark fs-5 text-decoration-none"><i
+                  class="bi bi-whatsapp"></i></a>
             </div>
           </div>
         </div>

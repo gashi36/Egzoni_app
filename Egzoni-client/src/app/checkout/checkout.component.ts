@@ -96,7 +96,6 @@ export class CheckoutComponent implements OnInit {
     return results.filter(product => product !== null) as unknown as Product[];
   }
 
-
   getProductCode(productId: number): any {
     const product = this.products.find((p) => p.id === productId);
     return product ? product.code : 'Produkt i panjohur';
@@ -114,7 +113,6 @@ export class CheckoutComponent implements OnInit {
     }
     return this.getProductPrice(productId);
   }
-
 
   getProductThumbnailUrl(productId: number): string {
     const product = this.products.find((p) => p.id === productId);

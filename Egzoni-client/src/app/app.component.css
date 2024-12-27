@@ -1,139 +1,32 @@
-/* Header Styles */
+  .nav-link {
+    position: relative;
+    overflow: hidden;
+  }
 
+  .hover-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    transition: all 0.3s;
+    transform: translateX(-50%);
+  }
 
-header {
-  background-color: #fff;
-  color: #000;
-}
+  .nav-link:hover .hover-line {
+    width: 100%;
+  }
 
-header .navbar {
-  padding: 0;
-  position: relative;
-}
-
-header .navbar-brand img {
-  height: 50px;
-}
-
-header .navbar-nav .nav-link {
-  color: #fff;
-  font-weight: 500;
-}
-
-header .navbar-nav .nav-link:hover {
-  color: #f0ad4e;
-}
-
-.search-form {
-  max-width: 600px;
-}
-
-.search-form input {
-  border-radius: 20px 0 0 20px;
-  border: 1px solid #f0ad4e;
-}
-
-.search-form button {
-  border-radius: 0 20px 20px 0;
-  background-color: #f0ad4e;
-  border: 1px solid #f0ad4e;
-}
-
-.search-form button i {
-  color: #fff;
-}
-
-.search-form .form-control {
-  min-width: 300px;
-}
-
-.cart-badge {
-  position: absolute;
-  top: 0;
-  right: 1;
-  transform: translate(50%, -50%);
-  background-color: #dc3545;
-  /* Red background */
-  color: #fff;
-  /* White text */
-  border-radius: 50%;
-  padding: 0.25em 0.4em;
-  font-size: 0.75rem;
-}
-
-.ms-auto {
-  margin-left: auto;
-}
-
-/* Footer Styles */
-footer {
-  display: flex;
-  justify-content: center;
-  background-color: #f8f9fa;
-  padding: 20px 0;
-}
-
-footer h5 {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-}
-
-footer a {
-  color: #333;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-footer a:hover {
-  color: #007bff;
-}
-
-footer .social-links a {
-  font-size: 1.5rem;
-}
-
-footer .social-links a:hover {
-  color: #007bff;
-}
-
-/* Product Details Styles */
-.product-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.main-image img {
-  width: 100%;
-  max-width: 500px;
-}
-
-a[data-bs-toggle="modal"] {
-  cursor: pointer;
-  text-decoration: none;
-}
-
-a[data-bs-toggle="modal"]:hover {
-  text-decoration: underline;
-  color: #007bff;
-}
-
-/* Ensure the autocomplete dropdown is aligned properly */
-.mat-autocomplete-panel {
-  max-height: 300px;
-  /* Prevent long lists from overflowing */
-  overflow-y: auto;
-  /* Make dropdown scrollable */
-}
-
-mat-autocomplete {
-  width: 80%;
-  /* Ensure the autocomplete dropdown takes up full width */
-}
-
-mat-option {
-  padding: 10px;
-  /* Add padding for better spacing */
-}
-
-/* Override all mat-form-field focus styles */
+  .cart-badge {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 25;
+    z-index: 10;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.25em 0.5em;
+    font-size: 0.75rem;
+  }

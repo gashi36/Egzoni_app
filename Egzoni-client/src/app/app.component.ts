@@ -81,15 +81,17 @@ export class AppComponent implements OnInit {
       });
   }
 
-  getCategoryName(categoryId: number): string | undefined {
+
+  getBrandName(brandId: number): string {
+    const brand = this.brands.find((brand) => brand.id === brandId);
+    return brand?.name || 'Brand i panjohur';
+  }
+
+  getCategoryName(categoryId: number): string {
     const category = this.categories.find(
       (category) => category.id === categoryId
     );
-    return category?.name!;
-  }
-  getBrandName(brandId: number): string | undefined {
-    const brand = this.brands.find((brand) => brand.id === brandId);
-    return brand?.name!;
+    return category?.name || 'Kategori e pa njohur';
   }
 
   searchProducts(searchTerm: string): void {
@@ -126,12 +128,15 @@ export class AppComponent implements OnInit {
   // This method is called when an option is selected
   onOptionSelected(event: any): void {
     const selectedProduct = this.filteredProducts.find(
-      (product) => product.description === event.option.value
+      (product) => product.id === event.option.value.id
     );
     if (selectedProduct) {
       console.log('Selected product:', selectedProduct);
       // Navigate to product details page with product id
-      this.router.navigate(['/product', selectedProduct.id]);
+      this.router.navigate(['/product', selectedProduct.id]).then(() => {
+        // Clear the search bar after navigation
+        this.productControl.setValue('');
+      });
     }
   }
   highlightText(text: string | undefined): string {
@@ -182,4 +187,6 @@ export class AppComponent implements OnInit {
   closeDropdown(): void {
     this.isDropdownOpen = false;
   }
+
+
 }

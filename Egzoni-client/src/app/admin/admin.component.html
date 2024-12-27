@@ -1,30 +1,49 @@
-<div class="d-flex align-items-center justify-content-center vh-100 bg-light">
-  <div class="bg-white p-4 rounded shadow-lg" style="max-width: 400px; width: 100%;">
-    <div class="text-center mb-3">
-      <img src="assets/egzoni.png" alt="Egzoni" class="img-fluid rounded">
+<div class="d-flex align-items-center justify-content-center vh-100" style="background-color: #fcf7f4;">
+  <div class="p-4 rounded shadow-lg"
+    style="max-width: 400px; width: 100%; background-color: #ffffff; border: 1px solid #ddd;">
+
+    <!-- Logo Section -->
+    <div class="text-center mb-4">
+      <img src="assets/EGZONI_SMALL_COLOR.png" alt="Egzoni" class="img-fluid rounded mb-3" style="max-height: 150px;">
+      <h1>Egzoni Carpets Admin</h1>
     </div>
-    <form (ngSubmit)="onSubmit()">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" [(ngModel)]="username" name="username" required>
-        <!-- Display alert if username is invalid -->
-        <div *ngIf="usernameInvalid" class="alert alert-danger">
-          Username is required.
+
+    <form (ngSubmit)="onSubmit()" class="px-3">
+      <!-- Username Field -->
+      <div class="mb-4">
+        <label for="username" class="form-label text-muted">Përdoruesi</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0">
+            <i class="bi bi-person text-muted"></i>
+          </span>
+          <input type="text" id="username" [(ngModel)]="username" name="username" required
+            class="form-control shadow-none border-0 bg-light">
         </div>
+        <small *ngIf="usernameInvalid" class="text-danger">Përdoruesi është i detyrueshëm</small>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required>
-        <!-- Display alert if password is invalid -->
-        <div *ngIf="passwordInvalid" class="alert alert-danger">
-          Password is required.
+
+      <!-- Password Field -->
+      <div class="mb-4">
+        <label for="password" class="form-label text-muted">Fjalëkalimi</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0">
+            <i class="bi bi-lock text-muted"></i>
+          </span>
+          <input type="password" id="password" [(ngModel)]="password" name="password" required
+            class="form-control shadow-none border-0 bg-light">
         </div>
+        <small *ngIf="passwordInvalid" class="text-danger">Fjalëkalimi është i detyrueshëm</small>
       </div>
-      <!-- Display error message -->
-      <div *ngIf="errorMessage" class="alert alert-danger">
+
+      <!-- General Error Message -->
+      <div *ngIf="errorMessage" class="alert alert-danger text-center mt-3">
         {{ errorMessage }}
       </div>
-      <button type="submit" class="btn btn-success w-100">Confirm identity</button>
+
+      <!-- Submit Button -->
+      <button type="submit" class="submitbutton btn w-100 text-uppercase mt-4 shadow-sm">
+        Kycu
+      </button>
     </form>
   </div>
 </div>

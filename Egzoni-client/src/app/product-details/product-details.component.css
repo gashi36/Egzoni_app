@@ -1,221 +1,50 @@
-/* Main Product Details Container */
-.product-details-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.modal-content {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-/* Card Styling */
-.card {
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.modal-dialog {
+  max-width: 40% !important;
 }
 
-.card-body {
-  padding: 20px;
-}
-
-/* Main Image Container */
-.main-image-container {
-  position: relative;
-  width: 100%;
-  height: 600px;
-  overflow: hidden;
-}
-
-.main-image-container img {
-  width: 100%;
-  height: auto;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Image Navigation Arrows */
-.image-navigation {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  transform: translateY(-50%);
-}
-
-.image-navigation button {
-  z-index: 10;
-}
-
-/* Modal Image Styling */
 .modal-body {
-  position: relative;
+  padding: 1rem !important;
 }
 
-.modal-body .image-navigation {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  transform: translateY(-50%);
+.btn-outline-secondary {
+  border-color: #6c757d !important;
+  color: #6c757d !important;
 }
 
-.modal-body img {
-  width: 100%;
-  height: 750px;
-  overflow: hidden;
+.btn-outline-secondary:hover {
+  background-color: #6c757d !important;
+  color: #ffffff !important;
 }
 
-/* Thumbnail Gallery */
-.thumbnail-gallery {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  margin-top: 10px;
-  gap: 10px;
+.btn-close {
+  color: red;
 }
 
-.thumbnail {
-  cursor: pointer;
-}
-
-.thumbnail img {
-  width: 80px;
-  height: auto;
-  border: 2px solid transparent;
-  border-radius: 5px;
-  transition: border-color 0.3s;
-}
-
-.thumbnail img.selected {
-  border-color: red;
-}
-
-/* Product Title and Subtitle */
-.product-title {
-  font-size: 2.4em;
-  margin: 0;
-  color: #333;
-}
-
-.product-subtitle {
-  font-size: 1.3em;
-  color: #666;
-}
-
-/* Price Section Styling */
-.price-section {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.price-details {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-}
-
-.product-price {
-  font-size: 1.6em;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.original-price {
-  color: #6c757d;
-  text-decoration: line-through;
-  margin-right: 8px;
-  font-size: 1.6em;
-  margin-bottom: 25px;
-}
-
-.discounted-price {
-  color: #dc3545;
-  font-weight: bold;
-}
-
-.discount-percentage {
-  color: #28a745;
-  margin-left: 8px;
-}
-
-/* Button Group Styling */
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.custom-btn {
-  background-color: #6c757d;
-  color: white;
-  border-radius: 25px;
-  padding: 12px 25px;
-  font-size: 1.1em;
-}
-
-.custom-btn-buy {
-  background-color: #dc3545;
-  color: white;
-  border-radius: 25px;
-  padding: 12px 25px;
-  font-size: 1.1em;
-}
-
-/* Details List */
-.details-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.details-list li {
-  margin-bottom: 12px;
-  font-size: 1.1em;
-}
-
-/* Responsive Adjustments */
 @media (max-width: 768px) {
-  .main-image-container {
-    height: 300px;
+  .modal-dialog {
+    max-width: 110% !important;
+    margin: auto !important;
   }
 
-  .thumbnail-gallery {
-    height: auto;
-    padding: 2px 0;
-  }
+  .modal-content {
+    height: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 
-  .thumbnail img {
-    width: 60px;
-  }
+    .modal-body {
+      padding: 1rem !important;
+    }
 
-  .product-title {
-    font-size: 1.8em;
-  }
-
-  .product-price {
-    font-size: 1.5em;
-  }
-}
-
-/* Responsive Styling for Mobile Devices */
-@media (max-width: 576px) {
-  .price-details {
-    font-size: 1rem;
-  }
-
-  .button-group {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .custom-btn,
-  .custom-btn-buy {
-    width: 100%;
-    justify-content: center;
-    padding: 0.6rem;
-    font-size: 0.85rem;
+    .btn-outline-secondary {
+      width: auto !important;
+      margin: 0.5rem 0 !important;
+    }
   }
 }

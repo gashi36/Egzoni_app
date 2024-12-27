@@ -16,6 +16,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   imports: [
     BrowserModule,
@@ -24,14 +26,15 @@ import { MatCardModule } from '@angular/material/card';
     NgbModule,
     RouterModule,
     BrowserAnimationsModule,
-    MatExpansionModule,  // Angular Material Expansion Panel module
+    MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
     MatOptionModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatDialogModule,
   ],
   declarations: [ShopComponent],
   exports: [ShopComponent],

@@ -64,6 +64,7 @@ export class CarpetsComponent implements OnInit {
     categoryId: new FormControl<number | undefined>(undefined),
     brandId: new FormControl<number | undefined>(undefined),
     image: new FormControl<File[]>([], [Validators.required]),
+    thumbnail: new FormControl<File | null>(null, [Validators.required]),
   });
 
   addBrandForm = new FormGroup({
@@ -417,28 +418,24 @@ export class CarpetsComponent implements OnInit {
 
     const formValues = this.addProductForm.value;
     const files = formValues.image as File[];
+    const thumbnail = formValues.thumbnail as File;
     const brandId = Number(formValues.brandId); // Convert to number
     const categoryId = Number(formValues.categoryId); // Convert to number
-    const image = this.image.value;
 
-    const uploadImageAsBase64 = (file: File): Promise<string> => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+    if (!files.length || !thumbnail) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Files',
+        text: 'Please upload both images and a thumbnail.',
+        confirmButtonColor: '#d33',
       });
-    };
+      return;
+    }
 
     const handleMutation = async () => {
       this.isAddingProduct = true;
 
       try {
-        this.isAddingProduct = true;
-        const imageBase64s = await Promise.all(
-          files.map((file) => uploadImageAsBase64(file))
-        );
-
         if (this.isEdit) {
           await this.editProd
             .mutate({
@@ -465,7 +462,8 @@ export class CarpetsComponent implements OnInit {
                 retailPrice: parseFloat(formValues.retailPrice ?? '') || 0,
                 categoryId: categoryId!,
                 brandId: brandId!,
-                image: image, // Combine images as base64
+                image: files, // Pass files directly
+                thumbnail: thumbnail, // Pass thumbnail directly
               },
               {
                 context: {
@@ -516,6 +514,13 @@ export class CarpetsComponent implements OnInit {
     if (input.files) {
       const files = Array.from(input.files); // Convert FileList to Array
       this.addProductForm.controls['image'].setValue(files); // Update the form control
+    }
+  }
+
+  setThumbnail(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.addProductForm.controls['thumbnail'].setValue(input.files[0]); // Update the form control
     }
   }
 
@@ -607,5 +612,11 @@ export class CarpetsComponent implements OnInit {
 
   logout(): void {
     this.authGuard.logout();
+  }
+
+  getThumbnailUrl(productId: number): string {
+    const product = this.products.find(p => p.id === productId);
+    const baseUrl = 'http://localhost:5044/images/';
+    return product && product.thumbnailUrl ? `${baseUrl}${productId}/${product.thumbnailUrl}` : 'assets/default-thumbnail.png';
   }
 }

@@ -98,6 +98,10 @@
       <label for="image">Images</label>
       <input type="file" class="form-control custom-input" (change)="setFile($event)" multiple />
     </div>
+    <div class="form-group col-md-6 mb-4">
+      <label for="thumbnail">Thumbnail</label>
+      <input type="file" class="form-control custom-input" (change)="setThumbnail($event)" />
+    </div>
     <button type="submit" class="btn btn-outline-danger mt-3" [disabled]="isAddingProduct">
       <span *ngIf="isAddingProduct" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
       {{ isEdit ? 'Ndrysho' : 'Regjistro' }}
@@ -143,6 +147,7 @@
             <input type="checkbox" (change)="toggleAllProducts()"
               [checked]="selectedProducts.length === products.length && products.length > 0" />
           </th>
+          <th scope="col">Thumbnail</th>
           <th scope="col">Kodi</th>
           <th scope="col">Masa</th>
           <th scope="col">Sasia</th>
@@ -154,7 +159,6 @@
           <th scope="col">Kategoria</th>
           <th scope="col"></th>
           <th scope="col"></th>
-
         </tr>
       </thead>
       <tbody>
@@ -162,6 +166,9 @@
           <td>
             <input type="checkbox" (change)="toggleProductSelection(pro.id)"
               [checked]="selectedProducts.includes(pro.id)" />
+          </td>
+          <td>
+            <img [src]="getThumbnailUrl(pro.id)" class="img-thumbnail" style="width:70px; height: 100px;" />
           </td>
           <td>{{ pro.code }}</td>
           <td>{{ pro.size }}</td>
@@ -182,6 +189,7 @@
               Fshij
             </button>
           </td>
+
         </tr>
       </tbody>
     </table>

@@ -188,7 +188,53 @@ export class ShopComponent implements OnInit {
 
   loadMoreProducts(): void {
     if (this.hasNextPage) {
-      this.getAllProductss(15);
+      const { brand, category, minPrice, maxPrice } = this.filterForm.value;
+
+      this.getProductsGQL
+        .watch({
+          first: 15,
+          cursor: this.cursor,
+          brandId: brand ? parseInt(brand, 10) : null,
+          categoryId: category ? parseInt(category, 10) : null,
+          minPrice: minPrice ? parseFloat(minPrice) : null,
+          maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+        })
+        .valueChanges
+        .pipe(
+          map((result: ApolloQueryResult<any>) => result.data.productsAsync)
+        )
+        .subscribe({
+          next: (data) => {
+            if (data?.nodes) {
+              const newProducts = data.nodes.map((product: any) => {
+                const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
+
+                return {
+                  ...product,
+                  discountedPrice: validSale?.discountedPrice ?? null,
+                  discountPercentage: validSale?.discountPercentage ?? 0,
+                  saleId: validSale?.id ?? null,
+                };
+              });
+
+              // Ensure only unique products are added
+              const uniqueProducts = newProducts.filter(
+                (newProduct: { id: number; }) => !this.allProducts.some((existingProduct) => existingProduct.id === newProduct.id)
+              );
+
+              this.allProducts = [...this.allProducts, ...uniqueProducts];
+              this.filteredProducts = this.applyFilters(this.allProducts);
+
+              if (data.pageInfo) {
+                this.cursor = data.pageInfo.endCursor ?? null;
+                this.hasNextPage = data.pageInfo.hasNextPage;
+              }
+            }
+          },
+          error: (error) => {
+            console.error('Error fetching more products:', error);
+          },
+        });
     } else {
       console.log('No more products to load.');
     }
@@ -250,9 +296,7 @@ export class ShopComponent implements OnInit {
     );
     return category?.name!;
   }
-  searchProduct(code: string): void {
-    // Implement search product functionality if needed
-  }
+
 
   toggleFilterVisibility() {
     this.isFilterVisible = !this.isFilterVisible;
@@ -260,5 +304,11 @@ export class ShopComponent implements OnInit {
   navigateToProduct(productId: number): void {
     console.log(`Navigating to product with ID: ${productId}`);
     this.router.navigate(['/product', productId]);
+  }
+  isProductOutOfStock(product: Product): boolean {
+    return product.quantity === 0;
+  }
+  priceFormatter(value: number): string {
+    return `${value} €`;
   }
 }

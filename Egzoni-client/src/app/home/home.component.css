@@ -1,709 +1,278 @@
-/* Global Styles */
-
-.brand-card,
-.category-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  /* Light background */
-  transition: transform 0.2s;
-}
-
-.brand-card:hover,
-.category-card:hover {
-  transform: scale(1.05);
-  /* Slightly enlarge on hover */
-}
-
-.brand-name,
-.category-name {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-}
-
-/* Shared Card Styles */
-/* Global Styles */
-.card {
-  border: none;
-  border-radius: 15px;
-  overflow: hidden;
-  transition: transform 0.3s ease-in-out;
-  height: 100%;
-  max-width: 280px;
-}
-
-.card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
-}
-
-.card-image-wrapper {
+/* Product Card Styles */
+.product-card {
+  cursor: pointer;
+  width: 100%;
+  max-width: 300px;
   position: relative;
   overflow: hidden;
-  height: 280px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-radius: 8px;
+  margin: 0 auto;
+  /* Light background for product card */
+  border: none;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.card-img-top {
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  /* Ensure image covers the entire area */
 }
 
-/* Discount Badge */
-.discount-badge {
+.image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Subtle shadow */
+}
+
+.imagehover {
+  width: 100%;
+  height: auto;
+  transition: transform 0.5s ease-in-out, filter 0.3s ease-in-out;
+  border-radius: inherit;
+}
+
+.img-fluid {
+  border-radius: 100%;
+}
+
+.imagehover:hover {
+  transform: scale(1.05);
+  /* Slight zoom on hover */
+  filter: blur(1px);
+  /* Slight blur effect */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Elevated shadow */
+}
+
+.hover-info {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(255, 0, 0, 0.8);
-  color: white;
-  font-size: 14px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-/* Card Body */
-.card-body {
-  padding: 15px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   text-align: center;
+  color: black;
+  padding: 15px 0;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
 }
 
-.card-title {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+.image-container:hover .hover-info {
+  opacity: 1;
+  transform: translateY(0);
+  /* Slide up the hover info */
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #343a40;
 }
 
 .product-size {
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 0.85rem;
+  color: #6c757d;
 }
 
-.price-section {
-  margin-top: 10px;
+.discounted-price,
+.regular-price {
+  font-size: 1rem;
+}
+
+.mat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.mat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.discount-ribbon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-color: #dc3545;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+  padding: 5px 10px;
+  z-index: 10;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.discount-ribbon::before,
+.discount-ribbon::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: -10px;
+  left: 15px;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.discount-ribbon::after {
+  border-width: 10px 10px 0 0;
+  top: -10px;
+  right: 0;
+  z-index: -1;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #495057;
 }
 
 .original-price {
-  font-size: 1rem;
-  color: black;
-  text-decoration: line-through;
-  margin-right: 10px;
+  font-size: 0.85rem;
+  color: #6c757d;
 }
 
 .discounted-price {
-  font-size: 1.2rem;
-  color: red;
+  font-size: 1rem;
+  color: #dc3545;
   font-weight: bold;
 }
 
 .regular-price {
-  font-size: 1.2rem;
-  color: black;
-}
-
-.btn-outline-danger {
-  border-color: #dc3545;
-  color: #dc3545;
-}
-
-.btn-outline-danger:hover {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-primary,
-.btn-secondary {
-  background-color: green;
-  color: #fff;
-  border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  border-radius: 30px;
-  text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-primary:hover,
-.btn-secondary:hover {
-  background-color: green;
-  transform: scale(1.05);
-}
-
-.hero-banner {
-  background-image: url('https://media.istockphoto.com/id/1659313537/photo/young-woman-vacuuming-her-apartment.webp?a=1&b=1&s=612x612&w=0&k=20&c=zHA_RHyW2Cw2fKzTQdszFXpyamoEvj86drjaFNd3DgU=');
-  background-size: cover;
-  background-position: center;
-  border-radius: 10px;
-  color: #fff;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  height: 500px;
-}
-
-.hero-banner h1 {
-  font-size: 4rem;
+  font-size: 1rem;
+  color: #343a40;
   font-weight: bold;
 }
 
-/* Adjusted for carousel navigation buttons */
-:host ::ng-deep .p-carousel-prev,
-:host ::ng-deep .p-carousel-next {
-  background-color: red !important;
-  border-radius: 50%;
-}
-
-
-.btn-outline-danger {
-  border-color: #dc3545;
-  color: #dc3545;
-}
-
-.btn-outline-danger:hover {
-  background-color: #dc3545;
-  color: white;
-}
-
-
-.btn-primary,
-.btn-secondary {
-  background-color: green;
-  color: #fff;
+.btn-danger {
+  background-color: #dc3545 !important;
   border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  border-radius: 30px;
-  text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-primary:hover,
-.btn-secondary:hover {
-  background-color: green;
-  transform: scale(1.05);
-}
-
-.btn-outline-danger {
-  background-color: red;
-  color: #fff;
-  border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  border-radius: 30px;
-  text-decoration: none;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.btn-outline-danger:hover {
-  background-color: red;
-  transform: scale(1.05);
-
-  color: #fff;
-}
-
-.btn-outline-success:hover {
-  background-color: #28a745;
-  color: #fff;
-}
-
-
-.btn-outline-success {
-  background-color: #fff;
-  border: 2px solid #28a745;
-  color: #28a745;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  transition: background-color 0.3s;
 }
 
-.btn-primary,
-.btn-outline-primary {
-  background-color: #fff;
-  border: 2px solid #ccc;
-  color: #000;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+.btn-danger:hover {
+  background-color: #c82333 !important;
 }
 
-.btn-outline-primary:hover {
-  background-color: #000;
-  color: #fff;
+@media (max-width: 768px) {
+  .mat-card {
+    height: 150px !important;
+    width: 100% !important;
+    padding: 10px !important;
+  }
+
+  .mat-card-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    height: 40px !important;
+  }
+
+  .product-description,
+  .product-price {
+    display: none !important;
+  }
+
+  .product-code {
+    font-weight: bold !important;
+    font-size: 0.5em !important;
+  }
+
+  .row-cols-2>* {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+
+  .product-title {
+    font-size: 0.7rem !important;
+  }
+
+  .product-size {
+    font-size: 0.6rem !important;
+  }
+
+  .original-price,
+  .discounted-price,
+  .regular-price {
+    font-size: 0.7rem !important;
+  }
 }
 
-.hero-section {
-  padding: 20px;
+.price {
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.hero-banner {
-  background-image: url('https://media.istockphoto.com/id/1659313537/photo/young-woman-vacuuming-her-apartment.webp?a=1&b=1&s=612x612&w=0&k=20&c=zHA_RHyW2Cw2fKzTQdszFXpyamoEvj86drjaFNd3DgU=');
-  background-size: cover;
-  background-position: center;
-  border-radius: 10px;
-  color: #fff;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  height: 500px;
+.product-card .mat-card-content {
+  padding: 5px;
+  /* Reduce padding in card content */
 }
 
-
-.hero-banner h1 {
-  font-size: 4rem;
-  font-weight: bold;
+.container {
+  margin-top: 50px;
 }
 
-/* Offer Box Styling */
-.offer-box {
-  position: relative;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 242px;
-  /* Height remains the same */
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* clip-path: polygon(0 0, 100% 0%, 100% 100%, 22% 100%); */
-
-  /* Adjusted for narrower image area */
+.brandbanner {
+  background-color: #fbf9f7;
 }
 
-/* Ensure the text is on the white side */
-.offer-text {
-  position: absolute;
-  left: 300px;
-  z-index: 2;
-  color: #fff;
-}
-
-.offer-box h2 {
-  font-size: 2.5rem;
-}
-
-.offer-box h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-/* Overlay for darkening the image */
-.offer-box::before {
-  content: "";
-  position: absolute;
+.loading-screen {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  /* Slight darkening of the image */
-  z-index: 1;
-}
-
-@media (max-width: 768px) {
-  .hero-banner h1 {
-    font-size: 3rem;
-  }
-
-  .offer-box {
-    height: 150px;
-    /* Slightly shorter for mobile screens */
-  }
-}
-
-.product-carousel-container {
-  padding: 1.5rem;
-  background-color: #f9f9f9;
-}
-
-
-/* Featured Curtains Section */
-.featured-curtains-section {
-  padding: 3rem 2rem;
-  text-align: center;
-}
-
-.featured-curtains-section h2 {
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #333;
-}
-
-/* Card Styles */
-/* Card Styles with Spacing */
-.product-card {
-  background: #fff;
-  height: 100%;
-  width: 350px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin: 0 10px;
-  transition: transform 0.3s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-}
-
-.button-container {
-  gap: 10px;
-  display: flex;
-}
-
-.product-card:hover {
-  transform: scale(1.05);
-
-}
-
-.product-info {
-  padding-top: 1rem;
-  text-align: center;
-}
-
-
-.product-info .product-code {
-  font-size: 1.1rem;
-  font-weight: bold;
-}
-
-.product-info .product-price {
-  font-size: 1rem;
-  font-weight: normal;
-}
-
-/* Image Container */
-.image-container {
-  position: relative;
-}
-
-.product-image {
-  width: 100%;
-  height: 350px;
-  object-fit: contain;
-}
-
-.h1-hero {
-  text-align: center;
-  font-size: 65px;
-  padding-bottom: 40px;
-  padding-top: 40px;
-  font-weight: 600;
-}
-
-.product-price {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.product-price span {
-  font-weight: bold;
-}
-
-small {
-  display: block;
-  margin-bottom: 1rem;
-  color: #888;
-}
-
-@media (max-width: 768px) {
-  .product-card {
-    width: 90%;
-    margin: 0 auto;
-  }
-}
-
-.product-info,
-.button-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20%;
-  background-color: rgba(123, 122, 122, 0.7);
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  opacity: 0;
-  padding: 0 10px;
-  /* Add padding for space between info and button */
-  transition: opacity 0.3s ease, height 0.3s ease;
-}
-
-
-
-.product-info h4 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-}
-
-.button-container {
-  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 }
 
-/* Show buttons on hover */
-.product-card:hover .product-info,
-.product-card:hover .button-container {
-  opacity: 1;
-  height: 20%;
-  /* Ensure the section remains at 1/5th of the card */
+.loading-gif {
+  width: 150px;
+  height: auto;
 }
 
-.carpet-banner {
-  background-image: url('https://media.istockphoto.com/id/1685138093/photo/happy-woman-moving-house-and-unrolling-a-carpet-while-unpacking.webp?a=1&b=1&s=612x612&w=0&k=20&c=1XZlbFmkcb2pdpA4fnvJsM_B7-ufYH_daTc_sqFtaY0=');
-  background-size: cover;
-  background-position: center;
-  padding: 4rem 2rem;
-  text-align: center;
-  color: #fff;
-  border-radius: 15px;
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+.carpet-animation {
+  animation: roll 2s infinite;
 }
 
-/* Curtain Banner Section */
-.curtain-banner {
-  background-image: url('../../assets/photo-1509644851169-2acc08aa25b5.avif');
-  background-size: cover;
-  background-position: center;
-  padding: 4rem 2rem;
-  text-align: center;
-  border-radius: 15px;
-  color: #fff;
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4);
+.carpet-img {
+  width: 100px;
+  height: auto;
 }
 
-.curtain-banner-content {
-  max-width: 80%;
-  margin: 0 auto;
-}
+@keyframes roll {
+  0% {
+    transform: rotate(0deg);
+  }
 
-.curtain-banner-content h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
+  50% {
+    transform: rotate(180deg);
+  }
 
-.curtain-banner-content p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-}
-
-/* Featured Curtains Card */
-.featured-curtains-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-}
-
-.featured-curtain-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  width: 320px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.featured-curtain-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-}
-
-.featured-curtain-card img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-}
-
-.featured-curtain-card-content {
-  padding: 1.5rem;
-  color: #333;
-}
-
-.featured-curtain-card-content h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.6rem;
-}
-
-.featured-curtain-card-content p {
-  margin: 0;
-}
-
-
-
-/* Style for the carousel previous button (navigator) */
-:host ::ng-deep .p-carousel-prev,
-:host ::ng-deep .p-carousel-next {
-  background-color: white !important;
-  color: red !important;
-  border: none !important;
-  border-radius: 50% !important;
-  width: 40px !important;
-  height: 40px !important;
-  display: flex !important;
-  justify-content: center !important;
-  /* Centers horizontally */
-  align-items: center !important;
-  /* Centers vertically */
-  font-size: 1.5rem !important;
-  /* Adjust icon size */
-  transition: background-color 0.3s ease !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-  /* Subtle shadow */
-}
-
-/* Hover effect for both buttons */
-:host ::ng-deep .p-carousel-prev:hover,
-:host ::ng-deep .p-carousel-next:hover {
-  background-color: red !important;
-  color: white !important;
-  cursor: pointer !important;
-}
-
-
-
-.brand-banner .brand-content {
-  display: flex;
-  flex-direction: column;
-  /* Align logo, text, and button vertically */
-  align-items: flex-start;
-  /* Align items to the left */
-}
-
-.brand-logo {
-  max-width: 120px;
-  /* Adjust logo size */
-}
-
-
-.brand-products {
-  /* Optional: add a border for separation */
-  padding-top: 15px;
-}
-
-.product-item {
-  margin-bottom: 15px;
-  /* Space between products */
-}
-
-/* Carousel Styles */
-.featured-products-carousel .p-carousel {
-  margin-top: 40px;
-}
-
-.featured-products-carousel .product-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.3s ease-in-out;
-}
-
-.featured-products-carousel .product-card:hover {
-  transform: translateY(-5px);
-}
-
-.featured-products-carousel .p-carousel .p-carousel-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.featured-products-carousel .card-image-wrapper {
-  position: relative;
-  overflow: hidden;
-  height: 200px;
-}
-
-.featured-products-carousel .card-img-top {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.featured-products-carousel .discount-badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(255, 0, 0, 0.8);
-  color: white;
-  font-size: 14px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-.featured-products-carousel .card-body {
-  padding: 15px;
-  text-align: center;
-}
-
-.featured-products-carousel .card-title {
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.featured-products-carousel .product-size {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.featured-products-carousel .price-section {
-  margin-top: 10px;
-}
-
-.featured-products-carousel .original-price {
-  font-size: 1rem;
-  color: black;
-  text-decoration: line-through;
-  margin-right: 10px;
-}
-
-.featured-products-carousel .discounted-price {
-  font-size: 1.2rem;
-  color: red;
-  font-weight: bold;
-}
-
-.featured-products-carousel .regular-price {
-  font-size: 1.2rem;
-  color: black;
-}
-
-.p-carousel-prev,
-.p-carousel-next {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  padding: 10px;
-}
-
-.p-carousel-prev:hover,
-.p-carousel-next:hover {
-  background-color: darkred;
+  100% {
+    transform: rotate(360deg);
+  }
 }

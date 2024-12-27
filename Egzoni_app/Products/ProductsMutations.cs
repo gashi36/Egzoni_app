@@ -20,6 +20,12 @@ namespace Egzoni_app.Products
                 throw new ArgumentNullException(nameof(input.Image), "Images cannot be null.");
             }
 
+            // Ensure input.Thumbnail is not null
+            if (input.Thumbnail == null)
+            {
+                throw new ArgumentNullException(nameof(input.Thumbnail), "Thumbnail cannot be null.");
+            }
+
             // Initialize a new Product instance with the provided input data
             var newProduct = new Product
             {
@@ -47,6 +53,27 @@ namespace Egzoni_app.Products
                 Directory.CreateDirectory(path);
             }
 
+            // Process the thumbnail image
+            var thumbnailName = $"Thumbnail_{Guid.NewGuid()}{System.IO.Path.GetExtension(input.Thumbnail.Name)}";
+            var thumbnailPath = System.IO.Path.Combine(path, thumbnailName);
+
+            try
+            {
+                // Save the thumbnail file to the specified path
+                using (var stream = new FileStream(thumbnailPath, FileMode.Create, FileAccess.Write))
+                {
+                    await input.Thumbnail.CopyToAsync(stream);
+                }
+
+                // Set the ThumbnailUrl
+                newProduct.ThumbnailUrl = thumbnailName;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (you might need a logging mechanism here)
+                throw new InvalidOperationException($"Error saving thumbnail {input.Thumbnail.Name}", ex);
+            }
+
             // Process each uploaded image
             foreach (var image in input.Image)
             {
@@ -66,12 +93,6 @@ namespace Egzoni_app.Products
 
                         // Add the image name to the PictureUrls list
                         newProduct.PictureUrls.Add(imageName);
-
-                        // Set the first image as the ThumbnailUrl
-                        if (newProduct.ThumbnailUrl == string.Empty)
-                        {
-                            newProduct.ThumbnailUrl = imageName;
-                        }
                     }
                     catch (Exception ex)
                     {

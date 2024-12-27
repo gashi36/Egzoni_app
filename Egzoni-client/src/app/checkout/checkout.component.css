@@ -6,3 +6,64 @@ input.ng-invalid.ng-touched~.invalid-feedback {
   display: block;
   /* This makes the feedback visible */
 }
+
+body {
+  background-color: #fcf7f4;
+}
+
+.text-brown {
+  color: #7d6b5f;
+}
+
+.btn-brown {
+  background-color: #7d6b5f;
+  color: white;
+  border: none;
+}
+
+.btn-brown:hover {
+  background-color: #5e4e42;
+}
+
+.btn-light-brown {
+  background-color: #7d6b5f;
+  color: #7d6b5f;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.card-header {
+  border-radius: 10px 10px 0 0;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+
+  .table th,
+  .table td {
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 0.3rem 0.6rem;
+  }
+
+  .d-flex {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .btn-outline-danger {
+    font-size: 12px;
+  }
+}

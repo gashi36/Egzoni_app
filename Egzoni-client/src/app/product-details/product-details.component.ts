@@ -9,9 +9,12 @@ import {
   GetProductByIdGQL,
   GetBrandsGQL,
   GetCategoriesGQL,
+  Product,
+  GetProductsGQL,
 } from '../../generated/graphql';
 import { ToastrService } from 'ngx-toastr';
 import { Modal } from 'bootstrap';
+import { ApolloQueryResult } from '@apollo/client/core';
 
 @Component({
   selector: 'app-product-details',
@@ -24,7 +27,9 @@ export class ProductDetailsComponent implements OnInit {
   selectedImage: string | undefined;
   currentIndex: number = 0;
   brands: Brand[] = [];
+  products: Product[] = [];
   categories: Category[] = [];
+  baseImageUrl: string = 'http://localhost:5044/images/';
 
   constructor(
     private route: ActivatedRoute,
@@ -33,7 +38,8 @@ export class ProductDetailsComponent implements OnInit {
     private getbrands: GetBrandsGQL,
     private getcategories: GetCategoriesGQL,
     private getProductByIdGQL: GetProductByIdGQL,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private getProductsGQL: GetProductsGQL,
   ) { }
 
   ngOnInit(): void {
@@ -120,6 +126,7 @@ export class ProductDetailsComponent implements OnInit {
         },
       });
   }
+
   getProductById(id: number): void {
     this.product$ = this.getProductByIdGQL.fetch({ id }).pipe(
       map((result: any) => {
@@ -140,6 +147,9 @@ export class ProductDetailsComponent implements OnInit {
           } else {
             console.warn('No images found for the product.');
           }
+
+          // Fetch similar products
+          this.getSimilarProducts(product.brandId, product.id);
         } else {
           console.warn('No product found with the given ID.');
         }
@@ -161,16 +171,68 @@ export class ProductDetailsComponent implements OnInit {
     );
   }
 
-  getBrandName(brandId: number): string | undefined {
-    const brand = this.brands.find((brand) => brand.id === brandId);
-    return brand?.name!;
+  getSimilarProducts(brandId: number, productId: number): void {
+    this.getProductsGQL
+      .watch({
+        first: 10,
+        brandId: brandId,
+      })
+      .valueChanges.pipe(
+        map((result: ApolloQueryResult<any>) => result.data.productsAsync.nodes || [])
+      )
+      .subscribe({
+        next: (data: Product[]) => {
+          this.products = data.filter(product => product.id !== productId);
+          console.log('Similar products fetched:', this.products);
+        },
+        error: (error) => {
+          console.error('Error fetching similar products:', error);
+        },
+      });
   }
 
-  getCategoryName(categoryId: number): string | undefined {
+  getProductsForBrand(brandId: number): void {
+    const productsJson = localStorage.getItem('products') || '[]';
+    const allProducts: Product[] = JSON.parse(productsJson);
+
+    this.products = allProducts.filter(product => product.brandId === brandId);
+    console.log('Products fetched for brand from local storage:', this.products);
+  }
+
+  getBrandById(brandId: number): void {
+    this.getbrands
+      .watch()
+      .valueChanges.pipe(map((result: any) => result.data.brands))
+      .subscribe({
+        next: (data) => {
+          if (data && data.length > 0) {
+            const brand = data.find((brand: any) => brand.id === brandId);
+            if (brand) {
+              console.log('Brand fetched:', brand);
+              // You can use the brand data as needed
+            } else {
+              console.error('No brand found with the given ID.');
+            }
+          } else {
+            console.error('No brands found');
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching brands:', error);
+        },
+      });
+  }
+
+  getBrandName(brandId: number): string {
+    const brand = this.brands.find((brand) => brand.id === brandId);
+    return brand?.name || 'Brand i panjohur';
+  }
+
+  getCategoryName(categoryId: number): string {
     const category = this.categories.find(
       (category) => category.id === categoryId
     );
-    return category?.name!;
+    return category?.name || 'Kategori e pa njohur';
   }
 
   selectImage(imageSrc: string): void {
@@ -203,8 +265,6 @@ export class ProductDetailsComponent implements OnInit {
     this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length; // Loop to the end
     this.selectedImage = this.images[this.currentIndex].src;
   }
-
-
 
   goBack(): void {
     this.router.navigate(['/shop']);
@@ -265,4 +325,19 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
+  getProductThumbnailUrl(product: Product): string {
+    const thumbnailUrl =
+      Array.isArray(product.pictureUrls) && product.pictureUrls.length > 0
+        ? product.pictureUrls[0]
+        : 'default-thumbnail.jpg';
+    return `${this.baseImageUrl}${product.id}/${thumbnailUrl}`;
+  }
+
+  navigateToProduct(productId: number): void {
+    this.router.navigate(['/product', productId]);
+  }
+
+  isProductOutOfStock(product: Product): boolean {
+    return product.quantity === 0;
+  }
 }

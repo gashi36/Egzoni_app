@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit {
       numScroll: 1,
     },
   ];
+  isLoading: boolean = true;
+  selectedBrands: Brand[] = [];
 
   constructor(
     private router: Router,
@@ -47,9 +49,10 @@ export class HomeComponent implements OnInit {
     this.getAllBrands();
   }
 
-  getLastThreeBrands(): Brand[] {
-    return this.brands.slice(-3); // Adjust as needed
+  getLastBrands(count: number): Brand[] {
+    return this.brands.slice(-count);
   }
+
   navigateToShopWithFilters(type: string, id: number): void {
     const queryParams: any = {};
 
@@ -64,10 +67,14 @@ export class HomeComponent implements OnInit {
   }
 
   getProductsForBrand(brandId: number): Product[] {
-    return this.products
+    const productsForBrand = this.products
       .filter(product => product.brandId === brandId)
       .slice(0, 4); // Return only the first four products
+
+    console.log(`Products for brand ${brandId}:`, productsForBrand); // Debugging log
+    return productsForBrand;
   }
+
   getLatestProducts(first: number = 10): void {
     this.getProductsGQL
       .watch({ first })
@@ -77,7 +84,37 @@ export class HomeComponent implements OnInit {
       .subscribe({
         next: (data: Product[]) => {
           console.log('Fetched Products:', data);
-          this.products = data;
+          this.products = data.map((product: any) => {
+            // Check if there are sales and assign values if they exist
+            if (product.sales) {
+              const sale = product.sales; // sales is not an array, it's an object
+
+              // Log the sales information
+              console.log(`Product ID: ${product.id}`);
+              console.log(`Discounted Price: ${sale.discountedPrice}`);
+              console.log(`Discount Percentage: ${sale.discountPercentage}%`);
+              console.log(`Sale End Date: ${sale.endDate}`);
+
+              return {
+                ...product,
+                discountedPrice: sale.discountedPrice,
+                discountPercentage: sale.discountPercentage,
+                endDate: sale.endDate,
+                isOutOfStock: product.quantity === 0,
+              };
+            } else {
+              // If no sales, just return the original product
+              return {
+                ...product,
+                discountedPrice: null, // or keep undefined
+                discountPercentage: null, // or keep undefined
+                endDate: null, // or keep undefined
+                isOutOfStock: product.quantity === 0,
+              };
+            }
+          });
+
+          console.log('Processed Products:', this.products); // Debugging log
         },
         error: (error) => {
           console.error('Error fetching products:', error);
@@ -86,10 +123,7 @@ export class HomeComponent implements OnInit {
   }
 
   getProductThumbnailUrl(product: Product): string {
-    const thumbnailUrl =
-      Array.isArray(product.pictureUrls) && product.pictureUrls.length > 0
-        ? product.pictureUrls[0]
-        : 'default-thumbnail.jpg';
+    const thumbnailUrl = product.thumbnailUrl || 'default-thumbnail.jpg';
     return `${this.baseImageUrl}${product.id}/${thumbnailUrl}`;
   }
 
@@ -192,7 +226,8 @@ export class HomeComponent implements OnInit {
             products: brand.products || [], // Ensure products are included
           })) || [];
 
-          console.log('Fetched Brands:', this.brands);
+          console.log('Fetched Brands:', this.brands); // Debugging log
+          this.selectedBrands = this.getLastBrands(3); // Get the last 3 brands
         },
         error: (error) => {
           console.error('Error fetching brands:', error);
@@ -216,5 +251,9 @@ export class HomeComponent implements OnInit {
       (category) => category.id === categoryId
     );
     return category?.name!;
+  }
+
+  isProductOutOfStock(product: Product): boolean {
+    return product.quantity === 0;
   }
 }

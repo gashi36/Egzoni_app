@@ -8,17 +8,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule } from 'apollo-angular';
 import { RouterModule } from '@angular/router';
 import { CarpetsComponent } from '../carpets/carpets.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-
+    MatInputModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
     //   ApolloModule,
     //   HttpClientModule,
     //   RouterModule.forRoot([{ path: 'carpets', component: CarpetsComponent }]),
   ],
   declarations: [AdminComponent],
 })
-export class AdminModule {}
+export class AdminModule { }

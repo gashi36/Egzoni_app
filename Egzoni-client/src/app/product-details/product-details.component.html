@@ -1,119 +1,187 @@
-<div *ngIf="product$ | async as product" class="product-details-container">
-  <div class="card shadow-lg">
-    <div class="card-body">
-      <div class="row">
-        <!-- Product Image and Gallery -->
-        <div class="col-lg-6 position-relative">
-          <div class="main-image-container">
-            <img [src]="selectedImage" alt="Product Image" class="img-fluid rounded" (click)="openModal()" />
-            <div class="image-navigation">
-              <button (click)="prevImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
+<div class="text-dark pt-3 container-fluid mb-5" [ngStyle]="{'background-color': '#f8f9fa'}">
+  <div *ngIf="product$ | async as product" class="container py-5">
+    <div class="card shadow-sm border-0 rounded-4 container" [ngStyle]="{'background-color': '#ffffff'}">
+      <div class="card-body p-4">
+        <div class="row">
+          <!-- Main Image with Navigation -->
+          <div class="col-lg-4 col-md-6 position-relative">
+            <div class="rounded-3 shadow-sm p-1" [ngStyle]="{'background-color': '#f8f9fa'}">
+              <img [src]="selectedImage" alt="Product Image" class="img-fluid rounded w-100" (click)="openModal()"
+                style="cursor: pointer;" />
+              <!-- Navigation Arrows -->
+              <button (click)="prevImage()"
+                class="btn btn-outline-secondary position-absolute top-50 start-0 translate-middle-y"
+                style="background-color: white; color: black;" [disabled]="images.length === 0">
                 <i class="bi bi-chevron-left"></i>
               </button>
-              <button (click)="nextImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
+              <button (click)="nextImage()"
+                class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+                style="background-color: white; color: black;" [disabled]="images.length === 0">
                 <i class="bi bi-chevron-right"></i>
               </button>
             </div>
           </div>
-        </div>
 
-        <!-- Product Details -->
-        <div class="col-lg-6">
-          <h2 class="product-title text-dark font-weight-bold">{{ product.code }}</h2>
-          <h5 class="product-subtitle text-muted">{{ product.description }}</h5>
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <tbody>
-                <tr>
-                  <td><strong>Brand:</strong></td>
-                  <td>{{ getBrandName(product.brandId) }}</td>
-                </tr>
-                <tr>
-                  <td><strong>Category:</strong></td>
-                  <td>{{ getCategoryName(product.categoryId) }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Thumbnails on the Right -->
+          <div class="col-lg-2 d-none d-lg-flex flex-column gap-2">
+            <img *ngFor="let image of images" [src]="image.thumb" (click)="selectImage(image.src)"
+              [class.border-primary]="image.src === selectedImage" class="img-thumbnail rounded shadow-sm"
+              style="width: 60px; height: 60px; cursor: pointer; background-color: #f8f9fa;" />
           </div>
-          <ul class="details-list list-unstyled mt-3">
-            <li><i class="fa fa-check text-success"></i> <strong>Code:</strong> {{ product.code }}</li>
-            <li><i class="fa fa-check text-success"></i> <strong>Color:</strong> {{ product.color }}</li>
-            <li><i class="fa fa-check text-success"></i> <strong>Size:</strong> {{ product.size }}</li>
-            <li><i class="fa fa-check text-success"></i> <strong>Quantity:</strong> {{ product.quantity }}</li>
-          </ul>
-          <div class="price-section mt-3">
-            <!-- Price Details -->
-            <div class="price-details">
-              <span *ngIf="product.discountedPrice; else regularPrice">
-                <span class="original-price text-muted text-decoration-line-through me-2">
-                  {{ product.retailPrice | currency:'EUR' }}
-                </span>
-                <span class="discounted-price text-danger fw-bold">
-                  {{ product.discountedPrice | currency:'EUR' }}
-                </span>
-                <span *ngIf="product.sales && product.sales[0].discountPercentage"
-                  class="discount-percentage text-success">
-                  (-{{ product.sales[0].discountPercentage }}%)
-                </span>
-              </span>
-              <ng-template #regularPrice>
-                <h3 class="product-price text-success">{{ product.retailPrice | currency :'EUR' }}</h3>
-              </ng-template>
-            </div>
-
-            <!-- Button Group -->
-            <div class="button-group mt-2">
-              <button (click)="addToCart(product.id)" class="btn custom-btn">
-                <i class="bi bi-cart"></i> Shto në shportë
-              </button>
-              <button (click)="buyNow(product?.id)" class="btn custom-btn-buy">
-                <i class="bi bi-lightning-fill"></i> Bleje menjëherë
-              </button>
-            </div>
+          <!-- Horizontal Thumbnails for Smaller Screens -->
+          <div class="d-lg-none mb-3 d-flex flex-nowrap gap-2 overflow-auto">
+            <img *ngFor="let image of images" [src]="image.thumb" (click)="selectImage(image.src)"
+              [class.border-primary]="image.src === selectedImage" class="img-thumbnail rounded shadow-sm"
+              style="width: 60px; height: 60px; cursor: pointer; background-color: #f8f9fa;" />
           </div>
 
-
-          <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-              <div class="toast-header">
-                <strong class="me-auto">Success</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-              </div>
-              <div class="toast-body">
-                Produkti u shtua!
+          <!-- Product Details -->
+          <div class="col-lg-6 col-md-12">
+            <!-- Product Info Table -->
+            <div class="product-details text-dark rounded-3 p-3" [ngStyle]="{'background-color': '#f1f1f1'}">
+              <h4 class="fw-bold mb-3">Detajet</h4>
+              <hr>
+              <h2 class="fw-bold text-dark">{{ getBrandName(product.brandId) }} - {{ product.code }}</h2>
+              <h5 class="text-muted mb-4">{{ product.description }}</h5>
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark">Brendi:</span>
+                  <span>{{ getBrandName(product.brandId) }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark">Kategoria:</span>
+                  <span>{{ getCategoryName(product.categoryId) }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark">Ngjyra:</span>
+                  <span>{{ product.color }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark">Masa:</span>
+                  <span>{{ product.size }}</span>
+                </div>
+                <hr>
+                <!-- Total Price Section -->
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark fw-bold">Totali:</span>
+                  <div>
+                    <span *ngIf="product.discountedPrice; else regularPrice">
+                      <span class="text-muted text-decoration-line-through me-2">{{ product.retailPrice | currency:
+                        'EUR' }}</span>
+                      <span class="text-danger fw-bold">{{ product.discountedPrice | currency: 'EUR' }}</span>
+                      <span *ngIf="product.sales && product.sales[0].discountPercentage" class="badge bg-danger ms-2">
+                        -{{ product.sales[0].discountPercentage }}%
+                      </span>
+                    </span>
+                    <ng-template #regularPrice>
+                      <span class="text-dark fw-bold">{{ product.retailPrice | currency: 'EUR' }}</span>
+                    </ng-template>
+                  </div>
+                </div>
+                <!-- Offer End Date -->
+                <div *ngIf="product.endDate" class="d-flex justify-content-between">
+                  <span class="text-dark">Oferta është e vlefshme deri më:</span>
+                  <span>{{ product.endDate | date: 'shortDate' }}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="thumbnail-gallery mt-2">
-            <div *ngFor="let image of images" class="thumbnail">
-              <img [src]="image.thumb" (click)="selectImage(image.src)" [class.selected]="image.src === selectedImage"
-                class="img-thumbnail" />
+            <!-- Transport Details -->
+            <div class="transport-details text-dark rounded-3 p-3 mt-2" [ngStyle]="{'background-color': '#f1f1f1'}">
+              <h4 class="fw-bold mb-3">Detajet e Transportit</h4>
+              <hr>
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark"><i class="bi bi-truck"></i> Transporti:</span>
+                  <span>Falas</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark"><i class="bi bi-clock"></i> Koha e Dorëzimit:</span>
+                  <span>1-3 ditë pune</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="text-dark"><i class="bi bi-geo-alt"></i> Vendndodhja:</span>
+                  <span>Lipjan, Kosovë</span>
+                </div>
+              </div>
             </div>
           </div>
-          <span *ngIf="product.endDate" class="end-date text-danger ms-2">
-            (Zbritja perfundon më: {{ product.endDate | date: 'shortDate' }})
-          </span>
+
+          <div class="d-flex flex-row-reverse gap-3 mt-2">
+            <button (click)="addToCart(product.id)" class="btn btn-primary">
+              <i class="bi bi-cart"></i> Shto ne shportë
+            </button>
+            <button (click)="buyNow(product.id)" class="btn btn-outline-secondary">
+              <i class="bi bi-lightning-fill"></i> Blej Menjëherë
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal for Viewing Images -->
+  <!-- Modal -->
   <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xs">
       <div class="modal-content">
         <div class="modal-body position-relative">
-          <img [src]="selectedImage" alt="Product Image" class="img-fluid rounded" />
-          <div class="image-navigation">
-            <button (click)="prevImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
-              <i class="bi bi-chevron-left"></i>
-            </button>
-            <button (click)="nextImage()" class="btn btn-outline-danger" [disabled]="images.length === 0">
-              <i class="bi bi-chevron-right"></i>
-            </button>
-          </div>
+          <img [src]="selectedImage" alt="Product Image" class="img-fluid rounded w-100" />
+          <!-- Navigation Arrows -->
+          <button (click)="prevImage()"
+            class="btn btn-outline-secondary position-absolute top-50 start-0 translate-middle-y"
+            [disabled]="images.length === 0" style="background-color: white; color: black;">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button (click)="nextImage()"
+            class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y"
+            [disabled]="images.length === 0" style="background-color: white; color: black;">
+            <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn-close btn-danger position-absolute  top-0 end-0 m-2" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Produkte të ngjashme</h2>
+    <div class="row row-cols-2 row-cols-md-5 g-2 justify-content-center">
+      <div *ngFor="let product of products.slice(0, 5)" class="col d-flex" style="width: 250px;">
+        <mat-card class="product-card w-100 text-dark shadow-lg text-center"
+          style="cursor: pointer; height: 400px; overflow: hidden;" (click)="navigateToProduct(product.id)">
+          <div *ngIf="product.sales?.[0]?.discountPercentage" class="discount-ribbon">
+            - {{ product.sales[0].discountPercentage }}%
+          </div>
+          <div class="product-image" [ngClass]="{'out-of-stock': isProductOutOfStock(product)}">
+            <img mat-card-image [src]="getProductThumbnailUrl(product)" alt="Product image"
+              style="height: 400px; width: 100%; object-fit: cover;" class="Img" />
+            <div *ngIf="isProductOutOfStock(product)" class="out-of-stock-label">Nuk ka Stok</div>
+          </div>
+          <mat-card-content class="card-content d-flex flex-column align-items-center justify-content-center p-2"
+            style="height: 60px; font-size: 0.9rem; width: 90%; margin-top: -60px; background: rgba(255, 255, 255, 0.9); border-radius: 2px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1; position: relative; left: 50%; transform: translateX(-50%);top: -10px;">
+            <div class="d-flex justify-content-between w-100">
+              <span class="product-title">{{ getBrandName(product.brandId) }}</span>
+              <span class="product-size">Masa: {{ product.size }}</span>
+            </div>
+            <div class="price-container mt-2 d-flex align-items-center">
+              <span *ngIf="product.discountedPrice; else regularPrice">
+                <span class="original-price text-decoration-line-through text-dark me-1">
+                  {{ product.retailPrice | number: '1.2-2' }} €
+                </span>
+                <span class="discounted-price text-danger fw-bold">
+                  {{ product.discountedPrice | number: '1.2-2' }} €
+                </span>
+              </span>
+              <ng-template #regularPrice>
+                <p class="regular-price fw-bold">
+                  {{ product.retailPrice | number: '1.2-2' }} €
+                </p>
+              </ng-template>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
     </div>
   </div>

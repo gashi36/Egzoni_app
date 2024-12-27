@@ -225,7 +225,8 @@ mutation addProductss(
   $purchasePrice: Decimal!
   $brandId: Int!
   $categoryId: Int!
-  $image: [Upload!]! # Add the pictureUrl variable
+  $image: [Upload!]!
+  $thumbnail: Upload!
 ) {
   addProduct(
     input: {
@@ -239,6 +240,7 @@ mutation addProductss(
       categoryId: $categoryId
       brandId: $brandId
       image: $image
+      thumbnail: $thumbnail
     }
   ) {
     id
@@ -252,6 +254,7 @@ mutation addProductss(
     brandId
     categoryId
     pictureUrls
+    thumbnailUrl
   }
 }
 

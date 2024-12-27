@@ -782,10 +782,11 @@ export type AddProductssMutationVariables = Exact<{
   brandId: Scalars['Int']['input'];
   categoryId: Scalars['Int']['input'];
   image: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
+  thumbnail: Scalars['Upload']['input'];
 }>;
 
 
-export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrls: Array<string> } };
+export type AddProductssMutation = { __typename?: 'Mutation', addProduct: { __typename?: 'Product', id: number, code?: string | null, size?: string | null, color?: string | null, description?: string | null, quantity?: any | null, purchasePrice?: any | null, retailPrice?: any | null, brandId: number, categoryId: number, pictureUrls: Array<string>, thumbnailUrl?: string | null } };
 
 export type PlaceOrderMutationVariables = Exact<{
   input: OrderInput;
@@ -1168,9 +1169,9 @@ export const SearchProductsByBrandDocument = gql`
     }
   }
 export const AddProductssDocument = gql`
-    mutation addProductss($code: String!, $size: String!, $description: String!, $quantity: Decimal!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $brandId: Int!, $categoryId: Int!, $image: [Upload!]!) {
+    mutation addProductss($code: String!, $size: String!, $description: String!, $quantity: Decimal!, $color: String!, $retailPrice: Decimal!, $purchasePrice: Decimal!, $brandId: Int!, $categoryId: Int!, $image: [Upload!]!, $thumbnail: Upload!) {
   addProduct(
-    input: {code: $code, size: $size, color: $color, description: $description, quantity: $quantity, retailPrice: $retailPrice, purchasePrice: $purchasePrice, categoryId: $categoryId, brandId: $brandId, image: $image}
+    input: {code: $code, size: $size, color: $color, description: $description, quantity: $quantity, retailPrice: $retailPrice, purchasePrice: $purchasePrice, categoryId: $categoryId, brandId: $brandId, image: $image, thumbnail: $thumbnail}
   ) {
     id
     code
@@ -1183,6 +1184,7 @@ export const AddProductssDocument = gql`
     brandId
     categoryId
     pictureUrls
+    thumbnailUrl
   }
 }
     `;

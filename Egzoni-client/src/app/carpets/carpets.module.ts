@@ -16,4 +16,4 @@ import { AuthGuard } from '../auth.guard';
   ],
   providers: [AuthGuard],
 })
-export class CarpetsModule {}
+export class CarpetsModule { }
