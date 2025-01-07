@@ -182,7 +182,14 @@ export class ProductDetailsComponent implements OnInit {
       )
       .subscribe({
         next: (data: Product[]) => {
-          this.products = data.filter(product => product.id !== productId);
+          this.products = data.filter(product => product.id !== productId).map(product => {
+            const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
+            return {
+              ...product,
+              discountedPrice: validSale ? validSale.discountedPrice : null,
+              discountPercentage: validSale ? validSale.discountPercentage : null,
+            };
+          });
           console.log('Similar products fetched:', this.products);
         },
         error: (error) => {

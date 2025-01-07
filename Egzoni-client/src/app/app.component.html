@@ -4,22 +4,22 @@
       <!-- Brand Logo -->
       <a class="navbar-brand" href="#">
         <img src="../../assets/EGZONI_SMALL_COLOR.png" alt="Your Logo"
-          style="max-width: 100px; height: auto; object-fit: contain; border: none; outline: none;">
+          style="max-width: 100px; height: 80px; object-fit: contain; border: none; outline: none;">
       </a>
 
 
       <!-- Search Bar with Angular Material -->
-      <div class="d-flex flex-grow-1 justify-content-center col-md-7">
-        <div class="d-flex align-items-center" style="max-width: 800px; width: 100%;">
-          <mat-form-field appearance="fill" color="warn" class="flex-grow-1">
+      <div class="d-flex flex-grow-1 justify-content-center col-md-7 ">
+        <div class="d-flex align-items-center" style="max-width: 800px; width: 100%; padding-top: 20px;">
+          <mat-form-field appearance="fill" color="warn" class="flex-grow-1 me-2">
             <mat-label>Kerko produktet</mat-label>
-            <input matInput [formControl]="productControl" [matAutocomplete]="auto" placeholder="Search">
+            <input matInput [formControl]="productControl" [matAutocomplete]="auto" placeholder="Search" />
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
               <!-- Display options if products are found -->
               <mat-option *ngFor="let product of filteredProducts" [value]="product">
                 <div class="d-flex align-items-center">
                   <img *ngIf="product.imageUrl" [src]="getProductThumbnailUrl(product.id)" alt="Product Image"
-                    class="img-fluid me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                    class="img-fluid me-2" style="width: 40px; height: 40px; object-fit: cover;" />
                   <div class="ms-2">
                     <span *ngIf="product.brandId" [innerHTML]="highlightText(getBrandName(product.brandId))"
                       class="me-2"></span>
@@ -41,11 +41,17 @@
               </ng-container>
             </mat-autocomplete>
           </mat-form-field>
+
+          <!-- Styled Button -->
+          <button class="btn" (click)="goToShop()">
+            <i class="bi bi-search"></i>
+            <span>Kërko</span>
+          </button>
         </div>
       </div>
 
       <!-- Navbar Toggler -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      <button class=" navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <i class="bi bi-menu-app"></i>
       </button>
@@ -84,9 +90,9 @@
 
 <footer class="bg-dark text-white py-4">
   <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
       <!-- Quick Links -->
-      <div class="col-md-3 d-flex flex-column align-items-center text-center">
+      <div class="col-md-3 d-flex flex-column align-items-center  text-center">
         <h5>Linqet</h5>
         <ul class="list-unstyled">
           <li><a routerLink="/home" class="text-white text-decoration-none">Kryefaqja</a></li>

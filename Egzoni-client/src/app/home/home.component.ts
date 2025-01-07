@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApolloQueryResult } from '@apollo/client/core';
-import { Brand, Category, GetBrandsGQL, GetCategoriesGQL, GetProductsGQL, Product } from '../../generated/graphql';
+import { Brand, Category, GetBrandsGQL, GetCategoriesGQL, GetProductsGQL, Product, GetMostSoldProductsWithDetailsGQL } from '../../generated/graphql'; // Import the query
 import { map } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr'; // Import ToastrService
 
@@ -34,19 +34,22 @@ export class HomeComponent implements OnInit {
   ];
   isLoading: boolean = true;
   selectedBrands: Brand[] = [];
+  mostSoldProducts: any[] = []; // Add a new property to store most sold products
 
   constructor(
     private router: Router,
     private getProductsGQL: GetProductsGQL,
     private getBrandsGQL: GetBrandsGQL,
     private getCategoriesGQL: GetCategoriesGQL,
-    private toastr: ToastrService // Inject ToastrService
+    private toastr: ToastrService, // Inject ToastrService
+    private getMostSoldProductsWithDetailsGQL: GetMostSoldProductsWithDetailsGQL // Inject the query
   ) { }
 
   ngOnInit(): void {
     this.getLatestProducts();
     this.getAllCategories();
     this.getAllBrands();
+    this.getMostSoldProducts(); // Call the new method
   }
 
   getLastBrands(count: number): Brand[] {
@@ -86,8 +89,8 @@ export class HomeComponent implements OnInit {
           console.log('Fetched Products:', data);
           this.products = data.map((product: any) => {
             // Check if there are sales and assign values if they exist
-            if (product.sales) {
-              const sale = product.sales; // sales is not an array, it's an object
+            if (product.sales && product.sales.length > 0) {
+              const sale = product.sales[0]; // sales is an array, take the first element
 
               // Log the sales information
               console.log(`Product ID: ${product.id}`);
@@ -122,9 +125,13 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  getProductThumbnailUrl(product: Product): string {
+  getProductThumbnailUrl(product: any): string {
     const thumbnailUrl = product.thumbnailUrl || 'default-thumbnail.jpg';
     return `${this.baseImageUrl}${product.id}/${thumbnailUrl}`;
+  }
+  getProductThumbnailUrlBestSelles(product: any): string {
+    const thumbnailUrl = product.thumbnailUrl || 'default-thumbnail.jpg';
+    return `${this.baseImageUrl}${product.productId}/${thumbnailUrl}`;
   }
 
   navigateToProduct(productId: number): void {
@@ -231,6 +238,29 @@ export class HomeComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error fetching brands:', error);
+        },
+      });
+  }
+
+  getMostSoldProducts(): void {
+    this.getMostSoldProductsWithDetailsGQL
+      .watch()
+      .valueChanges.pipe(
+        map((result: ApolloQueryResult<any>) => result.data?.mostSoldProductsWithDetails || [])
+      )
+      .subscribe({
+        next: (data: any[]) => {
+          this.mostSoldProducts = data.slice(0, 5).map(product => {
+            return {
+              ...product,
+              discountedPrice: product.discountedPrice || null,
+              discountPercentage: product.discountPercentage || null,
+            };
+          });
+          console.log('Most Sold Products:', this.mostSoldProducts); // Debugging log
+        },
+        error: (error) => {
+          console.error('Error fetching most sold products:', error);
         },
       });
   }

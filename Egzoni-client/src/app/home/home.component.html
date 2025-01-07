@@ -1,9 +1,8 @@
 <!-- Main Wrapper Section with Dark Background -->
 <div class="container-fluid p-0">
   <section class="hero d-flex justify-content-center align-items-center text-center text-white"
-    style="background-image: url('../../assets/c4.jpg'); height: 400px; background-size: cover; background-position: center;">
-    <div class="hero-overlay w-100 h-100 d-flex justify-content-center align-items-center"
-      style="background: rgba(0, 0, 0, 0.5);">
+    style="background-image: url('../../assets/c4.jpg'); height: 300px; background-size: cover; background-position: center;">
+    <div class="hero-overlay w-100 h-100 d-flex justify-content-center align-items-center">
       <div class="hero-content">
         <h2 class="display-4 fw-bold mb-3">Zbuloni Luksin e Tepihëve të Jashtme</h2>
         <p class="lead mb-4">Ngrini hapësirën tuaj me përzgjedhjen tonë të kuratorëve të tepave dhe qilimëve të lartë.
@@ -20,87 +19,135 @@
 
 <section class="container-fluid" style="background-color: #f8f9fa; color: #1a1818; padding: 3rem 0;"></section>
 <br />
-<hr>
 
-<br>
 <div *ngIf="products.length === 0">
   <p>Nuk u gjetën produkte!</p>
 </div>
-<div class="container">
-  <div *ngIf="products.length > 0">
-    <p-carousel [value]="products" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
-      [responsiveOptions]="responsiveOptions" [showNavigators]="false" [showIndicators]="false"
-      styleClass="custom-carousel">
 
-      <ng-template let-product pTemplate="item">
-        <div class="col d-flex " style="width: 250px; ">
-          <mat-card class="product-card w-100 text-dark shadow-lg text-center"
-            style="cursor: pointer; height: 400px; overflow: hidden;" (click)="navigateToProduct(product.id)">
-            <div *ngIf="product.sales?.[0]?.discountPercentage" class="discount-ribbon">
-              - {{ product.sales[0].discountPercentage }}%
-            </div>
-            <div class="product-image" [ngClass]="{'out-of-stock': isProductOutOfStock(product)}">
-              <img mat-card-image [src]="getProductThumbnailUrl(product)" alt="Product image"
-                style="height: 400px; width: 100%; object-fit: cover;" class="Img" />
-              <div *ngIf="isProductOutOfStock(product)" class="out-of-stock-label">Nuk ka Stok</div>
-            </div>
-            <mat-card-content class="card-content d-flex flex-column align-items-center justify-content-center p-2"
-              style="height: 60px; font-size: 0.9rem; width: 90%; margin-top: -60px; background: rgba(255, 255, 255, 0.9); border-radius: 2px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1; position: relative; left: 50%; transform: translateX(-50%);top: -10px;">
-              <div class="d-flex justify-content-between w-100">
-                <span class="product-title">{{ getBrandName(product.brandId) }}</span>
-                <span class="product-size">Masa: {{ product.size }}</span>
-              </div>
-              <div class="price-container mt-2 d-flex align-items-center">
-                <span *ngIf="product.discountedPrice; else regularPrice">
-                  <span class="original-price text-decoration-line-through text-dark me-1">
-                    {{ product.retailPrice | number: '1.2-2' }} €
-                  </span>
-                  <span class="discounted-price text-danger fw-bold">
-                    {{ product.discountedPrice | number: '1.2-2' }} €
-                  </span>
-                </span>
-                <ng-template #regularPrice>
-                  <p class="regular-price fw-bold">
-                    {{ product.retailPrice | number: '1.2-2' }} €
-                  </p>
-                </ng-template>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </ng-template>
-
-    </p-carousel>
+<!-- Most Sold Products Section -->
+<section class="container mt-5">
+  <div class="section-header text-center mb-4">
+    <h2 style="font-size: 2.5rem; font-weight: bold; color: #343a40;">Më të Pëlqyerat</h2>
+    <div class="section-divider"></div>
   </div>
-</div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 justify-content-center">
+    <div *ngFor="let product of mostSoldProducts" class="col">
+      <mat-card class="product-card text-dark shadow-lg text-center"
+        style="cursor: pointer; width: 250px; height: 400px; overflow: hidden;"
+        (click)="navigateToProduct(product.productId)">
+        <div *ngIf="product.discountPercentage" class="discount-ribbon">
+          - {{ product.discountPercentage }}%
+        </div>
+        <div class="product-image" [ngClass]="{'out-of-stock': isProductOutOfStock(product)}">
+          <img mat-card-image [src]="getProductThumbnailUrlBestSelles(product)" alt="Product image"
+            style="height: 400px; width: 100%; object-fit: cover;" class="Img" />
+          <div *ngIf="isProductOutOfStock(product)" class="out-of-stock-label">Nuk ka Stok</div>
+        </div>
+        <mat-card-content class="card-content d-flex flex-column align-items-center justify-content-center p-2"
+          style="height: 60px; font-size: 0.8rem; width: 90%; margin-top: -60px; background: rgba(255, 255, 255, 0.9); border-radius: 2px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1; position: relative; left: 50%; transform: translateX(-50%);top: -10px;">
+          <div class="d-flex justify-content-between w-100">
+            <span class="product-title">{{ product.brand }}</span>
+            <span class="product-size">{{ product.size }}</span>
+          </div>
+          <div class="price-container mt-2 d-flex align-items-center">
+            <span *ngIf="product.discountedPrice && product.discountedPrice < product.retailPrice; else regularPrice">
+              <span class="original-price text-decoration-line-through text-dark me-1">
+                {{ product.retailPrice | number: '1.2-2' }} €
+              </span>
+              <span class="discounted-price text-danger fw-bold">
+                {{ product.discountedPrice | number: '1.2-2' }} €
+              </span>
+            </span>
+            <ng-template #regularPrice>
+              <p class="regular-price fw-bold">
+                {{ product.retailPrice | number: '1.2-2' }} €
+              </p>
+            </ng-template>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
 
 <!-- Last Brands Section -->
 <section class="container mt-5">
-  <hr>
-  <h2 class="text-center mb-4" style="font-size: 2.5rem; font-weight: bold; color: #343a40;">Koleksionet e Fundit</h2>
-  <hr>
+  <div class="section-header text-center mb-4">
+    <h2 style="font-size: 2.5rem; font-weight: bold; color: #343a40;">Koleksionet e Fundit</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="container">
+    <div *ngIf="products.length > 0">
+      <p-carousel [value]="products" [numVisible]="5" [numScroll]="1" [circular]="true" [autoplayInterval]="3000"
+        [responsiveOptions]="responsiveOptions" [showNavigators]="false" [showIndicators]="false"
+        styleClass="custom-carousel">
+
+        <ng-template let-product pTemplate="item">
+          <div class="col d-flex " style="width: 250px; gap: 20px; ">
+            <mat-card class="product-card w-100 text-dark shadow-lg text-center"
+              style="cursor: pointer; height: 400px; overflow: hidden;" (click)="navigateToProduct(product.id)">
+              <div *ngIf="product.sales?.[0]?.discountPercentage" class="discount-ribbon">
+                - {{ product.sales[0].discountPercentage }}%
+              </div>
+              <div class="product-image" [ngClass]="{'out-of-stock': isProductOutOfStock(product)}">
+                <img mat-card-image [src]="getProductThumbnailUrl(product)" alt="Product image"
+                  style="height: 400px; width: 100%; object-fit: cover;" class="Img" />
+                <div *ngIf="isProductOutOfStock(product)" class="out-of-stock-label">Nuk ka Stok</div>
+              </div>
+              <mat-card-content class="card-content d-flex flex-column align-items-center justify-content-center p-2"
+                style="height: 60px; font-size: 0.9rem; width: 90%; margin-top: -60px; background: rgba(255, 255, 255, 0.9); border-radius: 2px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1; position: relative; left: 50%; transform: translateX(-50%);top: -10px;">
+                <div class="d-flex justify-content-between w-100">
+                  <span class="product-title">{{ getBrandName(product.brandId) }}</span>
+                  <span class="product-size">Masa: {{ product.size }}</span>
+                </div>
+                <div class="price-container mt-2 d-flex align-items-center">
+                  <span
+                    *ngIf="product.discountedPrice && product.discountedPrice < product.retailPrice; else regularPrice">
+                    <span class="original-price text-decoration-line-through text-dark me-1">
+                      {{ product.retailPrice | number: '1.2-2' }} €
+                    </span>
+                    <span class="discounted-price text-danger fw-bold">
+                      {{ product.discountedPrice | number: '1.2-2' }} €
+                    </span>
+                  </span>
+                  <ng-template #regularPrice>
+                    <p class="regular-price fw-bold">
+                      {{ product.retailPrice | number: '1.2-2' }} €
+                    </p>
+                  </ng-template>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </ng-template>
+
+      </p-carousel>
+    </div>
+  </div>
   <div *ngFor="let brand of selectedBrands" class="mb-5">
     <div class="brandbanner row align-items-center  p-4 rounded">
       <!-- Brand Banner -->
       <div class="col-md-4 text-center">
         <a [routerLink]="['/shop']" [queryParams]="{ brand: brand.id }">
           <img *ngIf="brand.logoUrl" [src]="brand.logoUrl" alt="{{ brand.name }} Logo" class="img-fluid shadow-sm "
-            style="height: 400px; width: 400px;" />
+            style="height: 300px; width: 300px;" />
         </a>
       </div>
       <div class="col-md-8">
         <h1 class="text-center mb-3">{{ brand.name }}</h1>
+        <div class="section-divider"></div>
+        <br>
         <div class="row row-cols-2 row-cols-md-4 g-1 text-center justify-content-center">
           <div *ngFor="let product of getProductsForBrand(brand.id)" class="col-6 col-md-3 d-flex">
             <mat-card class="product-card text-dark shadow-lg text-center"
-              style="cursor: pointer; width: 200px; height: 300px; overflow: hidden;"
+              style="cursor: pointer; width: 250px; height: 350px; overflow: hidden;"
               (click)="navigateToProduct(product.id)">
               <div *ngIf="product.sales?.[0]?.discountPercentage" class="discount-ribbon">
                 - {{ product.sales[0].discountPercentage }}%
               </div>
               <div class="product-image" [ngClass]="{'out-of-stock': isProductOutOfStock(product)}">
                 <img mat-card-image [src]="getProductThumbnailUrl(product)" alt="Product image"
-                  style="height: 300px; width: 100%; object-fit: cover;" class="Img" />
+                  style="height:350px;; width: 100%; object-fit: cover;" class="Img" />
                 <div *ngIf="isProductOutOfStock(product)" class="out-of-stock-label">Nuk ka Stok</div>
               </div>
               <mat-card-content class="card-content d-flex flex-column align-items-center justify-content-center p-2"
@@ -110,7 +157,8 @@
                   <span class="product-size">Masa: {{ product.size }}</span>
                 </div>
                 <div class="price-container mt-2 d-flex align-items-center">
-                  <span *ngIf="product.discountedPrice; else regularPrice">
+                  <span
+                    *ngIf="product.discountedPrice && product.discountedPrice < product.retailPrice; else regularPrice">
                     <span class="original-price text-decoration-line-through text-dark me-1">
                       {{ product.retailPrice | number: '1.2-2' }} €
                     </span>

@@ -58,6 +58,23 @@ export class AppComponent implements OnInit {
         },
       });
   }
+  goToShop(): void {
+    if (this.filteredProducts && this.filteredProducts.length > 0) {
+      const productIds = this.filteredProducts.map((product) => product.id).join(',');
+
+      console.log('Navigating to shop with the following product IDs:', productIds);
+
+      this.router.navigate(['/shop'], { queryParams: { products: productIds } }).then(
+        () => console.log('Navigation to /shop successful.'),
+        (error) => console.error('Navigation to /shop failed:', error)
+      );
+    } else {
+      console.warn('No products to display. Ensure filteredProducts is populated.');
+    }
+
+    // Debugging logs for additional clarity
+    console.log('Current filteredProducts:', this.filteredProducts);
+  }
 
   getProductThumbnailUrl(productId: number): string {
     const product = this.filteredProducts.find((p) => p.id === productId);

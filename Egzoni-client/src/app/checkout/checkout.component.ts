@@ -100,6 +100,11 @@ export class CheckoutComponent implements OnInit {
     const product = this.products.find((p) => p.id === productId);
     return product ? product.code : 'Produkt i panjohur';
   }
+  getProductBrand(productId: number): any {
+    const product = this.products.find((p) => p.id === productId);
+    return product ? product.brand : 'Produkt i panjohur';
+  }
+
 
   getProductPrice(productId: number): number {
     const product = this.products.find(p => p.id === productId);

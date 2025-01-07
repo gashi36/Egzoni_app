@@ -9,7 +9,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background-color: #fff;
+    background-color: #e51c38;
     transition: all 0.3s;
     transform: translateX(-50%);
   }
@@ -29,4 +29,15 @@
     border-radius: 50%;
     padding: 0.25em 0.5em;
     font-size: 0.75rem;
+  }
+
+  .btn {
+    background-color: #e51c38;
+    color: #000;
+    margin-top: -25px;
+    width: 90px;
+  }
+
+  .bi {
+    padding-right: 5px;
   }

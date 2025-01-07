@@ -133,6 +133,22 @@ query getSalesForYear($year: Int!) {
     year
   }
 }
+
+query getMostSoldProductsWithDetails {
+  mostSoldProductsWithDetails {
+    brand
+    category
+    pictureUrls
+    productCode
+    productId
+    thumbnailUrl
+    retailPrice
+    size
+    discountedPrice
+    discountPercentage
+  }
+}
+
 query getOrdersAndStatsForYear($year: Int!) {
   ordersAndStatsForYear(year: $year) {
     month
@@ -189,7 +205,9 @@ query searchProductsByBrand($brandName: String, $categoryName: String) {
     where: {
       or: [
         { brand: { name: { startsWith: $brandName } } }
+        { brand: { name: { contains: $brandName } } }
         { category: { name: { startsWith: $categoryName } } }
+        { category: { name: { contains: $categoryName } } }
       ]
     }
   ) {

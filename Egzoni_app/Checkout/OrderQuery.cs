@@ -140,6 +140,68 @@ namespace Egzoni_app.Checkouts
                 Brand = msp.Brand
             }).ToList();
         }
+
+        public async Task<List<MostSoldProductDetails>> GetMostSoldProductsWithDetailsAsync(CancellationToken cancellationToken)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
+            int currentYear = DateTime.Now.Year;
+            var startDate = new DateTime(currentYear, 1, 1);
+            var endDate = DateTime.Now;
+
+            var mostSoldProducts = await context.Orders
+                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+                .SelectMany(o => o.OrderItems)
+                .GroupBy(oi => oi.Code)
+                .Select(g => new
+                {
+                    ProductCode = g.Key,
+                    QuantitySold = g.Sum(oi => oi.Quantity),
+                    ProductDetails = context.Products
+                        .Where(p => p.Code == g.Key)
+                        .Select(p => new
+                        {
+                            p.Id,
+                            p.Description,
+                            p.PictureUrls,
+                            p.ThumbnailUrl,
+                            Category = p.Category.Name,
+                            Brand = p.Brand.Name,
+                            p.Size,
+                            p.RetailPrice,
+                            Sales = p.Sales
+                                .Where(s => s.EndDate >= DateTime.Now || s.EndDate == null)
+                                .OrderByDescending(s => s.EndDate)
+                                .Select(s => new
+                                {
+                                    s.DiscountedPrice,
+                                    s.DiscountPercentage,
+                                    s.EndDate
+                                }).FirstOrDefault()
+                        })
+                        .FirstOrDefault()
+                })
+                .OrderByDescending(msp => msp.QuantitySold)
+                .Take(10)
+                .ToListAsync(cancellationToken);
+
+            return mostSoldProducts.Select(msp => new MostSoldProductDetails
+            {
+                ProductId = msp.ProductDetails.Id,
+                ProductCode = msp.ProductCode,
+                QuantitySold = msp.QuantitySold,
+                PictureUrls = msp.ProductDetails.PictureUrls,
+                ThumbnailUrl = msp.ProductDetails.ThumbnailUrl,
+                Category = msp.ProductDetails.Category,
+                Brand = msp.ProductDetails.Brand,
+                Size = msp.ProductDetails.Size,
+                RetailPrice = msp.ProductDetails.RetailPrice,
+                DiscountedPrice = msp.ProductDetails.Sales != null
+                    ? msp.ProductDetails.RetailPrice * (1 - (decimal)msp.ProductDetails.Sales.DiscountPercentage / 100)
+                    : msp.ProductDetails.RetailPrice, // Calculate the discounted price
+                DiscountPercentage = msp.ProductDetails.Sales?.DiscountPercentage,
+            }).ToList();
+        }
+
         public async Task<List<OrderPriceStats>> GetMonthlyPricesAndStatsForYearAsync(int year, CancellationToken cancellationToken)
         {
             await using var context = _dbContextFactory.CreateDbContext();
@@ -228,5 +290,20 @@ namespace Egzoni_app.Checkouts
         public int QuantitySold { get; set; }
         public string? Category { get; set; }
         public string? Brand { get; set; }
+    }
+
+    public class MostSoldProductDetails
+    {
+        public int ProductId { get; set; }
+        public string? ProductCode { get; set; }
+        public string? Size { get; set; }
+        public decimal? RetailPrice { get; set; }
+        public int QuantitySold { get; set; }
+        public List<string> PictureUrls { get; set; } = new List<string>();
+        public string? ThumbnailUrl { get; set; }
+        public string? Category { get; set; }
+        public string? Brand { get; set; }
+        public decimal? DiscountedPrice { get; set; }
+        public double? DiscountPercentage { get; set; }
     }
 }

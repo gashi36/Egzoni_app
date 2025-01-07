@@ -24,6 +24,7 @@ namespace Egzoni_app.Checkouts
             _emailService = emailService;
             _adminEmail = adminEmail;
         }
+
         public async Task<Order> PlaceOrderAsync(OrderInput input, CancellationToken cancellationToken)
         {
             if (input.Items == null || !input.Items.Any())
@@ -115,7 +116,6 @@ namespace Egzoni_app.Checkouts
             }
         }
 
-
         private string GenerateEmailBody(Order order)
         {
             var body = $@"
@@ -123,20 +123,20 @@ namespace Egzoni_app.Checkouts
     <head>
         <style>
             body {{
-                font-family: 'Arial', sans-serif;
-                background-color: #1e1e1e;
+                font-family: 'Ubuntu', sans-serif;
+                background-color: #f8f9fa;
                 margin: 0;
                 padding: 0;
             }}
             .container {{
                 width: 600px;
                 margin: 20px auto;
-                background-color: #2c2c2c;
-                color: #f4f4f4;
-                border: 1px solid #d32f2f;
+                background-color: #ffffff;
+                color: #343a40;
+                border: 1px solid #dc3545;
                 border-radius: 8px;
                 padding: 20px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }}
             .header {{
                 text-align: center;
@@ -150,38 +150,40 @@ namespace Egzoni_app.Checkouts
             .header h1 {{
                 margin: 10px 0;
                 font-size: 24px;
-                color: #d32f2f;
+                color: #dc3545;
             }}
             .content {{
                 padding: 20px;
             }}
             .footer {{
-                background-color: #333;
+                background-color: #ffffff;
                 padding: 15px;
                 text-align: center;
                 border-radius: 0 0 8px 8px;
-                border-top: 1px solid #d32f2f;
+                border-top: 1px solid #dc3545;
+                color: #ffffff;
             }}
             .item {{
-                border-bottom: 1px solid #444;
+                border-bottom: 1px solid #e9ecef;
                 padding: 10px 0;
+                color: #343a40; /* Ensure text color is consistent */
             }}
             .total {{
                 font-weight: bold;
                 font-size: 1.2em;
                 margin-top: 20px;
-                color: #d32f2f;
+                color: #dc3545;
             }}
             h2 {{
-                border-bottom: 2px solid #d32f2f;
+                border-bottom: 2px solid #dc3545;
                 padding-bottom: 5px;
                 font-size: 20px;
-                color: #d32f2f;
+                color: #dc3545;
                 margin-top: 0;
             }}
             p {{
                 margin: 10px 0;
-                color:white;
+                color: #343a40; /* Ensure text color is consistent */
             }}
             ul {{
                 list-style: none;
@@ -190,6 +192,13 @@ namespace Egzoni_app.Checkouts
             }}
             li {{
                 padding: 5px 0;
+                color: #343a40; /* Ensure text color is consistent */
+            }}
+            .order-details {{
+                margin-bottom: 20px;
+            }}
+            .order-details p {{
+                margin: 5px 0;
             }}
         </style>
     </head>
@@ -201,11 +210,13 @@ namespace Egzoni_app.Checkouts
             </div>
             <div class='content'>
                 <p>Faleminderit për porosinë tuaj, <strong>{order.CostumerName}</strong>!</p>
-                <p><strong>Numri i Porosisë:</strong> 001{order.Id}</p>
-                <p><strong>Data e Porosisë:</strong> {order.OrderDate}</p>
-                <p><strong>Adresa e Dërgesës:</strong> {order.DeliveryAddress}</p>
-                <p><strong>Numri i Telefonit:</strong> {order.PhoneNumber}</p>
-                <p><strong>Mesazhi Shtesë:</strong> {order.AdditionalMessage}</p>
+                <div class='order-details'>
+                    <p><strong>Numri i Porosisë:</strong> 001{order.Id}</p>
+                    <p><strong>Data e Porosisë:</strong> {order.OrderDate}</p>
+                    <p><strong>Adresa e Dërgesës:</strong> {order.DeliveryAddress}</p>
+                    <p><strong>Numri i Telefonit:</strong> {order.PhoneNumber}</p>
+                    <p><strong>Mesazhi Shtesë:</strong> {order.AdditionalMessage}</p>
+                </div>
                 <h2>Artikujt e Porosisë</h2>
                 <ul>";
 
@@ -233,6 +244,5 @@ namespace Egzoni_app.Checkouts
 
             return body;
         }
-
     }
 }

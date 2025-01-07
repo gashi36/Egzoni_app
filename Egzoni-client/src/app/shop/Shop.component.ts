@@ -33,10 +33,9 @@ export class ShopComponent implements OnInit {
   isFilterVisible = false;
   screenSmall = window.innerWidth < 768;
 
-
   filterForm = new FormGroup({
-    brand: new FormControl(null),
-    category: new FormControl(null),
+    brand: new FormControl("all"),
+    category: new FormControl("all"),
     minPrice: new FormControl(null),
     maxPrice: new FormControl(null),
   });
@@ -48,27 +47,28 @@ export class ShopComponent implements OnInit {
     private getBrandsGQL: GetBrandsGQL,
     private getCategoriesGQL: GetCategoriesGQL
   ) { }
-
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
-      const brandId = params['brand'];
-      const categoryId = params['category'];
+      const productIds = params['products'];
 
-      // Patch the form with undefined instead of null for empty values
-      this.filterForm.patchValue({
-        brand: brandId ? brandId : undefined,   // Keep as string or undefined if empty
-        category: categoryId ? categoryId : undefined,  // Keep as string or undefined if empty
-      });
+      console.log('Received product IDs in query params:', productIds);
 
+      if (productIds) {
+        const productIdArray = productIds.split(',').map((id: string) => id.trim());
+        console.log('Parsed product IDs array:', productIdArray);
 
+        // Filter products based on received IDs
+        this.filteredProducts = this.allProducts.filter((product) =>
+          productIdArray.includes(product.id.toString())
+        );
 
-      // If there's a brand or category filter, apply it
-      if (brandId || categoryId) {
-        this.filterProducts(); // Apply filters based on query params
+        console.log('Filtered products:', this.filteredProducts);
       } else {
-        this.getAllProductss(); // Load all products if no filters
+        console.warn('No product IDs provided. Displaying all products.');
+        this.filteredProducts = this.allProducts;
       }
     });
+
 
 
     this.getAllProductss();
@@ -120,9 +120,21 @@ export class ShopComponent implements OnInit {
       });
   }
 
+  refetchProducts(): void {
+    this.cursor = null;
+    this.hasNextPage = false;
+    this.allProducts = [];
+    this.filteredProducts = [];
+    this.getAllProductss();
+  }
+
   // Ensure correct import statements and structure as per your application's design
   getAllProductss(first: number = 15): void {
-    const { brand, category, minPrice, maxPrice } = this.filterForm.value;
+    let { brand, category, minPrice, maxPrice } = this.filterForm.value;
+
+    // Set brand and category to null if "all" is selected
+    brand = brand === 'all' ? null : brand;
+    category = category === 'all' ? null : category;
 
     this.getProductsGQL
       .watch({
@@ -167,22 +179,28 @@ export class ShopComponent implements OnInit {
       });
   }
 
-
   applyFilters(products: Product[]): Product[] {
-    const { brand, category, minPrice, maxPrice } = this.filterForm.value;
+    let { brand, category, minPrice, maxPrice } = this.filterForm.value;
+
+    // Set brand and category to null if "all" is selected
+    brand = brand === 'all' ? null : brand;
+    category = category === 'all' ? null : category;
 
     return products.filter((product) => {
       const matchesBrand = !brand || product.brandId === parseInt(brand, 10);
-      const matchesCategory =
-        !category || product.categoryId === parseInt(category, 10);
-      const matchesMinPrice =
-        !minPrice || product.retailPrice >= parseFloat(minPrice);
-      const matchesMaxPrice =
-        !maxPrice || product.retailPrice <= parseFloat(maxPrice);
+      const matchesCategory = !category || product.categoryId === parseInt(category, 10);
+      const matchesMinPrice = !minPrice || product.retailPrice >= parseFloat(minPrice);
+      const matchesMaxPrice = !maxPrice || product.retailPrice <= parseFloat(maxPrice);
 
-      return (
-        matchesBrand && matchesCategory && matchesMinPrice && matchesMaxPrice
-      );
+      return matchesBrand && matchesCategory && matchesMinPrice && matchesMaxPrice;
+    }).map((product) => {
+      const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
+      return {
+        ...product,
+        discountedPrice: validSale?.discountedPrice ?? null,
+        discountPercentage: validSale?.discountPercentage ?? 0,
+        saleId: validSale?.id ?? null,
+      };
     });
   }
 
@@ -240,7 +258,7 @@ export class ShopComponent implements OnInit {
     }
   }
 
-  filterProducts(): void {
+  filterProducts(searchTerm?: string): void {
     const { brand, category, minPrice, maxPrice } = this.filterForm.value;
 
     this.allProducts = [];
@@ -262,13 +280,24 @@ export class ShopComponent implements OnInit {
       .subscribe({
         next: (data) => {
           if (data && data.nodes) {
-            this.allProducts = data.nodes;
+            this.allProducts = data.nodes.map((product: any) => {
+              const validSale = product.sales?.find((sale: any) => sale.isValidSalePeriod);
+              return {
+                ...product,
+                discountedPrice: validSale?.discountedPrice ?? null,
+                discountPercentage: validSale?.discountPercentage ? Math.round(validSale.discountPercentage) : 0,
+                saleId: validSale?.id ?? null,
+              };
+            });
+
             this.filteredProducts = this.applyFilters(this.allProducts);
 
             if (data.pageInfo) {
               this.cursor = data.pageInfo.endCursor ?? null;
               this.hasNextPage = data.pageInfo.hasNextPage;
             }
+
+            console.log('Filtered Products:', this.filteredProducts);
           }
         },
         error: (error) => {
@@ -297,17 +326,19 @@ export class ShopComponent implements OnInit {
     return category?.name!;
   }
 
-
   toggleFilterVisibility() {
     this.isFilterVisible = !this.isFilterVisible;
   }
+
   navigateToProduct(productId: number): void {
     console.log(`Navigating to product with ID: ${productId}`);
     this.router.navigate(['/product', productId]);
   }
+
   isProductOutOfStock(product: Product): boolean {
     return product.quantity === 0;
   }
+
   priceFormatter(value: number): string {
     return `${value} €`;
   }

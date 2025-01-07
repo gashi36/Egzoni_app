@@ -65,7 +65,8 @@
                 <div class="d-flex justify-content-between">
                   <span class="text-dark fw-bold">Totali:</span>
                   <div>
-                    <span *ngIf="product.discountedPrice; else regularPrice">
+                    <span
+                      *ngIf="product.discountedPrice && product.discountedPrice < product.retailPrice; else regularPrice">
                       <span class="text-muted text-decoration-line-through me-2">{{ product.retailPrice | currency:
                         'EUR' }}</span>
                       <span class="text-danger fw-bold">{{ product.discountedPrice | currency: 'EUR' }}</span>
@@ -145,8 +146,11 @@
     </div>
   </div>
 
+  <!-- Similar Products Section -->
   <div class="container mt-5">
-    <h2 class="text-center mb-4">Produkte të ngjashme</h2>
+    <h4 style="font-size: 1.5rem; font-weight: bold; color: #343a40; text-align: center;">Produkte të ngjashme</h4>
+    <div class="section-divider"></div>
+    <br>
     <div class="row row-cols-2 row-cols-md-5 g-2 justify-content-center">
       <div *ngFor="let product of products.slice(0, 5)" class="col d-flex" style="width: 250px;">
         <mat-card class="product-card w-100 text-dark shadow-lg text-center"
@@ -160,10 +164,10 @@
             <div *ngIf="isProductOutOfStock(product)" class="out-of-stock-label">Nuk ka Stok</div>
           </div>
           <mat-card-content class="card-content d-flex flex-column align-items-center justify-content-center p-2"
-            style="height: 60px; font-size: 0.9rem; width: 90%; margin-top: -60px; background: rgba(255, 255, 255, 0.9); border-radius: 2px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1; position: relative; left: 50%; transform: translateX(-50%);top: -10px;">
+            style="height: 60px; font-size: 0.8rem; width: 90%; margin-top: -60px; background: rgba(255, 255, 255, 0.9); border-radius: 2px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); z-index: 1; position: relative; left: 50%; transform: translateX(-50%);top: -10px;">
             <div class="d-flex justify-content-between w-100">
               <span class="product-title">{{ getBrandName(product.brandId) }}</span>
-              <span class="product-size">Masa: {{ product.size }}</span>
+              <span class="product-size">{{ product.size }}</span>
             </div>
             <div class="price-container mt-2 d-flex align-items-center">
               <span *ngIf="product.discountedPrice; else regularPrice">

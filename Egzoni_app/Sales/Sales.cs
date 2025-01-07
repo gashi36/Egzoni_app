@@ -14,7 +14,7 @@ namespace Egzoni_app.OnSale
         public int ProductId { get; set; }
         public Product? Product { get; set; }
 
-        // Calculated property for the discounted price}
+        // Calculated property for the discounted price
         public decimal? DiscountedPrice => Product?.RetailPrice.HasValue == true
                     ? Product.RetailPrice.Value - (Product.RetailPrice.Value * (decimal)(DiscountPercentage / 100))
                     : null;
@@ -23,7 +23,5 @@ namespace Egzoni_app.OnSale
         {
             return StartDate < EndDate && StartDate <= DateTime.UtcNow && EndDate >= DateTime.UtcNow;
         }
-
-
     }
 }

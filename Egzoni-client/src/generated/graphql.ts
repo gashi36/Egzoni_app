@@ -276,6 +276,21 @@ export type MostSoldProduct = {
   quantitySold: Scalars['Int']['output'];
 };
 
+export type MostSoldProductDetails = {
+  __typename?: 'MostSoldProductDetails';
+  brand?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  discountPercentage?: Maybe<Scalars['Float']['output']>;
+  discountedPrice?: Maybe<Scalars['Decimal']['output']>;
+  pictureUrls: Array<Scalars['String']['output']>;
+  productCode?: Maybe<Scalars['String']['output']>;
+  productId: Scalars['Int']['output'];
+  quantitySold: Scalars['Int']['output'];
+  retailPrice?: Maybe<Scalars['Decimal']['output']>;
+  size?: Maybe<Scalars['String']['output']>;
+  thumbnailUrl?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBrand: Brand;
@@ -558,6 +573,7 @@ export type Query = {
   categories: Array<Category>;
   monthlyPricesAndStatsForYear: Array<OrderPriceStats>;
   monthlyProductStatsForCurrentAndLastYear: Array<MonthlyProductStats>;
+  mostSoldProductsWithDetails: Array<MostSoldProductDetails>;
   orderById?: Maybe<Order>;
   ordersAndStatsForYear: Array<OrderStats>;
   productById: Product;
@@ -733,6 +749,11 @@ export type GetSalesForYearQueryVariables = Exact<{
 
 
 export type GetSalesForYearQuery = { __typename?: 'Query', monthlyPricesAndStatsForYear: Array<{ __typename?: 'OrderPriceStats', month: number, monthName: string, mostSoldProductCode?: string | null, totalOrders: number, totalPurchasePrice: any, totalRetailPrice: any, year: number }> };
+
+export type GetMostSoldProductsWithDetailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMostSoldProductsWithDetailsQuery = { __typename?: 'Query', mostSoldProductsWithDetails: Array<{ __typename?: 'MostSoldProductDetails', brand?: string | null, category?: string | null, pictureUrls: Array<string>, productCode?: string | null, productId: number, thumbnailUrl?: string | null, retailPrice?: any | null, size?: string | null, discountedPrice?: any | null, discountPercentage?: number | null }> };
 
 export type GetOrdersAndStatsForYearQueryVariables = Exact<{
   year: Scalars['Int']['input'];
@@ -1019,6 +1040,33 @@ export const GetSalesForYearDocument = gql`
       super(apollo);
     }
   }
+export const GetMostSoldProductsWithDetailsDocument = gql`
+    query getMostSoldProductsWithDetails {
+  mostSoldProductsWithDetails {
+    brand
+    category
+    pictureUrls
+    productCode
+    productId
+    thumbnailUrl
+    retailPrice
+    size
+    discountedPrice
+    discountPercentage
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetMostSoldProductsWithDetailsGQL extends Apollo.Query<GetMostSoldProductsWithDetailsQuery, GetMostSoldProductsWithDetailsQueryVariables> {
+    document = GetMostSoldProductsWithDetailsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const GetOrdersAndStatsForYearDocument = gql`
     query getOrdersAndStatsForYear($year: Int!) {
   ordersAndStatsForYear(year: $year) {
@@ -1133,7 +1181,7 @@ export const SearchProductsDocument = gql`
 export const SearchProductsByBrandDocument = gql`
     query searchProductsByBrand($brandName: String, $categoryName: String) {
   productsAsync(
-    where: {or: [{brand: {name: {startsWith: $brandName}}}, {category: {name: {startsWith: $categoryName}}}]}
+    where: {or: [{brand: {name: {startsWith: $brandName}}}, {brand: {name: {contains: $brandName}}}, {category: {name: {startsWith: $categoryName}}}, {category: {name: {contains: $categoryName}}}]}
   ) {
     edges {
       node {
